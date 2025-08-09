@@ -1,37 +1,63 @@
-import { Assets as NavigationAssets } from '@react-navigation/elements';
-import { DarkTheme, DefaultTheme } from '@react-navigation/native';
-import { Asset } from 'expo-asset';
-import * as SplashScreen from 'expo-splash-screen';
-import * as React from 'react';
-import { useColorScheme } from 'react-native';
-import { Navigation } from './navigation';
+import { Assets as NavigationAssets } from "@react-navigation/elements";
+import { DarkTheme, DefaultTheme } from "@react-navigation/native";
+import { Asset } from "expo-asset";
+import * as SplashScreen from "expo-splash-screen";
+import * as React from "react";
+import { useColorScheme } from "react-native";
+import { Navigation } from "./navigation";
+import { QueryProvider } from "./shared/query/client";
+import { Toaster } from "sonner-native";
+import { UnistylesRuntime } from "react-native-unistyles";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { AppBottomSheetProvider } from "./components";
 
 Asset.loadAsync([
   ...NavigationAssets,
-  require('./assets/newspaper.png'),
-  require('./assets/bell.png'),
+  require("./assets/newspaper.png"),
+  require("./assets/bell.png"),
 ]);
 
 SplashScreen.preventAutoHideAsync();
 
 export function App() {
-  const colorScheme = useColorScheme();
+  const scheme = useColorScheme();
 
-  const theme = colorScheme === 'dark' ? DarkTheme : DefaultTheme
+  // Configure Unistyles themes early
+  if (scheme) {
+    UnistylesRuntime.setTheme(scheme);
+  }
 
   return (
-    <Navigation
-      theme={theme}
-      linking={{
-        enabled: 'auto',
-        prefixes: [
-          // Change the scheme to match your app's scheme defined in app.json
-          'helloworld://',
-        ],
-      }}
-      onReady={() => {
-        SplashScreen.hideAsync();
-      }}
-    />
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <AppBottomSheetProvider>
+          <QueryProvider>
+            <Navigation
+              linking={{
+                enabled: "auto",
+                prefixes: [
+                  // Change the scheme to match your app's scheme defined in app.json
+                  "spltup://",
+                ],
+              }}
+              onReady={() => {
+                SplashScreen.hideAsync();
+              }}
+            />
+            <Toaster
+              position="bottom-center"
+              toastOptions={{
+                style: {
+                  borderRadius: 12,
+                  paddingVertical: 12,
+                  paddingHorizontal: 12,
+                },
+              }}
+            />
+          </QueryProvider>
+        </AppBottomSheetProvider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }
