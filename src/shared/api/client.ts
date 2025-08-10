@@ -4,6 +4,8 @@ import axios, {
   AxiosRequestConfig,
   AxiosResponse,
 } from "axios";
+import Constants from "expo-constants";
+import { Platform } from "react-native";
 
 import { getAccessToken } from "../utils/storage";
 
@@ -40,6 +42,7 @@ const baseURL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export const httpClient: AxiosInstance = axios.create({
   baseURL,
+  // Axios expects milliseconds. 60 was 60ms → instant timeout.
   timeout: 30_000,
   headers: {
     "Content-Type": "application/json",

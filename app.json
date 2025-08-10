@@ -8,6 +8,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "scheme": "fe",
+
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.satya164.reactnavigationtemplate"

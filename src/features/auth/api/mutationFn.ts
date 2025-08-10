@@ -9,6 +9,7 @@ export function useLoginMutation() {
     mutationFn: (body) =>
       apiPost<AuthResponse, LoginRequest>(authEndpoints.login, body),
     onError: (e: any) => {
+      console.log("error", e);
       appToast.error("Login failed", {
         description: e?.message ?? "Unknown error",
       });
