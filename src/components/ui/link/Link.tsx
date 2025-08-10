@@ -6,6 +6,7 @@ import type {
   ViewStyle,
 } from "react-native";
 import { Pressable, Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { StyleSheet } from "react-native-unistyles";
 
 interface LinkProps {
@@ -16,6 +17,7 @@ interface LinkProps {
   style?: StyleProp<TextStyle>;
   containerStyle?: StyleProp<ViewStyle>;
   testID?: string;
+  href?: string; // optional route name
 }
 
 export const Link: React.FC<LinkProps> = ({
@@ -26,14 +28,23 @@ export const Link: React.FC<LinkProps> = ({
   style,
   containerStyle,
   testID,
+  href,
 }) => {
+  const navigation = useNavigation<any>();
   return (
     <View style={[styles.container, containerStyle]}>
       <Pressable
         accessibilityRole="link"
         accessibilityState={{ disabled }}
         disabled={disabled}
-        onPress={onPress}
+        onPress={(e) => {
+          if (href) {
+            try {
+              navigation.navigate(href as never);
+            } catch {}
+          }
+          onPress?.(e);
+        }}
         testID={testID}
         style={({ pressed }) => [styles.wrapper]}
       >

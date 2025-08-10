@@ -9,6 +9,7 @@
     "ios": "expo run:ios"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
     "@expo-google-fonts/roboto": "^0.4.0",
     "@expo/metro-runtime": "~5.0.4",
     "@expo/vector-icons": "^14.1.0",
@@ -38,6 +39,7 @@
     "expo-web-browser": "~14.2.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-hook-form": "^7.62.0",
     "react-native": "0.79.5",
     "react-native-edge-to-edge": "^1.6.2",
     "react-native-gesture-handler": "~2.24.0",
@@ -51,7 +53,8 @@
     "react-native-unistyles": "^3.0.8",
     "react-native-web": "^0.20.0",
     "react-native-webview": "13.13.5",
-    "sonner-native": "^0.21.0"
+    "sonner-native": "^0.21.0",
+    "zod": "^4.0.17"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",

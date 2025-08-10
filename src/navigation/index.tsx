@@ -2,24 +2,19 @@ import {
   createStaticNavigation,
   StaticParamList,
 } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { ExampleScreen } from "../features/example/screens";
+import { AppNavigation } from "./AppNavigator";
+import { AuthNavigation } from "./AuthNavigator";
+import { useAuthContext } from "@/features/auth";
 
-const RootStack = createNativeStackNavigator({
-  screens: {
-    Main: {
-      screen: ExampleScreen,
-      options: {
-        title: "Components",
-        headerShown: true,
-      },
-    },
-  },
-});
+export function Navigation(props: any) {
+  const { isAuthenticated } = useAuthContext();
+  const Component = isAuthenticated
+    ? (AppNavigation as any)
+    : (AuthNavigation as any);
+  return <Component {...props} />;
+}
 
-export const Navigation = createStaticNavigation(RootStack);
-
-type RootStackParamList = StaticParamList<typeof RootStack>;
+type RootStackParamList = StaticParamList<any>;
 
 declare global {
   namespace ReactNavigation {

@@ -55,12 +55,6 @@ export const TextField = React.forwardRef<RNTextInput, TextFieldProps>(
     // Combine refs
     React.useImperativeHandle(ref, () => inputRef.current as RNTextInput);
 
-    const handleOutsidePress = () => {
-      inputRef.current?.blur();
-      onBlur?.();
-      Keyboard.dismiss();
-    };
-
     const handleBlur = () => {
       onBlur?.();
     };
@@ -73,52 +67,48 @@ export const TextField = React.forwardRef<RNTextInput, TextFieldProps>(
         : styles.inputDefault;
 
     return (
-      <TouchableWithoutFeedback onPress={handleOutsidePress}>
-        <View style={styles.touchableContainer}>
-          <View
+      <View
+        style={[
+          styles.container,
+          disabled ? styles.containerDisabled : null,
+          containerStyle,
+        ]}
+      >
+        {label ? (
+          <Text
             style={[
-              styles.container,
-              disabled ? styles.containerDisabled : null,
-              containerStyle,
+              styles.label,
+              disabled ? styles.labelDisabled : null,
+              labelStyle,
             ]}
           >
-            {label ? (
-              <Text
-                style={[
-                  styles.label,
-                  disabled ? styles.labelDisabled : null,
-                  labelStyle,
-                ]}
-              >
-                {label}
-              </Text>
-            ) : null}
-            <TouchableWithoutFeedback onPress={() => inputRef.current?.focus()}>
-              <View>
-                <RNTextInput
-                  ref={inputRef}
-                  style={[
-                    styles.inputBase,
-                    inputVariantStyle,
-                    disabled ? styles.inputDisabled : null,
-                    error ? styles.inputError : null,
-                    style,
-                  ]}
-                  placeholderTextColor={theme.colors.textSecondary}
-                  editable={!disabled}
-                  value={value}
-                  onChangeText={onChangeText}
-                  onBlur={handleBlur}
-                  {...props}
-                />
-              </View>
-            </TouchableWithoutFeedback>
-            {error ? (
-              <Text style={[styles.errorText, errorStyle]}>{error}</Text>
-            ) : null}
+            {label}
+          </Text>
+        ) : null}
+        <TouchableWithoutFeedback onPress={() => inputRef.current?.focus()}>
+          <View>
+            <RNTextInput
+              ref={inputRef}
+              style={[
+                styles.inputBase,
+                inputVariantStyle,
+                disabled ? styles.inputDisabled : null,
+                error ? styles.inputError : null,
+                style,
+              ]}
+              placeholderTextColor={theme.colors.textSecondary}
+              editable={!disabled}
+              value={value}
+              onChangeText={onChangeText}
+              onBlur={handleBlur}
+              {...props}
+            />
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+        {error ? (
+          <Text style={[styles.errorText, errorStyle]}>{error}</Text>
+        ) : null}
+      </View>
     );
   }
 );
@@ -126,9 +116,6 @@ export const TextField = React.forwardRef<RNTextInput, TextFieldProps>(
 TextField.displayName = "TextField";
 
 const styles = StyleSheet.create((theme) => ({
-  touchableContainer: {
-    flex: 1,
-  },
   container: {
     minWidth: "100%",
   },

@@ -5,18 +5,7 @@ import axios, {
   AxiosResponse,
 } from "axios";
 
-/**
- * In-memory auth token store. Replace with SecureStore/Keystore as needed.
- */
-let authToken: string | null = null;
-
-export function setAuthToken(token: string | null): void {
-  authToken = token;
-}
-
-export function getAuthToken(): string | null {
-  return authToken;
-}
+import { getAccessToken } from "../utils/storage";
 
 export type ApiError = {
   message: string;
@@ -59,7 +48,7 @@ export const httpClient: AxiosInstance = axios.create({
 });
 
 httpClient.interceptors.request.use(async (config) => {
-  const token = getAuthToken();
+  const token = getAccessToken();
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
