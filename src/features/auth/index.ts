@@ -4,5 +4,4 @@ export * from "./api/query";
 export * from "./api/mutationFn";
 export * from "./api/endpoints";
 export * from "./hooks";
-export * from "./types";
 export * from "./context";

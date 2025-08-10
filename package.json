@@ -9,7 +9,7 @@
     "ios": "expo run:ios"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.9.0",
+    "@hookform/resolvers": "5.1.0",
     "@expo-google-fonts/roboto": "^0.4.0",
     "@expo/metro-runtime": "~5.0.4",
     "@expo/vector-icons": "^14.1.0",

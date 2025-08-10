@@ -1,14 +1,23 @@
 import { createStaticNavigation } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationOptions,
+} from "@react-navigation/native-stack";
+import { Platform } from "react-native";
 import { LoginScreen, RegisterScreen } from "@/features/auth";
 
 const AuthStack = createNativeStackNavigator({
+  screenOptions: {
+    headerShown: false,
+    animation: Platform.select<NativeStackNavigationOptions["animation"]>({
+      ios: "fade",
+      android: "fade",
+      default: "fade",
+    }),
+  },
   screens: {
-    Login: { screen: LoginScreen, options: { headerShown: false } },
-    Register: {
-      screen: RegisterScreen,
-      options: { headerShown: false },
-    },
+    Login: { screen: LoginScreen },
+    Register: { screen: RegisterScreen },
   },
 });
 

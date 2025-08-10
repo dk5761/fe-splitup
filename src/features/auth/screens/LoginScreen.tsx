@@ -10,7 +10,7 @@ import type { LoginRequest } from "../types";
 import { useAuth } from "../hooks";
 
 const loginSchema = z.object({
-  email: z.string().email("Invalid email"),
+  email: z.string().min(1, "Email is required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
@@ -19,17 +19,23 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export const LoginScreen: React.FC = () => {
   const { signIn } = useAuth();
   const { mutateAsync, isPending } = useLoginMutation();
-  const { control, handleSubmit, setValue, formState } =
-    useForm<LoginFormValues>({
-      resolver: zodResolver(loginSchema),
-      defaultValues: { email: "", password: "" },
-      mode: "onChange",
-    });
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: "", password: "" },
+    mode: "onChange",
+  });
 
   const onSubmit = async (values: LoginFormValues) => {
     const res = await mutateAsync(values as LoginRequest);
     await signIn(res);
   };
+
+  console.log(errors);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
