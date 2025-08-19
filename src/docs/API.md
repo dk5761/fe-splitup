@@ -1,419 +1,522 @@
-## SplitUp API
+# SplitUp API Contract
 
-### Base URL
+This document outlines the API contract for the SplitUp backend.
 
-- Public: `/health`
-- API: `/api/v1/*`
-- Auth: Bearer JWT in header `Authorization: Bearer <token>`
+**Base URL:** `/api/v1`
 
-### Conventions
-
-- IDs: UUID strings
-- Amounts: strings with 2 decimals, e.g., `"12.30"`
-- Timestamps: ISO 8601
-- Errors: `{ "error": "<message>" }`
+**Authentication:** All protected routes require a `Authorization` header with a Bearer token: `Authorization: Bearer <access_token>`.
 
 ---
 
-## Auth
+## Auth Module
 
-### POST `/api/v1/auth/register`
+**Base Path:** `/api/v1/auth`
 
-- Body:
+### 1. Register
 
-```json
-{ "username": "john", "email": "john@example.com", "password": "secret123" }
-```
+- **Description:** Registers a new user.
+- **Endpoint:** `POST /register`
+- **Request Body:**
+  ```json
+  {
+    "name": "string",
+    "username": "string",
+    "email": "string",
+    "password": "string"
+  }
+  ```
+- **Response Body:**
+  ```json
+  {
+    "user": {
+      "id": "uuid",
+      "name": "string",
+      "username": "string",
+      "email": "string"
+    },
+    "access_token": "string",
+    "refresh_token": "string"
+  }
+  ```
 
-- 201:
+### 2. Login
 
-```json
-{
-  "message": "User registered successfully",
-  "user": {
-    "id": "...",
-    "username": "john",
-    "email": "john@example.com",
-    "created_at": "...",
-    "updated_at": "..."
-  },
-  "token": "<jwt>"
-}
-```
+- **Description:** Logs in a user.
+- **Endpoint:** `POST /login`
+- **Request Body:**
+  ```json
+  {
+    "email": "string",
+    "password": "string"
+  }
+  ```
+- **Response Body:**
+  ```json
+  {
+    "user": {
+      "id": "uuid",
+      "name": "string",
+      "username": "string",
+      "email": "string"
+    },
+    "access_token": "string",
+    "refresh_token": "string"
+  }
+  ```
 
-### POST `/api/v1/auth/login`
+### 3. Refresh Token
 
-- Body:
+- **Description:** Refreshes an access token.
+- **Endpoint:** `POST /refresh`
+- **Request Body:**
+  ```json
+  {
+    "refresh_token": "string"
+  }
+  ```
+- **Response Body:**
+  ```json
+  {
+    "access_token": "string",
+    "refresh_token": "string"
+  }
+  ```
 
-```json
-{ "email": "john@example.com", "password": "secret123" }
-```
+### 4. Logout
 
-- 200:
+- **Description:** Logs out a user by invalidating the refresh token.
+- **Endpoint:** `POST /logout`
+- **Request Body:**
+  ```json
+  {
+    "refresh_token": "string"
+  }
+  ```
+- **Response:** `200 OK` with `{"message": "Logged out successfully."}`
 
-```json
-{
-  "message": "Login successful",
-  "user": {
-    "id": "...",
-    "username": "john",
-    "email": "john@example.com",
-    "created_at": "...",
-    "updated_at": "..."
-  },
-  "token": "<jwt>"
-}
-```
+### 5. Check Username Exists
 
-### GET `/api/v1/auth/check-username?username=...`
+- **Description:** Checks if a username is already taken.
+- **Endpoint:** `GET /check-username?username={username}`
+- **Response:** `200 OK` with `{"exists": boolean}`
 
-- 200:
+### 6. Forgot Password
 
-```json
-{ "exists": true }
-```
+- **Description:** Initiates the password reset process.
+- **Endpoint:** `POST /forgot-password`
+- **Request Body:**
+  ```json
+  {
+    "email": "string"
+  }
+  ```
+- **Response:** `200 OK` with `{"message": "If a user with that email exists, a password reset link has been sent."}`
 
----
+### 7. Reset Password
 
-## User (auth required)
-
-### GET `/api/v1/user/me`
-
-- 200 → `UserResponse`
-
-### GET `/api/v1/user/search?q=...`
-
-- Query: `limit` (default 20, max 100), `offset` (default 0)
-- 200 → `UserResponse[]`
-
----
-
-## Group (auth required)
-
-### POST `/api/v1/group/create`
-
-- Body:
-
-```json
-{ "name": "Trip" }
-```
-
-- 201 → `GroupResponse`
-- Note: Creator is auto-added as `owner`.
-
-### GET `/api/v1/group/get-all`
-
-- Uses authenticated user (optional fallback `?user_id=...`). Pagination: `limit` (default 20, max 100), `offset` (default 0)
-- 200 → `GroupResponse[]` (groups the user is a member of)
-
-### GET `/api/v1/group/get-by-id?group_id=...`
-
-- 200 → `GroupResponse`
-
-### GET `/api/v1/group/get-users?group_id=...`
-
-- Pagination: `limit` (default 20, max 100), `offset` (default 0)
-- 200 → `UserResponse[]`
-
-### GET `/api/v1/group/details?group_id=...`
-
-- 200 → `GroupDetailsResponse` (group + members + expenses list)
-
-### PATCH `/api/v1/group/update`
-
-- Body:
-
-```json
-{ "name": "New Name", "group_id": "<uuid>" }
-```
-
-- 200 → `GroupResponse`
-
-### DELETE `/api/v1/group/delete?group_id=...`
-
-- 200 → `{ "message": "Group deleted successfully" }`
-
-### PUT `/api/v1/group/add-user`
-
-- Body:
-
-```json
-{ "user_id": "<uuid>", "group_id": "<uuid>", "role": "owner|admin|member" }
-```
-
-- 200 → `{ "message": "User added to group successfully" }`
-
-### PUT `/api/v1/group/remove-user`
-
-- Body:
-
-```json
-{ "user_id": "<uuid>", "group_id": "<uuid>" }
-```
-
-- 200 → `{ "message": "User removed from group successfully" }`
-
-### PUT `/api/v1/group/update-user-role`
-
-- Body:
-
-```json
-{ "user_id": "<uuid>", "group_id": "<uuid>", "role": "owner|admin|member" }
-```
-
-- 200 → `{ "message": "User role updated successfully" }`
+- **Description:** Resets the password using a token.
+- **Endpoint:** `POST /reset-password`
+- **Request Body:**
+  ```json
+  {
+    "token": "string",
+    "new_password": "string"
+  }
+  ```
+- **Response:** `200 OK` with `{"message": "Password has been reset successfully."}`
 
 ---
 
-## Expense (auth required; nested under group)
+## User Module
 
-Base path: `/api/v1/group/:groupID/expenses`
+**Base Path:** `/api/v1/user` (Protected)
 
-### POST ``
+### 1. Get Profile
 
-- Body (CreateExpenseRequest):
+- **Description:** Gets the current user's profile.
+- **Endpoint:** `GET /me`
+- **Response Body:**
+  ```json
+  {
+    "id": "uuid",
+    "name": "string",
+    "username": "string",
+    "email": "string"
+  }
+  ```
 
-```json
-{
-  "group_id": "<uuid>",
-  "description": "Dinner",
-  "amount": "120.00",
-  "paid_by_user_id": "<uuid>",
-  "expense_date": "2025-06-10T12:00:00Z",
-  "split_type": "EQUAL",
-  "participants": ["<uuid>", "<uuid>"]
-}
-```
+### 2. Update Profile
 
-- Behavior: If `participants` omitted, auto-uses all current group members. Payer must be among participants.
-- 201 → `ExpenseResponse`
+- **Description:** Updates the current user's profile.
+- **Endpoint:** `PATCH /me`
+- **Request Body:**
+  ```json
+  {
+    "name": "string",
+    "username": "string",
+    "email": "string"
+  }
+  ```
+- **Response Body:**
+  ```json
+  {
+    "id": "uuid",
+    "name": "string",
+    "username": "string",
+    "email": "string"
+  }
+  ```
 
-### GET ``
+### 3. Change Password
 
-- Pagination: `limit` (default 20, max 100), `offset` (default 0)
-- 200 → `ExpenseResponse[]` (splits omitted in list for performance)
+- **Description:** Changes the current user's password.
+- **Endpoint:** `POST /change-password`
+- **Request Body:**
+  ```json
+  {
+    "old_password": "string",
+    "new_password": "string"
+  }
+  ```
+- **Response:** `200 OK` with `{"message": "Password changed successfully"}`
 
-### GET `/:expenseID`
+### 4. Delete Account
 
-- 200 → `ExpenseResponse`
+- **Description:** Deletes the current user's account.
+- **Endpoint:** `DELETE /me`
+- **Response:** `200 OK` with `{"message": "Account deleted successfully"}`
 
-### PUT `/:expenseID`
+### 5. Search Users
 
-- Body (UpdateExpenseRequest): any subset of
-
-```json
-{
-  "description": "...",
-  "amount": "12.34",
-  "expense_date": "2025-06-10T12:00:00Z",
-  "paid_by_user_id": "<uuid>",
-  "split_type": "EQUAL|EXACT_AMOUNTS|PERCENTAGE",
-  "participants": ["<uuid>", "<uuid>"]
-}
-```
-
-- 200 → `ExpenseResponse`
-
-### DELETE `/:expenseID`
-
-- 200 → `{ "message": "Expense deleted successfully" }`
-- Permission: only the expense creator can delete.
-
----
-
-## Receipt (GenAI; auth required)
-
-### POST `/api/v1/receipt/analyze`
-
-- Content-Type options:
-  - `multipart/form-data`: field `file` (image/jpeg|png)
-  - `application/json`:
-
-```json
-{ "image_b64": "<base64>", "mime_type": "image/jpeg" }
-```
-
-- 202 Accepted → `ReceiptResponse`
-
-```json
-{
-  "id": "<uuid>",
-  "status": "queued",
-  "suggestion": null,
-  "error": null,
-  "created_at": "<iso>",
-  "updated_at": "<iso>"
-}
-```
-
-- This enqueues an async analysis job. Use the returned `id` to poll or stream status.
-
-### GET `/api/v1/receipt/:id`
-
-- 200 → `ReceiptResponse` (current status; on success contains `suggestion`).
-
-Example (succeeded):
-
-```json
-{
-  "id": "<uuid>",
-  "status": "succeeded",
-  "suggestion": {
-    "amount": "12.34",
-    "description": "Dinner",
-    "expense_date": "<iso>",
-    "merchant": "Restaurant"
-  },
-  "error": null,
-  "created_at": "<iso>",
-  "updated_at": "<iso>"
-}
-```
-
-Example (failed):
-
-```json
-{
-  "id": "<uuid>",
-  "status": "failed",
-  "suggestion": null,
-  "error": "<message>",
-  "created_at": "<iso>",
-  "updated_at": "<iso>"
-}
-```
-
-### GET `/api/v1/receipt/:id/stream` (SSE)
-
-- Content-Type: `text/event-stream`
-- Emits `status` events with `ReceiptResponse` every ~2s until `succeeded` or `failed`.
+- **Description:** Searches for users by username or email.
+- **Endpoint:** `GET /search?q={query}&page={page}&limit={limit}`
+- **Response Body:**
+  ```json
+  {
+    "data": [
+      {
+        "id": "uuid",
+        "name": "string",
+        "username": "string",
+        "email": "string"
+      }
+    ],
+    "total": "int",
+    "limit": "int",
+    "offset": "int"
+  }
+  ```
 
 ---
 
-## Health
+## Friend Module
 
-### GET `/health`
+**Base Path:** `/api/v1/friend` (Protected)
 
-- 200 → `{ "status": "UP", "message": "SplitUp service is healthy" }`
+### 1. Send Friend Request
 
----
+- **Description:** Sends a friend request to another user.
+- **Endpoint:** `POST /requests`
+- **Request Body:**
+  ```json
+  {
+    "addresseeId": "uuid"
+  }
+  ```
+- **Response:** `200 OK` with `{"message": "Friend request sent."}`
 
-## Models
+### 2. Get Pending Friend Requests
 
-### UserResponse
+- **Description:** Gets all pending friend requests for the current user.
+- **Endpoint:** `GET /requests`
+- **Response Body:**
+  ```json
+  [
+    {
+      "user": {
+        "id": "uuid",
+        "name": "string",
+        "username": "string",
+        "email": "string"
+      },
+      "sentAt": "timestamp",
+      "direction": "string" // "incoming" or "outgoing"
+    }
+  ]
+  ```
 
-```json
-{
-  "id": "<uuid>",
-  "username": "...",
-  "email": "...",
-  "created_at": "<iso>",
-  "updated_at": "<iso>"
-}
-```
+### 3. Respond to Friend Request
 
-### GroupResponse
+- **Description:** Accepts or declines a friend request.
+- **Endpoint:** `PUT /requests/{requesterId}`
+- **Request Body:**
+  ```json
+  {
+    "action": "string" // "accept" or "decline"
+  }
+  ```
+- **Response:** `200 OK` with `{"message": "Friend request {action}ed."}`
 
-```json
-{
-  "id": "<uuid>",
-  "name": "...",
-  "created_by": "<uuid>",
-  "created_at": "<iso>",
-  "updated_at": "<iso>"
-}
-```
+### 4. List Friends
 
-### GroupDetailsResponse
+- **Description:** Lists all friends of the current user.
+- **Endpoint:** `GET`
+- **Response Body:**
+  ```json
+  {
+    "data": [
+      {
+        "id": "uuid",
+        "name": "string",
+        "username": "string",
+        "email": "string"
+      }
+    ],
+    "total": "int",
+    "limit": "int",
+    "offset": "int"
+  }
+  ```
 
-```json
-{ "group": GroupResponse, "members": [UserResponse], "expenses": [ExpenseListItemResponse] }
-```
+### 5. Remove Friend
 
-### ExpenseResponse
+- **Description:** Removes a friend.
+- **Endpoint:** `DELETE /{friendId}`
+- **Response:** `200 OK` with `{"message": "Friend removed."}`
 
-```json
-{
-  "id": "<uuid>",
-  "group_id": "<uuid>",
-  "paid_by_user_id": "<uuid>",
-  "paid_by_username": "...",
-  "amount": "12.34",
-  "description": "...",
-  "expense_date": "<iso>",
-  "split_type": "EQUAL|EXACT_AMOUNTS|PERCENTAGE",
-  "receipt_image_key": null,
-  "created_at": "<iso>",
-  "updated_at": "<iso>",
-  "splits": [ExpenseSplitResponse]
-}
-```
+### 6. Get Friend Expenses
 
-### ExpenseSplitResponse
-
-```json
-{
-  "id": "<uuid>",
-  "expense_id": "<uuid>",
-  "user_id": "<uuid>",
-  "participant_username": "...",
-  "share_amount": "4.11",
-  "created_at": "<iso>"
-}
-```
-
-### ExpenseListItemResponse
-
-```json
-{
-  "id": "<uuid>",
-  "group_id": "<uuid>",
-  "paid_by_user_id": "<uuid>",
-  "paid_by_username": "...",
-  "description": "...",
-  "amount": "12.34",
-  "expense_date": "<iso>",
-  "split_type": "EQUAL",
-  "created_at": "<iso>"
-}
-```
-
-### ReceiptResponse
-
-```json
-{
-  "id": "<uuid>",
-  "status": "queued|processing|succeeded|failed",
-  "suggestion": {
-    "amount": "12.34",
-    "description": "Dinner",
-    "expense_date": "<iso>",
-    "merchant": "Restaurant"
-  },
-  "error": "<message>|null",
-  "created_at": "<iso>",
-  "updated_at": "<iso>"
-}
-```
+- **Description:** Gets expenses between the current user and a friend.
+- **Endpoint:** `GET /{friendId}/expenses?page={page}&limit={limit}`
+- **Response Body:**
+  ```json
+  // Paginated list of expenses
+  ```
 
 ---
 
-## Auth header example
+## Group Module
 
-```
-Authorization: Bearer <jwt>
-```
+**Base Path:** `/api/v1/groups` (Protected)
 
-## Common status codes
+### 1. Create Group
 
-- 200 OK, 201 Created, 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 409 Conflict
+- **Description:** Creates a new group.
+- **Endpoint:** `POST`
+- **Request Body:**
+  ```json
+  {
+    "name": "string",
+    "members": [
+      {
+        "user_id": "uuid",
+        "role": "string" // "admin" or "member"
+      }
+    ]
+  }
+  ```
+- **Response Body:**
+  ```json
+  // Group details
+  ```
+
+### 2. List Groups
+
+- **Description:** Lists all groups the current user is a member of.
+- **Endpoint:** `GET?page={page}&limit={limit}`
+- **Response Body:**
+  ```json
+  // Paginated list of groups
+  ```
+
+### 3. Get Group By ID
+
+- **Description:** Gets the details of a specific group.
+- **Endpoint:** `GET /{groupId}`
+- **Response Body:**
+  ```json
+  // Group details
+  ```
+
+### 4. Update Group Name
+
+- **Description:** Updates the name of a group.
+- **Endpoint:** `PUT /{groupId}`
+- **Request Body:**
+  ```json
+  {
+    "name": "string"
+  }
+  ```
+- **Response:** `200 OK` with `{"message": "Group name updated successfully"}`
+
+### 5. Update Group
+
+- **Description:** Updates a group (add/remove members).
+- **Endpoint:** `PATCH /{groupId}`
+- **Request Body:**
+  ```json
+  {
+    "name": "string",
+    "addMembers": ["uuid"],
+    "removeMembers": ["uuid"]
+  }
+  ```
+- **Response:** `200 OK` with `{"message": "Group updated successfully"}`
+
+### 6. Delete Group
+
+- **Description:** Deletes a group.
+- **Endpoint:** `DELETE /{groupId}`
+- **Response:** `204 No Content`
+
+### 7. Add Members to Group
+
+- **Description:** Adds members to a group.
+- **Endpoint:** `POST /{groupId}/members`
+- **Request Body:**
+  ```json
+  {
+    "user_ids": ["uuid"]
+  }
+  ```
+- **Response:** `200 OK` with `{"message": "Members added successfully"}`
+
+### 8. Get Group Members
+
+- **Description:** Gets the members of a group.
+- **Endpoint:** `GET /{groupId}/members?page={page}&limit={limit}&role={role}`
+- **Response Body:**
+  ```json
+  // Paginated list of group members
+  ```
+
+### 9. Remove Member from Group
+
+- **Description:** Removes a member from a group.
+- **Endpoint:** `DELETE /{groupId}/members/{userId}`
+- **Response:** `204 No Content`
+
+### 10. Get Group Expenses
+
+- **Description:** Gets the expenses for a specific group.
+- **Endpoint:** `GET /{groupId}/expenses?page={page}&limit={limit}`
+- **Response Body:**
+  ```json
+  // Paginated list of expenses
+  ```
 
 ---
 
-## Typical flows
+## Expense Module
 
-1. Register/Login → store `token`
-2. Create Group → add members
-3. (Optional) Analyze receipt to prefill fields → Create Expense
-4. List Group Expenses or fetch Group Details → render
-5. Delete Expense (creator only)
+**Base Path:** `/api/v1/expenses` (Protected)
+
+### 1. Create Expense
+
+- **Description:** Creates a new expense.
+- **Endpoint:** `POST`
+- **Request Body:**
+  ```json
+  {
+    "description": "string",
+    "total_amount": "decimal",
+    "group_id": "uuid", // optional
+    "expense_date": "timestamp",
+    "split_type": "string", // "equal", "exact", "percentage"
+    "participants": [
+      {
+        "user_id": "uuid",
+        "share_amount": "decimal" // required for "exact" and "percentage"
+      }
+    ]
+  }
+  ```
+- **Response Body:**
+  ```json
+  // Detailed expense response
+  ```
+
+### 2. Get Balances
+
+- **Description:** Gets the user's balances with friends.
+- **Endpoint:** `GET /balances`
+- **Response Body:**
+  ```json
+  {
+    "total_you_owe": "decimal",
+    "total_you_are_owed": "decimal",
+    "balances": [
+      {
+        "friend_id": "uuid",
+        "friend_name": "string",
+        "amount": "decimal"
+      }
+    ]
+  }
+  ```
+
+### 3. Record Payment
+
+- **Description:** Records a payment between users.
+- **Endpoint:** `POST /payments`
+- **Request Body:**
+  ```json
+  {
+    "to_user_id": "uuid",
+    "amount": "decimal",
+    "currency": "string",
+    "payment_date": "timestamp"
+  }
+  ```
+- **Response Body:**
+  ```json
+  // Updated balance response
+  ```
+
+### 4. Get Expense By ID
+
+- **Description:** Gets the details of a specific expense.
+- **Endpoint:** `GET /{id}`
+- **Response Body:**
+  ```json
+  // Detailed expense response
+  ```
+
+### 5. Update Expense
+
+- **Description:** Updates an existing expense.
+- **Endpoint:** `PUT /{id}`
+- **Request Body:**
+  ```json
+  {
+    "description": "string",
+    "total_amount": "decimal",
+    "split_type": "string",
+    "participants": [
+      {
+        "user_id": "uuid",
+        "share_amount": "decimal"
+      }
+    ]
+  }
+  ```
+- **Response Body:**
+  ```json
+  // Detailed expense response
+  ```
+
+### 6. Delete Expense
+
+- **Description:** Deletes an expense.
+- **Endpoint:** `DELETE /{id}`
+- **Response:** `204 No Content`
+
+### 7. Get Payment History
+
+- **Description:** Gets the payment history with a friend.
+- **Endpoint:** `GET /history/{friendId}?page={page}&limit={limit}`
+- **Response Body:**
+  ```json
+  // Paginated list of payments
+  ```
