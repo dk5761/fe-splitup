@@ -8,6 +8,7 @@ export const mmkv = new MMKV({ id: "app-storage", encryptionKey });
 
 export const storageKeys = {
   authToken: "auth.token",
+  authRefreshToken: "auth.refreshToken",
   authUser: "auth.user",
 } as const;
 
@@ -52,4 +53,16 @@ export function setAccessToken(token: string | null): void {
     return;
   }
   setString(storageKeys.authToken, token);
+}
+
+export function getRefreshToken(): string | null {
+  return getString(storageKeys.authRefreshToken) ?? null;
+}
+
+export function setRefreshToken(token: string | null): void {
+  if (!token) {
+    deleteKey(storageKeys.authRefreshToken);
+    return;
+  }
+  setString(storageKeys.authRefreshToken, token);
 }

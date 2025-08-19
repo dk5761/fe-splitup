@@ -7,6 +7,8 @@ import {
   getObject,
   setObject,
   deleteKey,
+  getRefreshToken,
+  setRefreshToken,
 } from "@/shared/utils/storage";
 import { queryClient } from "@/shared/query/client";
 import { appToast } from "@/components/toast";
@@ -15,6 +17,7 @@ export interface AuthState {
   isAuthenticated: boolean;
   user: AuthUser | null;
   token: string | null;
+  refreshToken: string | null;
   initializing: boolean;
 }
 
@@ -29,11 +32,13 @@ const AuthContext = React.createContext<AuthContextValue | undefined>(
 
 function loadInitialAuthState(): AuthState {
   const token = getAccessToken();
+  const refreshToken = getRefreshToken();
   const user = getObject<AuthUser>(storageKeys.authUser) ?? null;
   return {
     isAuthenticated: !!token,
     user,
     token,
+    refreshToken,
     initializing: false,
   };
 }
@@ -47,11 +52,17 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
 
   const signIn = React.useCallback(async (payload: AuthResponse) => {
     setAccessToken(payload.token);
+    // store refresh token if provided
+    if ((payload as any).refreshToken) {
+      // @ts-ignore
+      setRefreshToken((payload as any).refreshToken);
+    }
     setObject(storageKeys.authUser, payload.user);
     setState({
       isAuthenticated: true,
       user: payload.user,
       token: payload.token,
+      refreshToken: (payload as any).refreshToken ?? null,
       initializing: false,
     });
     await queryClient.invalidateQueries();
@@ -61,10 +72,12 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
   const signOut = React.useCallback(async () => {
     setAccessToken(null);
     deleteKey(storageKeys.authUser);
+    deleteKey((storageKeys as any).authRefreshToken);
     setState({
       isAuthenticated: false,
       user: null,
       token: null,
+      refreshToken: null,
       initializing: false,
     });
     await queryClient.clear();

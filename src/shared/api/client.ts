@@ -7,7 +7,16 @@ import axios, {
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 
-import { getAccessToken } from "../utils/storage";
+import {
+  getAccessToken,
+  getRefreshToken,
+  deleteKey,
+  storageKeys,
+  setAccessToken,
+  setRefreshToken,
+} from "../utils/storage";
+import { authEndpoints } from "@/features/auth/api/endpoints";
+import { appToast } from "@/components/toast";
 
 export type ApiError = {
   message: string;
@@ -60,7 +69,48 @@ httpClient.interceptors.request.use(async (config) => {
 
 httpClient.interceptors.response.use(
   (response: AxiosResponse) => response,
-  (error) => Promise.reject(toApiError(error))
+  async (error) => {
+    const originalRequest = error?.config as any;
+    const status = error?.response?.status;
+
+    if (status === 401 && !originalRequest?._retry) {
+      originalRequest._retry = true;
+      const currentRefreshToken = getRefreshToken();
+      if (!currentRefreshToken) {
+        // No refresh token; force sign-out
+        deleteKey(storageKeys.authToken);
+        deleteKey(storageKeys.authRefreshToken);
+        appToast.warning("Session expired. Please log in again.");
+        return Promise.reject(toApiError(error));
+      }
+
+      // Perform refresh token request
+      try {
+        const res = await httpClient.post<any>(authEndpoints.refresh, {
+          refresh_token: currentRefreshToken,
+        });
+        const newToken = res?.data?.token ?? res?.data?.access_token;
+        const newRefresh = res?.data?.refresh_token ?? res?.data?.refreshToken;
+        if (newToken) {
+          setAccessToken(newToken);
+        }
+        if (newRefresh) {
+          setRefreshToken(newRefresh);
+        }
+        // Retry original request with new token
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return httpClient(originalRequest);
+      } catch (refreshError) {
+        // Refresh failed
+        deleteKey(storageKeys.authToken);
+        deleteKey(storageKeys.authRefreshToken);
+        appToast.error("Session expired. Please log in again.");
+        return Promise.reject(toApiError(refreshError));
+      }
+    }
+
+    return Promise.reject(toApiError(error));
+  }
 );
 
 export async function apiGet<T>(
