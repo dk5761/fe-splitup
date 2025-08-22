@@ -6,15 +6,16 @@ const CENTER_BUTTON_SIZE = 55;
 
 export const styles = StyleSheet.create((theme) => ({
   container: {
-    position: "absolute",
+    // position: "absolute", // Remove absolute positioning
     // The 'bottom' value will now be set dynamically in the component
-    left: 20,
-    right: 20,
-    paddingBottom: 10,
+
     backgroundColor: "transparent",
-    paddingTop: 5,
+
+    paddingHorizontal: 20,
     borderTopWidth: 1,
     borderTopColor: theme.colors.border,
+    height: 100,
+    flexDirection: "row",
   },
   pillContainer: {
     flexDirection: "row",

@@ -1,28 +1,33 @@
-import { Pressable, StyleSheet, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { Button } from "@/components/ui/button";
+import { Ionicons } from "@expo/vector-icons";
+import { useUnistyles } from "react-native-unistyles";
 
 export const CreateGroupButton = () => {
+  const { theme } = useUnistyles();
   return (
-    <Pressable style={styles.button}>
-      <Text style={styles.plus}>+</Text>
-    </Pressable>
+    <View style={styles.container}>
+      <Button variant="primary" style={styles.button}>
+        <Ionicons name="add" size={30} color={theme.colors.primaryOn} />
+      </Button>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
+  container: {
     position: "absolute",
-    bottom: 30,
+    bottom: 20,
     right: 20,
+    borderRadius: 9999,
+    overflow: "hidden",
+  },
+  button: {
     width: 60,
     height: 60,
-    borderRadius: 30,
-    backgroundColor: "#FFA500",
+    borderRadius: 9999,
     justifyContent: "center",
     alignItems: "center",
-    elevation: 8,
-  },
-  plus: {
-    fontSize: 30,
-    color: "white",
+    padding: 0,
   },
 });

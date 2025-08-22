@@ -35,82 +35,79 @@ export const CustomTabBar = ({
   // FIX: Create a dynamic style for the container that respects the bottom inset
   const containerStyle = {
     ...styles.container,
-    // Add the safe area bottom inset to our desired margin.
-    // Use a fallback for devices with no bottom inset.
-    bottom: insets.bottom > 0 ? insets.bottom - 10 : 20,
+    paddingBottom: insets.bottom,
+    backgroundColor: theme.colors.surface,
   };
 
   return (
     // Apply the dynamic style
     <View style={containerStyle}>
-      <View style={styles.pillContainer}>
-        {state.routes.map((route, index) => {
-          const { options } = descriptors[route.key];
-          const label =
-            options.tabBarLabel?.toString() ?? options.title ?? route.name;
-          const isFocused = state.index === index;
+      {state.routes.map((route, index) => {
+        const { options } = descriptors[route.key];
+        const label =
+          options.tabBarLabel?.toString() ?? options.title ?? route.name;
+        const isFocused = state.index === index;
 
-          const onPress = () => {
-            const event = navigation.emit({
-              type: "tabPress",
-              target: route.key,
-              canPreventDefault: true,
-            });
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name);
-            }
-          };
-
-          const onLongPress = () => {
-            navigation.emit({ type: "tabLongPress", target: route.key });
-          };
-
-          // Check if iconMap has an entry for the current route
-          const iconInfo = iconMap[route.name as keyof typeof iconMap];
-          const iconName = iconInfo
-            ? isFocused
-              ? iconInfo.focused
-              : iconInfo.unfocused
-            : "alert-circle"; // Fallback icon
-
-          styles.useVariants({ active: isFocused });
-
-          if (index === middleRouteIndex) {
-            return (
-              <View key={route.key} style={styles.tabButton}>
-                <Pressable
-                  style={styles.centerActionButton}
-                  onPress={onCenterButtonPress}
-                >
-                  <Ionicons
-                    name="scan-outline"
-                    size={32}
-                    color={theme.colors.primaryOn}
-                  />
-                </Pressable>
-              </View>
-            );
+        const onPress = () => {
+          const event = navigation.emit({
+            type: "tabPress",
+            target: route.key,
+            canPreventDefault: true,
+          });
+          if (!isFocused && !event.defaultPrevented) {
+            navigation.navigate(route.name);
           }
+        };
 
+        const onLongPress = () => {
+          navigation.emit({ type: "tabLongPress", target: route.key });
+        };
+
+        // Check if iconMap has an entry for the current route
+        const iconInfo = iconMap[route.name as keyof typeof iconMap];
+        const iconName = iconInfo
+          ? isFocused
+            ? iconInfo.focused
+            : iconInfo.unfocused
+          : "alert-circle"; // Fallback icon
+
+        styles.useVariants({ active: isFocused });
+
+        if (index === middleRouteIndex) {
           return (
-            <Pressable
-              key={route.key}
-              onPress={onPress}
-              onLongPress={onLongPress}
-              style={styles.tabButton}
-            >
-              <Ionicons
-                name={iconName as any}
-                size={24}
-                color={
-                  isFocused ? theme.colors.primary : theme.colors.textSecondary
-                }
-              />
-              <Text style={styles.tabLabel}>{label}</Text>
-            </Pressable>
+            <View key={route.key} style={styles.tabButton}>
+              <Pressable
+                style={styles.centerActionButton}
+                onPress={onCenterButtonPress}
+              >
+                <Ionicons
+                  name="scan-outline"
+                  size={32}
+                  color={theme.colors.primaryOn}
+                />
+              </Pressable>
+            </View>
           );
-        })}
-      </View>
+        }
+
+        return (
+          <Pressable
+            key={route.key}
+            onPress={onPress}
+            onLongPress={onLongPress}
+            style={styles.tabButton}
+          >
+            <Ionicons
+              name={iconName as any}
+              size={24}
+              color={
+                isFocused ? theme.colors.primary : theme.colors.textSecondary
+              }
+            />
+            <Text style={styles.tabLabel}>{label}</Text>
+          </Pressable>
+        );
+      })}
     </View>
   );
 };
