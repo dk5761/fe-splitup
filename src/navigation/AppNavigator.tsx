@@ -8,70 +8,17 @@ import {
   NativeStackNavigationOptions,
 } from "@react-navigation/native-stack";
 import { Platform, useColorScheme } from "react-native";
-import { ExampleScreen } from "@/features/example/screens";
 import { useAuthContext } from "@/features/auth";
-import {
-  RootStackParamList,
-  MainStackParamList,
-  AuthStackParamList,
-} from "./types";
+import { RootStackParamList, AuthStackParamList } from "./types";
 import {
   LoginScreen,
   WelcomeScreen,
   SignUpScreen,
 } from "@/features/auth/screens";
+import { MainStackNavigator } from "./MainStack";
+import { AuthStack } from "./AuthStack";
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
-const MainStack = createNativeStackNavigator<MainStackParamList>();
-const AuthStackNavigator = createNativeStackNavigator<AuthStackParamList>();
-
-function MainStackNavigator() {
-  return (
-    <MainStack.Navigator
-      screenOptions={{
-        headerShown: true,
-        animation: Platform.select<NativeStackNavigationOptions["animation"]>({
-          ios: "fade",
-          android: "fade",
-          default: "fade",
-        }),
-      }}
-    >
-      <MainStack.Screen
-        name="Home"
-        component={ExampleScreen}
-        options={{ title: "Components" }}
-      />
-    </MainStack.Navigator>
-  );
-}
-
-function AuthStack() {
-  return (
-    <AuthStackNavigator.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-      initialRouteName="Welcome"
-    >
-      <AuthStackNavigator.Screen
-        name="Welcome"
-        component={WelcomeScreen}
-        options={{ title: "Welcome" }}
-      />
-      <AuthStackNavigator.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ title: "Login" }}
-      />
-      <AuthStackNavigator.Screen
-        name="SignUp"
-        component={SignUpScreen}
-        options={{ title: "Sign Up" }}
-      />
-    </AuthStackNavigator.Navigator>
-  );
-}
 
 interface AppNavigatorProps {
   linking?: any;

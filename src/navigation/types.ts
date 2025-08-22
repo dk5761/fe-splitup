@@ -7,7 +7,7 @@ export type AuthStackParamList = {
 };
 
 export type MainStackParamList = {
-  Home: undefined;
+  Tabs: undefined;
 };
 
 export type RootStackParamList = {
