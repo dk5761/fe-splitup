@@ -9,11 +9,11 @@
     "ios": "expo run:ios"
   },
   "dependencies": {
-    "@hookform/resolvers": "5.1.0",
     "@expo-google-fonts/roboto": "^0.4.0",
     "@expo/metro-runtime": "~5.0.4",
     "@expo/vector-icons": "^14.1.0",
     "@gorhom/bottom-sheet": "^5.1.8",
+    "@hookform/resolvers": "5.1.0",
     "@react-native-community/netinfo": "11.4.1",
     "@react-navigation/bottom-tabs": "^7.4.5",
     "@react-navigation/elements": "^2.6.2",
@@ -37,6 +37,7 @@
     "expo-symbols": "~0.4.5",
     "expo-system-ui": "~5.0.10",
     "expo-web-browser": "~14.2.0",
+    "lucide-react-native": "^0.541.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-hook-form": "^7.62.0",
