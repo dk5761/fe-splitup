@@ -10,7 +10,7 @@ import { Toaster } from "sonner-native";
 import { UnistylesRuntime } from "react-native-unistyles";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { AppBottomSheetProvider } from "./components";
+
 import { AuthProvider } from "@/features/auth";
 
 Asset.loadAsync([
@@ -32,34 +32,32 @@ export function App() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <AppBottomSheetProvider>
-          <QueryProvider>
-            <AuthProvider>
-              <Navigation
-                linking={{
-                  enabled: "auto",
-                  prefixes: [
-                    // Change the scheme to match your app's scheme defined in app.json
-                    "spltup://",
-                  ],
-                }}
-                onReady={() => {
-                  SplashScreen.hideAsync();
-                }}
-              />
-              <Toaster
-                position="bottom-center"
-                toastOptions={{
-                  style: {
-                    borderRadius: 12,
-                    paddingVertical: 12,
-                    paddingHorizontal: 12,
-                  },
-                }}
-              />
-            </AuthProvider>
-          </QueryProvider>
-        </AppBottomSheetProvider>
+        <QueryProvider>
+          <AuthProvider>
+            <Navigation
+              linking={{
+                enabled: "auto",
+                prefixes: [
+                  // Change the scheme to match your app's scheme defined in app.json
+                  "spltup://",
+                ],
+              }}
+              onReady={() => {
+                SplashScreen.hideAsync();
+              }}
+            />
+            <Toaster
+              position="bottom-center"
+              toastOptions={{
+                style: {
+                  borderRadius: 12,
+                  paddingVertical: 12,
+                  paddingHorizontal: 12,
+                },
+              }}
+            />
+          </AuthProvider>
+        </QueryProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );
