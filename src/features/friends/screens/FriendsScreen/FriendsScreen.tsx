@@ -11,8 +11,8 @@ import {
   View,
 } from "react-native";
 
-import { getFriendsQuery } from "../api/query";
-import { Friend } from "../types/friends.types";
+import { getFriendsQuery } from "../../api/query";
+import { Friend } from "../../types/friends.types";
 import { stylesheet as styles } from "./FriendsScreen.styles";
 
 import { SearchInput } from "@/components/ui/searchInput";

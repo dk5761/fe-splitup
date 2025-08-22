@@ -1,7 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import FriendsScreen from "@/features/friends/screens/FriendsScreen";
-import AddFriendScreen from "@/features/friends/screens/AddFriendScreen";
+import { FriendsScreen, AddFriendScreen } from "@/features/friends/screens";
 import { FriendsStackParamList } from "./types";
 import Header from "@/components/layout/header/Header";
 import { useUnistyles } from "react-native-unistyles";

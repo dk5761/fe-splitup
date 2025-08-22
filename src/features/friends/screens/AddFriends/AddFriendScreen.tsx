@@ -10,9 +10,9 @@ import {
 } from "react-native";
 import { useUnistyles } from "react-native-unistyles";
 
-import { useSendFriendRequest } from "../api/mutationFn";
-import { searchUsersQuery } from "../api/query";
-import { Friend } from "../types/friends.types";
+import { useSendFriendRequest } from "../../api/mutationFn";
+import { searchUsersQuery } from "../../api/query";
+import { Friend } from "../../types/friends.types";
 import { stylesheet as styles } from "./AddFriendScreen.styles";
 
 import { Button } from "@/components/ui/button";
