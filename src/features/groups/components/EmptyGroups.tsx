@@ -1,7 +1,11 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Button } from "@/components/ui/button";
+import { Ionicons } from "@expo/vector-icons";
+import { useUnistyles } from "react-native-unistyles";
 
 export const EmptyGroups = () => {
+  const { theme } = useUnistyles();
+
   return (
     <View style={styles.container}>
       {/* Replace with actual illustration */}
@@ -10,10 +14,11 @@ export const EmptyGroups = () => {
       <Text style={styles.subtitle}>You haven't created a group yet</Text>
       <Button
         variant="primary"
-        style={{ marginTop: 20 }}
+        style={{ marginTop: 20, gap: 10 }}
         title="Create a New Group"
       >
-        <Text>+ Create a New Group</Text>
+        <Ionicons name="add-circle" size={24} color={theme.colors.primaryOn} />
+        <Text style={styles.buttonText}> Create a New Group</Text>
       </Button>
     </View>
   );
@@ -24,6 +29,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
   illustration: {
     width: 150,
