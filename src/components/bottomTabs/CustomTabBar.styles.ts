@@ -1,5 +1,4 @@
 // src/components/CustomTabBar/CustomTabBar.styles.ts
-// NO CHANGES NEEDED HERE
 
 import { StyleSheet } from "react-native-unistyles";
 
@@ -13,13 +12,15 @@ export const styles = StyleSheet.create((theme) => ({
     right: 20,
     paddingBottom: 10,
     backgroundColor: "transparent",
+    paddingTop: 5,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.border,
   },
   pillContainer: {
     flexDirection: "row",
     height: 70,
     backgroundColor: theme.colors.surface,
     borderRadius: theme.radii.lg,
-    ...theme.shadows.s,
   },
   tabButton: {
     flex: 1,

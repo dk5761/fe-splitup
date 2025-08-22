@@ -8,6 +8,7 @@ export type AuthStackParamList = {
 
 export type MainStackParamList = {
   Tabs: undefined;
+  Home: undefined;
 };
 
 export type RootStackParamList = {

@@ -2,9 +2,9 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { CustomTabBar } from "@/components/bottomTabs/CustomTabBar";
 import { SafeAreaView, View } from "react-native";
+import { HomeScreen } from "@/features/home/screens";
 
 // --- Your Screen Components ---
-const HomeScreen = () => <View style={{ flex: 1, backgroundColor: "blue" }} />;
 const GroupsScreen = () => (
   <SafeAreaView style={{ flex: 1, backgroundColor: "green" }}>
     <View style={{ flex: 1, backgroundColor: "green" }} />
