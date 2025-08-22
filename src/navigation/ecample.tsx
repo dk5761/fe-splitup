@@ -1,135 +1,139 @@
-// screens/DropdownExampleScreen.tsx
+// screens/ExampleScreen.tsx
 
-import React, { useRef, useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, ScrollView } from "react-native";
+import React, { useState } from "react";
 import {
-  AppDropdown,
-  DropdownOption,
-} from "@/components/ui/appdropdown/AppDropdown"; // Adjust path
+  SafeAreaView,
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import { AppDropdown } from "../components/ui/appdropdown/AppDropdown"; // Adjust path
+import { Checkbox } from "../components/ui/checkbox/Checkbox";
 import { useUnistyles } from "react-native-unistyles";
-import {
-  AppBottomSheet,
-  AppBottomSheetHeader,
-  AppBottomSheetRef,
-} from "@/components/ui/appbottomsheet/AppBottomSheet";
-import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { Button, Input } from "@/components";
+import { Check } from "lucide-react-native";
 
-const currencyOptions: DropdownOption[] = [
-  { label: "US Dollar (USD)", value: "USD" },
-  { label: "Euro (EUR)", value: "EUR" },
-  { label: "Japanese Yen (JPY)", value: "JPY" },
-  { label: "British Pound (GBP)", value: "GBP" },
-  { label: "Canadian Dollar (CAD)", value: "CAD" },
+const currencyOptions = [
+  { label: "US Dollar", value: "US_DOLLAR", symbol: "USD" },
+  { label: "Euro", value: "EURO", symbol: "EUR" },
+];
+const userOptions = [
+  {
+    label: "Andrew Ainsley",
+    value: "user_1",
+    avatar: "https://i.pravatar.cc/100?u=user_1",
+  },
+  {
+    label: "Kristin Watson",
+    value: "user_2",
+    avatar: "https://i.pravatar.cc/100?u=user_2",
+  },
 ];
 
-const categoryOptions: DropdownOption[] = [
-  { label: "Groceries", value: "groceries" },
-  { label: "Utilities", value: "utilities" },
-  { label: "Transport", value: "transport" },
-  { label: "Dining Out", value: "dining" },
-  { label: "Entertainment", value: "entertainment" },
-];
-
-const DropdownExampleScreen = () => {
-  const [selectedCurrency, setSelectedCurrency] = useState<string | null>(
-    "USD"
-  );
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([
-    "groceries",
-    "transport",
-  ]);
-  const requestSheetRef = useRef<AppBottomSheetRef>(null);
+const CompoundDropdownScreen = () => {
+  const [currency, setCurrency] = useState("US_DOLLAR");
+  const [users, setUsers] = useState(["user_1"]);
   const { theme } = useUnistyles();
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: theme.colors.background,
-      padding: 20,
-    },
-    dialogActions: { flexDirection: "row", gap: 10 },
-    title: {
-      fontSize: 18,
-      fontWeight: "bold",
-      color: theme.colors.text,
-      marginBottom: 10,
-      marginTop: 20,
-    },
-    contentContainer: {
-      paddingHorizontal: theme.spacing.lg,
-      paddingBottom: theme.spacing.lg,
-    },
-  });
-
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={{ flex: 1 }}
-        keyboardShouldPersistTaps="handled"
+    <SafeAreaView style={{ flex: 1, padding: 20, gap: 30 }}>
+      {/* --- SINGLE SELECT EXAMPLE --- */}
+      <Text>Select Currency:</Text>
+      <AppDropdown
+        value={currency}
+        onChange={setCurrency}
+        options={currencyOptions}
       >
-        <Text style={styles.title}>Single Select (Currency)</Text>
-        <AppDropdown
-          placeholder="Select a currency"
-          options={currencyOptions}
-          value={selectedCurrency}
-          onChange={setSelectedCurrency}
-        />
-        <Text style={{ marginTop: 10, color: theme.colors.textSecondary }}>
-          Selected: {selectedCurrency}
-        </Text>
+        <AppDropdown.Trigger placeholder="Choose a currency">
+          {({ selectedValue, options }) => {
+            const selectedOption = options.find(
+              (opt) => opt.value === selectedValue
+            );
+            return <Text>{selectedOption?.symbol || ""}</Text>; // Your custom label logic!
+          }}
+        </AppDropdown.Trigger>
 
-        <Text style={styles.title}>Multi-Select (Categories)</Text>
-        <AppDropdown
-          placeholder="Select categories"
-          options={categoryOptions}
-          multiselect
-          value={selectedCategories}
-          onChange={setSelectedCategories}
-        />
-        <Text style={{ marginTop: 10, color: theme.colors.textSecondary }}>
-          Selected: {selectedCategories.join(", ")}
-        </Text>
-        {/* <Button
-          title="Show Request Form"
-          variant="primary"
-          onPress={() => requestSheetRef.current?.present()}
-        />
-        <AppBottomSheet ref={requestSheetRef} title="Request">
-          <BottomSheetScrollView>
-            <AppBottomSheetHeader title="Request" variant="destructive" />
-            <View style={styles.contentContainer}>
-              <Input
-                label="Amount"
-                defaultValue="$642.50"
-                keyboardType="numeric"
-              />
-              <Input label="Request to" defaultValue="Maryland Winkles" />
-              <Input
-                label="Notes (optional)"
-                defaultValue="Request Expense Explorers Group Payment."
-                multiline
-              />
-              <View style={styles.dialogActions}>
-                <Button
-                  title="Cancel"
-                  variant="outline"
-                  onPress={() => requestSheetRef.current?.dismiss()}
-                  style={{ flex: 1 }}
-                />
-                <Button
-                  title="Request Now"
-                  variant="primary"
-                  onPress={() => requestSheetRef.current?.dismiss()}
-                  style={{ flex: 1 }}
-                />
-              </View>
+        <AppDropdown.Content>
+          {({ item, isSelected, handleSelect }) => (
+            <TouchableOpacity
+              style={{
+                padding: 15,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+              onPress={() => handleSelect(item)}
+            >
+              <Text style={{ flex: 1 }}>
+                {item.label} ({item.symbol})
+              </Text>
+              {isSelected && <Check size={20} color="green" />}
+            </TouchableOpacity>
+          )}
+        </AppDropdown.Content>
+      </AppDropdown>
+
+      {/* --- MULTI SELECT EXAMPLE --- */}
+      <Text>Select Users:</Text>
+      <AppDropdown
+        value={users}
+        onChange={setUsers}
+        options={userOptions}
+        multiselect
+      >
+        <AppDropdown.Trigger placeholder="Assign users">
+          {({ selectedValue, options }) => (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: -10 }}
+            >
+              {(selectedValue as string[]).map((val) => {
+                const user = options.find((opt) => opt.value === val);
+                return (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                    key={user?.value}
+                  >
+                    <Text>{user?.label}</Text>
+                  </View>
+                );
+              })}
             </View>
-          </BottomSheetScrollView>
-        </AppBottomSheet> */}
-      </ScrollView>
+          )}
+        </AppDropdown.Trigger>
+
+        <AppDropdown.Content>
+          {({ item, isSelected, handleSelect }) => (
+            <TouchableOpacity
+              style={{
+                padding: 10,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+              onPress={() => handleSelect(item)}
+            >
+              <Checkbox
+                value={isSelected}
+                onValueChange={() => handleSelect(item)}
+              />
+              <Image
+                source={{ uri: item.avatar }}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                  marginHorizontal: 10,
+                }}
+              />
+              <Text>{item.label}</Text>
+            </TouchableOpacity>
+          )}
+        </AppDropdown.Content>
+      </AppDropdown>
     </SafeAreaView>
   );
 };
 
-export default DropdownExampleScreen;
+export default CompoundDropdownScreen;

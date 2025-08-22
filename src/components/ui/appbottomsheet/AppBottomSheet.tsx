@@ -16,15 +16,15 @@ export type AppBottomSheetRef = BottomSheetModal;
 type HeaderVariant = "destructive" | undefined;
 
 interface AppBottomSheetProps {
-  title: string;
   children: React.ReactNode;
   headerTitleVariant?: HeaderVariant; // Use the corrected type
+  onDismiss?: () => void;
 }
 
 export const AppBottomSheet = forwardRef<
   AppBottomSheetRef,
   AppBottomSheetProps
->(({ title, children, headerTitleVariant }, ref) => {
+>(({ children, headerTitleVariant, onDismiss }, ref) => {
   // Removed the "default" default value
   const snapPoints = useMemo(() => ["90%"], []);
 
@@ -50,6 +50,7 @@ export const AppBottomSheet = forwardRef<
       )}
       backgroundStyle={styles.background}
       style={{ flex: 1 }}
+      onDismiss={onDismiss}
     >
       {children}
     </BottomSheetModal>

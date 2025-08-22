@@ -4,10 +4,10 @@ import { CustomTabBar } from "@/components/bottomTabs/CustomTabBar";
 import { SafeAreaView, View } from "react-native";
 import { HomeScreen } from "@/features/home/screens";
 import { GroupsScreen } from "@/features/groups/screens";
-import DropdownExampleScreen from "./ecample";
+import CompoundDropdownScreen from "./ecample";
 
 // --- Your Screen Components ---
-const ScanScreen = () => <DropdownExampleScreen />; // This can be a modal screen
+const ScanScreen = () => <CompoundDropdownScreen />; // This can be a modal screen
 const ContactsScreen = () => (
   <View style={{ flex: 1, backgroundColor: "orange" }} />
 );
