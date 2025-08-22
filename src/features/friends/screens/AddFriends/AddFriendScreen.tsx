@@ -58,7 +58,7 @@ const AddFriendScreen = () => {
         <SearchInput
           placeholder="Search by email"
           value={searchTerm}
-          onSearch={setSearchTerm}
+          onChangeText={setSearchTerm}
         />
         {isLoading && <ActivityIndicator style={{ marginTop: 20 }} />}
         {users && users.length > 0 && (

@@ -9,44 +9,36 @@ import {
 } from "react-native";
 import { useUnistyles } from "react-native-unistyles";
 import { styles } from "./SearchInput.styles";
-import { useDebounce } from "@/hooks/useDebounce";
 import { Feather } from "@expo/vector-icons";
 
 interface SearchInputProps extends Omit<TextInputProps, "onChangeText"> {
-  onSearch: (query: string) => void;
   loading?: boolean;
-  debounceDelay?: number;
+  value: string;
+  onChangeText: (text: string) => void;
 }
 
 export const SearchInput = ({
-  onSearch,
   loading = false,
-  debounceDelay = 500,
   style,
+  value,
+  onChangeText,
   ...rest
 }: SearchInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [query, setQuery] = useState("");
   const { theme } = useUnistyles();
   const inputRef = useRef<TextInput>(null);
-  const debouncedQuery = useDebounce(query, debounceDelay);
-
-  useEffect(() => {
-    onSearch(debouncedQuery);
-  }, [debouncedQuery, onSearch]);
 
   styles.useVariants({ focused: isFocused });
 
   const handleClear = () => {
-    setQuery("");
-    // No need to manually refocus since we're using onPressIn
+    onChangeText("");
   };
 
   const renderRightIcon = () => {
     if (loading) {
       return <ActivityIndicator color={theme.colors.primary} />;
     }
-    if (query.length > 0) {
+    if (value.length > 0) {
       return (
         <Pressable style={styles.clearButton} onPressIn={handleClear}>
           <Feather name="x" size={20} color={theme.colors.textSecondary} />
@@ -70,8 +62,8 @@ export const SearchInput = ({
       <TextInput
         ref={inputRef}
         style={styles.input}
-        value={query}
-        onChangeText={setQuery}
+        value={value}
+        onChangeText={onChangeText}
         placeholderTextColor={theme.colors.textSecondary}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}

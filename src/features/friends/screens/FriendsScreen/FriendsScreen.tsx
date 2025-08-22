@@ -2,7 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
-import React from "react";
+import React, { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -21,6 +21,7 @@ import { FriendsStackParamList } from "@/navigation/types";
 const FriendsScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<FriendsStackParamList>>();
+  const [searchTerm, setSearchTerm] = useState("");
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery(getFriendsQuery());
 
@@ -62,7 +63,11 @@ const FriendsScreen = () => {
 
   return (
     <View style={styles.container}>
-      <SearchInput placeholder="Search contact" onSearch={() => {}} />
+      <SearchInput
+        placeholder="Search contact"
+        value={searchTerm}
+        onChangeText={setSearchTerm}
+      />
       <View style={styles.tabs}>
         <TouchableOpacity style={[styles.tab, styles.activeTab]}>
           <Text style={styles.activeTabText}>All Contacts</Text>
