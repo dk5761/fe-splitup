@@ -6,27 +6,16 @@ const CENTER_BUTTON_SIZE = 55;
 
 export const styles = StyleSheet.create((theme) => ({
   container: {
-    // position: "absolute", // Remove absolute positioning
-    // The 'bottom' value will now be set dynamically in the component
-
-    backgroundColor: "transparent",
-
-    // paddingHorizontal: 20,
+    backgroundColor: theme.colors.background,
     borderTopWidth: 1,
     borderTopColor: theme.colors.border,
     height: 75,
-
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: theme.spacing.md,
   },
-  pillContainer: {
-    flexDirection: "row",
-    height: 70,
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.radii.lg,
-  },
+
   tabButton: {
     flex: 1,
     justifyContent: "center",

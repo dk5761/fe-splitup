@@ -20,6 +20,10 @@ export type FriendsStackParamList = {
   AddFriendScreen: undefined;
 };
 
+export type GroupStackParamList = {
+  GroupsScreen: undefined;
+};
+
 export type MainStackParamList = {
   Tabs: NavigatorScreenParams<TabParamList>;
   FriendsStack: NavigatorScreenParams<FriendsStackParamList>;

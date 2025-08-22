@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native-unistyles";
 
 import { getGroupsQuery } from "../api";
 import { GroupList } from "../components/GroupList";
@@ -23,7 +24,6 @@ export const GroupsScreen = () => {
 
   return (
     <View style={[styles.container]}>
-      <GroupsHeader />
       {groups.length === 0 && !isLoading ? (
         <EmptyGroups />
       ) : (
@@ -41,9 +41,9 @@ export const GroupsScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: theme.colors.background,
   },
-});
+}));

@@ -3,10 +3,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { CustomTabBar } from "@/components/bottomTabs/CustomTabBar";
 import { SafeAreaView, View } from "react-native";
 import { HomeScreen } from "@/features/home/screens";
-import { GroupsScreen } from "@/features/groups/screens";
 import CompoundDropdownScreen from "./ecample";
 import { TabParamList } from "./types";
 import { FriendsStackNavigator } from "./FriendsStack";
+import { GroupStackNavigator } from "./GroupStack";
 
 // --- Your Screen Components ---
 const ScanScreen = () => <CompoundDropdownScreen />; // This can be a modal screen
@@ -24,7 +24,7 @@ export const Tabs = () => {
       screenOptions={{ headerShown: false }}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Groups" component={GroupsScreen} />
+      <Tab.Screen name="Groups" component={GroupStackNavigator} />
       {/* This screen acts as a placeholder to create space for the center button */}
       <Tab.Screen name="Scan" component={ScanScreen} />
       <Tab.Screen name="Friends" component={FriendsStackNavigator} />

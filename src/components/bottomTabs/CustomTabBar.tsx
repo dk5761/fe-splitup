@@ -6,15 +6,13 @@ import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { styles } from "./CustomTabBar.styles";
 import { useUnistyles } from "react-native-unistyles";
 import { Ionicons } from "@expo/vector-icons";
-// FIX: Import the hook
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-// ... (iconMap remains the same)
 const iconMap = {
   Home: { focused: "home", unfocused: "home-outline" },
   Groups: { focused: "people", unfocused: "people-outline" },
-  Contacts: { focused: "person", unfocused: "person-outline" },
-  Account: { focused: "cog", unfocused: "cog-outline" },
+  Friends: { focused: "person", unfocused: "person-outline" },
+  Account: { focused: "person-circle", unfocused: "person-circle-outline" },
 };
 
 export const CustomTabBar = ({
@@ -33,15 +31,10 @@ export const CustomTabBar = ({
   const middleRouteIndex = Math.floor(state.routes.length / 2);
 
   // FIX: Create a dynamic style for the container that respects the bottom inset
-  const containerStyle = {
-    ...styles.container,
-
-    backgroundColor: theme.colors.surface,
-  };
 
   return (
     // Apply the dynamic style
-    <View style={containerStyle}>
+    <View style={styles.container}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =
