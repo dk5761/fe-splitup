@@ -15,7 +15,11 @@ import {
   MainStackParamList,
   AuthStackParamList,
 } from "./types";
-import { LoginScreen, WelcomeScreen } from "@/features/auth/screens";
+import {
+  LoginScreen,
+  WelcomeScreen,
+  SignUpScreen,
+} from "@/features/auth/screens";
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 const MainStack = createNativeStackNavigator<MainStackParamList>();
@@ -60,6 +64,11 @@ function AuthStack() {
         component={LoginScreen}
         options={{ title: "Login" }}
       />
+      <AuthStackNavigator.Screen
+        name="SignUp"
+        component={SignUpScreen}
+        options={{ title: "Sign Up" }}
+      />
     </AuthStackNavigator.Navigator>
   );
 }
@@ -83,10 +92,12 @@ export function AppNavigator({ linking, onReady }: AppNavigatorProps) {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName={isAuthenticated ? "Main" : "Auth"}
       >
-        <RootStack.Screen name="Main" component={MainStackNavigator} />
-        <RootStack.Screen name="Auth" component={AuthStack} />
+        {isAuthenticated ? (
+          <RootStack.Screen name="Main" component={MainStackNavigator} />
+        ) : (
+          <RootStack.Screen name="Auth" component={AuthStack} />
+        )}
       </RootStack.Navigator>
     </NavigationContainer>
   );

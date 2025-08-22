@@ -51,18 +51,14 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
   );
 
   const signIn = React.useCallback(async (payload: AuthResponse) => {
-    setAccessToken(payload.token);
-    // store refresh token if provided
-    if ((payload as any).refreshToken) {
-      // @ts-ignore
-      setRefreshToken((payload as any).refreshToken);
-    }
+    setAccessToken(payload.access_token);
+    setRefreshToken(payload.refresh_token);
     setObject(storageKeys.authUser, payload.user);
     setState({
       isAuthenticated: true,
       user: payload.user,
-      token: payload.token,
-      refreshToken: (payload as any).refreshToken ?? null,
+      token: payload.access_token,
+      refreshToken: payload.refresh_token,
       initializing: false,
     });
     await queryClient.invalidateQueries();

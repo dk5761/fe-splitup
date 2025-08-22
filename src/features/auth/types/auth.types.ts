@@ -1,7 +1,8 @@
 export interface AuthUser {
   id: string;
+  name: string;
   username: string;
-  email?: string | null;
+  email: string;
 }
 
 export interface LoginRequest {
@@ -10,13 +11,18 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
+  name: string;
   username: string;
   email: string;
   password: string;
 }
 
 export interface AuthResponse {
-  token: string;
-  refreshToken: string;
   user: AuthUser;
+  access_token: string;
+  refresh_token: string;
+}
+
+export interface CheckUsernameResponse {
+  exists: boolean;
 }

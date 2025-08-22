@@ -56,8 +56,6 @@ export const Input = ({
 
   // This function will toggle visibility without blurring the input
   const handleToggleSecure = (e: GestureResponderEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
     setIsSecure((prev) => !prev);
   };
 

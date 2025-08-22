@@ -2,8 +2,18 @@ import { Button } from "@/components";
 import React from "react";
 import { View, Text } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { AuthStackParamList } from "@/navigation/types";
+
+type WelcomeScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  "Welcome"
+>;
 
 const WelcomeScreen = () => {
+  const navigation = useNavigation<WelcomeScreenNavigationProp>();
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Let's Get Started!</Text>
@@ -12,8 +22,8 @@ const WelcomeScreen = () => {
       </Text>
 
       <View style={styles.buttonContainer}>
-        <Button title="Sign up" onPress={() => console.log("Sign Up")} />
-        <Button title="Log In" onPress={() => console.log("Log In")} />
+        <Button title="Sign up" onPress={() => navigation.navigate("SignUp")} />
+        <Button title="Sign in" onPress={() => navigation.navigate("Login")} />
       </View>
 
       <View style={styles.footer}>

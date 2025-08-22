@@ -3,42 +3,47 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { StyleSheet, useUnistyles } from "react-native-unistyles";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AuthStackParamList } from "../../../navigation/types";
-import LoginForm from "../forms/LoginForm/LoginForm";
-import { LoginSchema, loginSchema } from "../forms/LoginForm/schema";
+import SignUpForm from "../forms/SignUpForm/SignUpForm";
+import { SignUpSchema, signUpSchema } from "../forms/SignUpForm/schema";
 import { Button } from "../../../components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Feather } from "@expo/vector-icons";
-import { useLoginMutation } from "../api/mutationFn";
+import { useRegisterMutation } from "../api/mutationFn";
 import { useAuthContext } from "../context";
-import type { LoginRequest } from "../types";
+import type { RegisterRequest } from "../types";
 
-type LoginScreenProps = NativeStackScreenProps<AuthStackParamList, "Login">;
+type SignUpScreenProps = NativeStackScreenProps<AuthStackParamList, "SignUp">;
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
   const { theme } = useUnistyles();
   const { signIn } = useAuthContext();
-  const loginMutation = useLoginMutation();
+  const registerMutation = useRegisterMutation();
 
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<LoginSchema>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<SignUpSchema>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
+      name: "",
+      username: "",
       email: "",
       password: "",
+      agreeToTerms: false,
     },
   });
 
-  const handleLogin = async (data: LoginSchema) => {
-    const loginData: LoginRequest = {
+  const handleSignUp = async (data: SignUpSchema) => {
+    const registerData: RegisterRequest = {
+      name: data.name,
+      username: data.username,
       email: data.email,
       password: data.password,
     };
 
-    loginMutation.mutate(loginData, {
+    registerMutation.mutate(registerData, {
       onSuccess: async (response) => {
         await signIn(response);
       },
@@ -53,30 +58,25 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       >
         <Feather name="arrow-left" size={24} color={theme.colors.text} />
       </TouchableOpacity>
-      <Text style={styles.title}>Welcome back 👋</Text>
+
+      <Text style={styles.title}>Create account 👩</Text>
       <Text style={styles.subtitle}>
-        Please enter your email & password to sign in.
+        Please enter your email & password to sign up
       </Text>
 
-      <LoginForm control={control} errors={errors} />
-
-      <View style={styles.optionsContainer}>
-        <TouchableOpacity onPress={() => console.log("Forgot password")}>
-          <Text style={styles.forgotPasswordText}>Forgot password?</Text>
-        </TouchableOpacity>
-      </View>
+      <SignUpForm control={control} errors={errors} />
 
       <Button
-        title={loginMutation.isPending ? "Signing in..." : "Sign in"}
-        onPress={handleSubmit(handleLogin)}
-        style={styles.signInButton}
-        disabled={loginMutation.isPending}
+        title={registerMutation.isPending ? "Signing up..." : "Sign up"}
+        onPress={handleSubmit(handleSignUp)}
+        style={styles.signUpButton}
+        disabled={registerMutation.isPending}
       />
 
-      <View style={styles.signUpContainer}>
-        <Text style={styles.signUpText}>Don't have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-          <Text style={styles.signupLink}> Sign up</Text>
+      <View style={styles.signInContainer}>
+        <Text style={styles.signInText}>Already have an account?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <Text style={styles.signInLink}> Sign in</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -93,10 +93,6 @@ const styles = StyleSheet.create((theme) => ({
   backButton: {
     marginBottom: 20,
   },
-  backButtonText: {
-    fontSize: 24,
-    color: theme.colors.text,
-  },
   title: {
     fontSize: 32,
     fontWeight: "bold",
@@ -108,18 +104,7 @@ const styles = StyleSheet.create((theme) => ({
     color: theme.colors.textSecondary,
     marginBottom: 30,
   },
-  optionsContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  forgotPasswordText: {
-    color: theme.colors.primary,
-    fontSize: 14,
-  },
-  signInButton: {
+  signUpButton: {
     backgroundColor: theme.colors.primary,
     paddingVertical: 15,
     borderRadius: 10,
@@ -127,25 +112,20 @@ const styles = StyleSheet.create((theme) => ({
     marginTop: "auto",
     marginBottom: 20,
   },
-  signInButtonText: {
-    color: theme.colors.primaryOn,
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  signUpContainer: {
+  signInContainer: {
     flexDirection: "row",
     justifyContent: "center",
     marginBottom: 20,
   },
-  signUpText: {
+  signInText: {
     color: theme.colors.textSecondary,
     fontSize: 14,
   },
-  signupLink: {
+  signInLink: {
     color: theme.colors.primary,
     fontSize: 14,
     fontWeight: "bold",
   },
 }));
 
-export default LoginScreen;
+export default SignUpScreen;

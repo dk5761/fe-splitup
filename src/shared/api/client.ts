@@ -89,8 +89,8 @@ httpClient.interceptors.response.use(
         const res = await httpClient.post<any>(authEndpoints.refresh, {
           refresh_token: currentRefreshToken,
         });
-        const newToken = res?.data?.token ?? res?.data?.access_token;
-        const newRefresh = res?.data?.refresh_token ?? res?.data?.refreshToken;
+        const newToken = res?.data?.access_token;
+        const newRefresh = res?.data?.refresh_token;
         if (newToken) {
           setAccessToken(newToken);
         }

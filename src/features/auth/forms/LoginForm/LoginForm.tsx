@@ -21,7 +21,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ control, errors }) => {
         render={({ field: { onChange, onBlur, value } }) => (
           <Input
             placeholder="Email"
-            onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             keyboardType="email-address"
@@ -43,10 +42,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ control, errors }) => {
         render={({ field: { onChange, onBlur, value } }) => (
           <Input
             placeholder="Password"
-            onBlur={onBlur}
             onChangeText={onChange}
             value={value}
-            secureTextEntry
             error={!!errors.password?.message}
             leftIcon={
               <Feather
@@ -55,7 +52,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ control, errors }) => {
                 color={theme.colors.textSecondary}
               />
             }
-            isPassword
+            isPassword={true}
           />
         )}
       />
@@ -66,6 +63,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ control, errors }) => {
 const styles = StyleSheet.create((theme) => ({
   container: {
     width: "100%",
+    gap: theme.spacing.md,
   },
   signInButton: {
     marginTop: 20,
