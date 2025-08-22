@@ -35,7 +35,7 @@ export const CustomTabBar = ({
   // FIX: Create a dynamic style for the container that respects the bottom inset
   const containerStyle = {
     ...styles.container,
-    paddingBottom: insets.bottom,
+
     backgroundColor: theme.colors.surface,
   };
 

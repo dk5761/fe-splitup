@@ -3,29 +3,54 @@ import {
   createNativeStackNavigator,
   NativeStackNavigationOptions,
 } from "@react-navigation/native-stack";
-import { Platform } from "react-native";
+import { Platform, View } from "react-native";
 import { MainStackParamList } from "./types";
 import { Tabs } from "./Tabs";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useUnistyles } from "react-native-unistyles";
+import Header from "@/components/layout/header/Header";
+import { FriendsStackNavigator } from "./FriendsStack";
 
 const MainStack = createNativeStackNavigator<MainStackParamList>();
 
 export function MainStackNavigator() {
+  const insets = useSafeAreaInsets();
+  const { theme } = useUnistyles();
   return (
-    <MainStack.Navigator
-      screenOptions={{
-        headerShown: false,
-        animation: Platform.select<NativeStackNavigationOptions["animation"]>({
-          ios: "fade",
-          android: "fade",
-          default: "fade",
-        }),
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.background,
+        paddingTop: insets.top,
+        paddingBottom: insets.bottom,
       }}
     >
-      <MainStack.Screen
-        name="Tabs"
-        component={Tabs}
-        options={{ title: "Home" }}
-      />
-    </MainStack.Navigator>
+      <MainStack.Navigator
+        screenOptions={{
+          header: (props) => <Header title={props.options.title || ""} />,
+          contentStyle: {
+            backgroundColor: theme.colors.background,
+          },
+          animation: Platform.select<NativeStackNavigationOptions["animation"]>(
+            {
+              ios: "fade",
+              android: "fade",
+              default: "fade",
+            }
+          ),
+        }}
+      >
+        <MainStack.Screen
+          name="Tabs"
+          component={Tabs}
+          options={{ title: "Home", headerShown: false }}
+        />
+        <MainStack.Screen
+          name="FriendsStack"
+          component={FriendsStackNavigator}
+          options={{ title: "Friends" }}
+        />
+      </MainStack.Navigator>
+    </View>
   );
 }

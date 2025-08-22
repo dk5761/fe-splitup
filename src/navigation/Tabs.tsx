@@ -5,17 +5,16 @@ import { SafeAreaView, View } from "react-native";
 import { HomeScreen } from "@/features/home/screens";
 import { GroupsScreen } from "@/features/groups/screens";
 import CompoundDropdownScreen from "./ecample";
+import { TabParamList } from "./types";
+import { FriendsStackNavigator } from "./FriendsStack";
 
 // --- Your Screen Components ---
 const ScanScreen = () => <CompoundDropdownScreen />; // This can be a modal screen
-const ContactsScreen = () => (
-  <View style={{ flex: 1, backgroundColor: "orange" }} />
-);
 const AccountScreen = () => (
   <View style={{ flex: 1, backgroundColor: "red" }} />
 );
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<TabParamList>();
 
 export const Tabs = () => {
   return (
@@ -28,7 +27,7 @@ export const Tabs = () => {
       <Tab.Screen name="Groups" component={GroupsScreen} />
       {/* This screen acts as a placeholder to create space for the center button */}
       <Tab.Screen name="Scan" component={ScanScreen} />
-      <Tab.Screen name="Contacts" component={ContactsScreen} />
+      <Tab.Screen name="Friends" component={FriendsStackNavigator} />
       <Tab.Screen name="Account" component={AccountScreen} />
     </Tab.Navigator>
   );

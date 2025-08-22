@@ -11,11 +11,15 @@ export const styles = StyleSheet.create((theme) => ({
 
     backgroundColor: "transparent",
 
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
     borderTopWidth: 1,
     borderTopColor: theme.colors.border,
-    height: 100,
+    height: 75,
+
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: theme.spacing.md,
   },
   pillContainer: {
     flexDirection: "row",

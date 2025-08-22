@@ -22,12 +22,7 @@ export const GroupsScreen = () => {
   const groups = data?.pages.flatMap((page) => page.data) ?? [];
 
   return (
-    <View
-      style={[
-        styles.container,
-        { paddingTop: insets.top, paddingBottom: insets.bottom },
-      ]}
-    >
+    <View style={[styles.container]}>
       <GroupsHeader />
       {groups.length === 0 && !isLoading ? (
         <EmptyGroups />
