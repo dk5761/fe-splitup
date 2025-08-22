@@ -13,11 +13,12 @@ import { styles } from "./Button.styles";
 import type { ButtonVariants } from "./Button.styles";
 
 interface ButtonProps extends TouchableOpacityProps {
-  title: string;
+  title?: string;
   loading?: boolean;
   icon?: React.ReactNode;
   variant?: ButtonVariants["variant"];
   disabled?: boolean;
+  children?: React.ReactNode;
 }
 
 export const Button = ({
@@ -28,6 +29,7 @@ export const Button = ({
   loading = false,
   icon,
   style,
+  children,
   ...rest
 }: ButtonProps) => {
   // V3: Call useVariants at the top of the component.
@@ -55,7 +57,7 @@ export const Button = ({
       ) : (
         <>
           {icon && <View style={styles.iconContainer}>{icon}</View>}
-          <Text style={styles.text}>{title}</Text>
+          {children ?? <Text style={styles.text}>{title}</Text>}
         </>
       )}
     </TouchableOpacity>

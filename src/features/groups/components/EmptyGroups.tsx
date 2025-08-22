@@ -12,7 +12,9 @@ export const EmptyGroups = () => {
         variant="primary"
         style={{ marginTop: 20 }}
         title="Create a New Group"
-      />
+      >
+        <Text>+ Create a New Group</Text>
+      </Button>
     </View>
   );
 };
