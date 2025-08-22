@@ -128,38 +128,47 @@ const typography = {
   },
 };
 
-// Color palettes
+// Color palettes based on the design system
 const palette = {
-  primary: "#2196F3", // Blue
-  secondary: "#FFC107", // Amber
-  background: "#F5F5F5", // Light Gray
-  surface: "#EEEEEE", // Very Light Gray
-  onSurface: "#212121", // Dark Gray
-  textSecondary: "#757575", // Medium Gray
+  // Brand Colors
+  yellow: "#FDBA2D",
+
+  // Neutral Colors
   white: "#FFFFFF",
-  black: "#000000",
-  success: "#2E7D32",
-  warning: "#ED6C02",
-  error: "#D32F2F",
-  info: "#0288D1",
+
+  // Light Theme Neutrals
+  gray50: "#F8F8F8", // background
+  gray100: "#E5E7EB", // border
+  gray500: "#6B7280", // textSecondary
+  gray800: "#212121", // text / onSurface
+
+  // Dark Theme Neutrals
+  dark900: "#121212", // background
+  dark800: "#1F1F1F", // surface
+  dark700: "#4B5563", // border
+  dark400: "#9CA3AF", // textSecondary
+  dark100: "#E5E5E5", // text / onSurface
+
+  // System Colors
+  greenLight: "#16A34A",
+  greenDark: "#22C55E",
+  redLight: "#DC2626",
+  redDark: "#EF4444",
 };
 
 const light = {
   colors: {
-    primary: palette.primary,
-    primaryOn: palette.white,
-    secondary: palette.secondary,
-    secondaryOn: palette.black,
-    background: palette.background,
-    surface: palette.surface,
-    onSurface: palette.onSurface,
-    text: palette.onSurface,
-    textSecondary: palette.textSecondary,
-    border: "#E0E0E0",
-    success: palette.success,
-    warning: palette.warning,
-    error: palette.error,
-    info: palette.info,
+    primary: palette.yellow,
+    primaryOn: palette.gray800,
+    background: palette.gray50,
+    surface: palette.white,
+    onSurface: palette.gray800,
+    text: palette.gray800,
+    textSecondary: palette.gray500,
+    border: palette.gray100,
+    success: palette.greenLight,
+    warning: palette.yellow, // Using primary yellow for warnings
+    error: palette.redLight,
   },
   spacing,
   radii,
@@ -187,7 +196,7 @@ const light = {
       radius: radii.xl,
       backgroundColor: palette.white,
       handleColor: "#E5E5E5",
-      headerBorderColor: "#E0E0E0",
+      headerBorderColor: palette.gray100,
       headerPadding: spacing.lg,
       contentPaddingHorizontal: spacing.lg,
       backdropOpacity: 0.5,
@@ -197,20 +206,17 @@ const light = {
 
 const dark = {
   colors: {
-    primary: palette.primary,
-    primaryOn: palette.white,
-    secondary: palette.secondary,
-    secondaryOn: palette.black,
-    background: "#121212",
-    surface: "#1E1E1E",
-    onSurface: "#E0E0E0",
-    text: "#E0E0E0",
-    textSecondary: "#B0B0B0",
-    border: "#2A2A2A",
-    success: "#4CAF50",
-    warning: "#FF9800",
-    error: "#EF5350",
-    info: "#29B6F6",
+    primary: palette.yellow,
+    primaryOn: palette.gray800,
+    background: palette.dark900,
+    surface: palette.dark800,
+    onSurface: palette.dark100,
+    text: palette.dark100,
+    textSecondary: palette.dark400,
+    border: palette.dark700,
+    success: palette.greenDark,
+    warning: palette.yellow, // Using primary yellow for warnings
+    error: palette.redDark,
   },
   spacing,
   radii,
@@ -236,9 +242,9 @@ const dark = {
     },
     bottomSheet: {
       radius: radii.xl,
-      backgroundColor: "#1E1E1E",
-      handleColor: "#3A3A3A",
-      headerBorderColor: "#2A2A2A",
+      backgroundColor: palette.dark800,
+      handleColor: palette.dark700,
+      headerBorderColor: palette.dark700,
       headerPadding: spacing.lg,
       contentPaddingHorizontal: spacing.lg,
       backdropOpacity: 0.6,
@@ -251,7 +257,7 @@ StyleSheet.configure({
   themes: { light, dark },
   breakpoints,
   settings: {
-    initialTheme: "dark",
+    initialTheme: "light", // Changed to light to match designs, can be changed back
   },
 });
 

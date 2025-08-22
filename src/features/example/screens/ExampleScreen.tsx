@@ -1,23 +1,52 @@
-import React from "react";
-import { ScrollView, View } from "react-native";
-import { StyleSheet } from "react-native-unistyles";
-import {
-  Button,
-  Checkbox,
-  DatePicker,
-  Link,
-  Switch,
-  TextField,
-  AppDropdown,
-} from "@/components";
-import { appToast } from "@/components/toast";
+import React, { useCallback, useState } from "react";
+import { ScrollView, View, Text } from "react-native";
+import { Button, Checkbox, Switch, Input } from "@/components";
+import { MaterialIcons } from "@expo/vector-icons";
+import { SwitchRow } from "@/components/ui/switch/Switch";
+import { SearchInput } from "@/components/ui/searchInput";
 
+const MOCK_DATA = [
+  "Hanlin",
+  "Andrew",
+  "Charlotte",
+  "Joseph",
+  "Kristin",
+  "Damon",
+];
 export const ExampleScreen: React.FC = () => {
   const [switchOn, setSwitchOn] = React.useState(false);
-  const [checked, setChecked] = React.useState(false);
-  const [text, setText] = React.useState("");
-  const [date, setDate] = React.useState<Date | null | undefined>(null);
-  const [selected, setSelected] = React.useState<string | number | undefined>();
+  const [frontendFilteredData, setFrontendFilteredData] = useState(MOCK_DATA);
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [backendResults, setBackendResults] = useState<string[]>([]);
+  const [checked, setChecked] = useState(false);
+
+  const handleBackendSearch = useCallback((query: string) => {
+    console.log("Backend search for:", query);
+    if (!query) {
+      setBackendResults([]);
+      return;
+    }
+    setBackendLoading(true);
+    setTimeout(() => {
+      const results = MOCK_DATA.filter((item) =>
+        item.toLowerCase().includes(query.toLowerCase())
+      );
+      setBackendResults(results);
+      setBackendLoading(false);
+    }, 1000);
+  }, []);
+
+  const handleFrontendSearch = useCallback((query: string) => {
+    console.log("Frontend search for:", query);
+    if (!query) {
+      setFrontendFilteredData(MOCK_DATA);
+      return;
+    }
+    const filtered = MOCK_DATA.filter((item) =>
+      item.toLowerCase().includes(query.toLowerCase())
+    );
+    setFrontendFilteredData(filtered);
+  }, []);
 
   const options = React.useMemo(
     () => [
@@ -29,83 +58,86 @@ export const ExampleScreen: React.FC = () => {
   );
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.section}>
-        <Button title="Primary Button" onPress={() => {}} />
-      </View>
-
-      <View style={styles.section}>
-        <Button title="Link Button" variant="link" onPress={() => {}} />
-      </View>
-
-      <View style={styles.section}>
-        <TextField
-          label="Text Field"
-          value={text}
-          onChangeText={setText}
-          placeholder="Type here"
+    <ScrollView contentContainerStyle={{ padding: 16, gap: 16 }}>
+      <View style={{ padding: 20, gap: 15 }}>
+        <Input
+          label="Username"
+          leftIcon={<MaterialIcons name="person" size={24} color="black" />}
         />
-      </View>
 
-      <View style={styles.section}>
-        <Link onPress={() => {}}>Link component</Link>
-      </View>
-
-      <View style={styles.row}>
-        <Switch value={switchOn} onValueChange={setSwitchOn} />
-        <Checkbox value={checked} onValueChange={setChecked} label="Accept" />
-      </View>
-
-      <View style={styles.section}>
-        <AppDropdown
-          label="Dropdown"
-          options={options}
-          onSelect={(o) => setSelected(o.value)}
-          selectedValue={selected}
+        <Input
+          leftIcon={<MaterialIcons name="lock" size={24} color="black" />}
+          isPassword
+          placeholder="Password"
         />
-      </View>
 
-      <View style={styles.section}>
-        <DatePicker
-          label="Date Picker"
-          value={date ?? undefined}
-          onChange={setDate}
-          allowClear
+        <SwitchRow
+          label="Notifications"
+          {...{ value: switchOn, onValueChange: setSwitchOn }}
         />
-      </View>
+        <Switch {...{ value: switchOn, onValueChange: setSwitchOn }} />
 
-      <View style={styles.row}>
+        <Checkbox
+          value={checked}
+          onValueChange={setChecked}
+          children={<Text>I agree to the terms and conditions</Text>}
+        />
+
+        <View>
+          <Text style={{ color: "white", fontSize: 18, marginBottom: 10 }}>
+            Frontend Search
+          </Text>
+          <SearchInput
+            placeholder="Search locally..."
+            onSearch={handleFrontendSearch}
+          />
+          <Text style={{ color: "gray", marginTop: 8 }}>
+            Results: {frontendFilteredData.join(", ")}
+          </Text>
+        </View>
+
+        {/* --- Backend Example --- */}
+        <View>
+          <Text style={{ color: "white", fontSize: 18, marginBottom: 10 }}>
+            Backend Search
+          </Text>
+          <SearchInput
+            placeholder="Search on server..."
+            onSearch={handleBackendSearch}
+            loading={backendLoading}
+          />
+          <Text style={{ color: "gray", marginTop: 8 }}>
+            Results: {backendResults.join(", ")}
+          </Text>
+        </View>
+
+        <Button title="Sign Up" variant="primary" onPress={() => {}} />
+        <Button title="Log In" variant="outline" onPress={() => {}} />
         <Button
-          title="Show Success"
-          onPress={() => appToast.success("Success", { description: "Saved" })}
+          title="Continue with Google"
+          variant="social"
+          icon={<MaterialIcons name="gpp-good" size={24} color="black" />}
+          onPress={() => {}}
         />
         <Button
-          title="Show Error"
-          onPress={() => appToast.error("Error", { description: "Failed" })}
+          title="Forgot Password?"
+          variant="ghost"
+          onPress={() => {}}
+          style={{ alignSelf: "center" }}
         />
         <Button
-          title="Show Warning"
-          onPress={() =>
-            appToast.warning("Warning", { description: "Check input" })
-          }
+          title="Processing..."
+          variant="primary"
+          loading
+          onPress={() => {}}
+        />
+        <Button
+          title="Disabled"
+          variant="outline"
+          disabled
+          onPress={() => {}}
         />
       </View>
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create((theme) => ({
-  container: {
-    padding: theme.spacing.xl,
-    gap: theme.spacing.lg,
-  },
-  section: {
-    borderRadius: theme.radii.md,
-    overflow: "hidden",
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: theme.spacing.lg,
-  },
-}));

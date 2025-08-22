@@ -1,101 +1,105 @@
-import React from "react";
-import type { StyleProp, ViewStyle } from "react-native";
-import { Pressable } from "react-native";
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
-import { StyleSheet } from "react-native-unistyles";
+// src/components/Switch/Switch.tsx
 
+import React, { useEffect } from "react";
+import { Pressable, View, Text } from "react-native";
+import Animated, {
+  interpolateColor,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  interpolate,
+} from "react-native-reanimated";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
+import { styles as staticStyles } from "./Switch.styles";
+
+// --- Custom Switch Component ---
 interface SwitchProps {
   value: boolean;
-  onValueChange?: (next: boolean) => void;
+  onValueChange: (value: boolean) => void;
   disabled?: boolean;
-  style?: StyleProp<ViewStyle>;
-  testID?: string;
 }
 
-export const Switch: React.FC<SwitchProps> = ({
-  value,
-  onValueChange,
-  disabled = false,
-  style,
-  testID,
-}) => {
-  const translateX = useSharedValue(value ? 12 : 0);
+const trackWidth = 50;
+const thumbSize = 28;
+const thumbPadding = 4; // 2px on each side
 
-  React.useEffect(() => {
-    translateX.value = withTiming(value ? 12 : 0, {
-      duration: 160,
-      easing: Easing.out(Easing.circle),
-    });
-  }, [value, translateX]);
+export const Switch = ({ value, onValueChange, disabled }: SwitchProps) => {
+  const { theme } = useUnistyles();
+  const progress = useSharedValue(value ? 1 : 0);
 
-  const handleToggle = () => {
-    if (disabled) return;
-    onValueChange?.(!value);
-  };
+  useEffect(() => {
+    progress.value = withTiming(value ? 1 : 0, { duration: 250 });
+  }, [value, progress]);
+
+  const animatedTrackStyle = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      progress.value,
+      [0, 1],
+      [theme.colors.border, theme.colors.primary]
+    );
+    return { backgroundColor };
+  });
+
+  const animatedThumbStyle = useAnimatedStyle(() => {
+    const translateX = interpolate(
+      progress.value,
+      [0, 1],
+      [thumbPadding / 2, trackWidth - thumbSize - thumbPadding / 2]
+    );
+    return { transform: [{ translateX }] };
+  });
 
   return (
-    <React.Fragment>
-      <Pressable
-        accessibilityRole="switch"
-        accessibilityState={{ disabled, checked: value }}
-        onPress={handleToggle}
-        disabled={disabled}
-        testID={testID}
+    <Pressable onPress={() => onValueChange(!value)} disabled={disabled}>
+      <Animated.View
         style={[
-          styles.track,
-          value ? styles.trackOn : styles.trackOff,
-          disabled ? styles.trackDisabled : null,
-          style,
+          staticStyles.track,
+          animatedTrackStyle,
+          {
+            backgroundColor: theme.colors.border,
+          },
         ]}
       >
         <Animated.View
           style={[
-            styles.thumb,
-            useAnimatedStyle(() => ({
-              transform: [{ translateX: translateX.value }],
-            })),
+            staticStyles.thumb,
+            animatedThumbStyle,
+            {
+              backgroundColor: theme.colors.surface,
+            },
           ]}
         />
-      </Pressable>
-    </React.Fragment>
+      </Animated.View>
+    </Pressable>
   );
 };
 
-const styles = StyleSheet.create((theme) => ({
-  container: {
-    width: "auto",
-    borderWidth: 1,
-    borderColor: "red",
-  },
-  track: {
-    width: 34,
-    height: 22,
-    borderRadius: 20,
-    padding: 2,
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  trackOff: {
-    backgroundColor: "#EEEEEE",
-  },
-  trackOn: {
-    backgroundColor: "#90CAF9",
-  },
-  trackDisabled: {
-    opacity: 0.5,
-  },
-  thumb: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: "#FFFFFF",
-  },
-}));
+// --- Convenience Row Component ---
+interface SwitchRowProps extends SwitchProps {
+  label: string;
+}
 
-export type { SwitchProps };
+export const SwitchRow = ({ label, ...switchProps }: SwitchRowProps) => {
+  const { theme } = useUnistyles();
+  const rowStyles = StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingVertical: theme.spacing.md,
+      width: "100%",
+    },
+    label: {
+      fontSize: theme.typography.sizes.body,
+      color: theme.colors.text,
+      fontFamily: theme.typography.families.medium,
+    },
+  });
+
+  return (
+    <View style={rowStyles.container}>
+      <Text style={rowStyles.label}>{label}</Text>
+      <Switch {...switchProps} />
+    </View>
+  );
+};
