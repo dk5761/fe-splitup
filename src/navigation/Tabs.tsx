@@ -1,7 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { CustomTabBar } from "@/components/bottomTabs/CustomTabBar";
-import { SafeAreaView, View } from "react-native";
+import { View } from "react-native";
 import { HomeScreen } from "@/features/home/screens";
 import CompoundDropdownScreen from "./ecample";
 import { TabParamList } from "./types";
@@ -19,7 +19,6 @@ const Tab = createBottomTabNavigator<TabParamList>();
 export const Tabs = () => {
   return (
     <Tab.Navigator
-      // Pass our custom component to the tabBar prop
       tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{ headerShown: false }}
     >

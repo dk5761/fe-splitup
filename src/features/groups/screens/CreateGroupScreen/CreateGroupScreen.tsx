@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import * as ImagePicker from "expo-image-picker";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 import { stylesheet } from "./CreateGroupScreen.styles";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,7 @@ import { getFriendsQuery } from "@/features/friends/api/query";
 import { useCreateGroup } from "../../api";
 import { CreateGroupPayload } from "../../types";
 import { UploadCloud } from "lucide-react-native";
+import { useTabBar } from "@/shared/context/TabBarContext";
 
 const createGroupSchema = z.object({
   name: z.string().min(1, "Group name is required"),
@@ -31,6 +32,14 @@ const CreateGroupScreen = () => {
   const styles = stylesheet;
   const navigation = useNavigation();
   const { mutate: createGroup, isPending } = useCreateGroup();
+  const { showTabBar, hideTabBar } = useTabBar();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      hideTabBar();
+      return () => showTabBar();
+    }, [hideTabBar, showTabBar])
+  );
 
   const { data: friendsData } = useInfiniteQuery(getFriendsQuery());
   const friends = friendsData?.pages.flatMap((page) => page.data) ?? [];

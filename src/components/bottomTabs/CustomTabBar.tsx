@@ -1,12 +1,17 @@
-// src/components/CustomTabBar/CustomTabBar.tsx
-
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, Pressable } from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+  interpolate,
+} from "react-native-reanimated";
 import { styles } from "./CustomTabBar.styles";
 import { useUnistyles } from "react-native-unistyles";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTabBar } from "@/shared/context/TabBarContext";
 
 const iconMap = {
   Home: { focused: "home", unfocused: "home-outline" },
@@ -15,14 +20,40 @@ const iconMap = {
   Account: { focused: "person-circle", unfocused: "person-circle-outline" },
 };
 
+const TAB_BAR_HEIGHT = 80; // Approximate height, adjust if needed
+
 export const CustomTabBar = ({
   state,
   descriptors,
   navigation,
 }: BottomTabBarProps) => {
   const { theme } = useUnistyles();
-  // FIX: Get the safe area insets
-  const insets = useSafeAreaInsets();
+
+  const { isTabBarVisible } = useTabBar();
+
+  const tabBarVisible = useSharedValue(isTabBarVisible ? 1 : 0);
+
+  useEffect(() => {
+    tabBarVisible.value = withTiming(isTabBarVisible ? 1 : 0, {
+      duration: 300,
+    });
+  }, [isTabBarVisible, tabBarVisible]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const height = interpolate(
+      tabBarVisible.value,
+      [0, 1],
+      [0, TAB_BAR_HEIGHT]
+    );
+    const paddingTop = interpolate(tabBarVisible.value, [0, 1], [0, 10]);
+
+    return {
+      height,
+      paddingTop,
+      opacity: tabBarVisible.value,
+      overflow: "hidden",
+    };
+  });
 
   const onCenterButtonPress = () => {
     navigation.navigate("Scan");
@@ -30,11 +61,8 @@ export const CustomTabBar = ({
 
   const middleRouteIndex = Math.floor(state.routes.length / 2);
 
-  // FIX: Create a dynamic style for the container that respects the bottom inset
-
   return (
-    // Apply the dynamic style
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, animatedStyle]}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =
@@ -56,13 +84,12 @@ export const CustomTabBar = ({
           navigation.emit({ type: "tabLongPress", target: route.key });
         };
 
-        // Check if iconMap has an entry for the current route
         const iconInfo = iconMap[route.name as keyof typeof iconMap];
         const iconName = iconInfo
           ? isFocused
             ? iconInfo.focused
             : iconInfo.unfocused
-          : "alert-circle"; // Fallback icon
+          : "alert-circle";
 
         styles.useVariants({ active: isFocused });
 
@@ -101,6 +128,6 @@ export const CustomTabBar = ({
           </Pressable>
         );
       })}
-    </View>
+    </Animated.View>
   );
 };

@@ -1,4 +1,8 @@
-import { useRoute, useNavigation } from "@react-navigation/native";
+import {
+  useRoute,
+  useNavigation,
+  useFocusEffect,
+} from "@react-navigation/native";
 import { Image } from "expo-image";
 import React, { useRef } from "react";
 import {
@@ -33,6 +37,7 @@ import {
   AppBottomSheetRef,
   Button,
 } from "@/components/ui/";
+import { useTabBar } from "@/shared/context/TabBarContext";
 
 const FriendDetailScreen = () => {
   const { theme } = useUnistyles();
@@ -45,14 +50,17 @@ const FriendDetailScreen = () => {
   const aref = useAnimatedRef<Animated.FlatList<any>>();
   const bottomSheetRef = useRef<AppBottomSheetRef>(null);
   const { mutate: removeFriend, isPending } = useRemoveFriend();
+  const { showTabBar, hideTabBar } = useTabBar();
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isLoading,
-    isFetchingNextPage,
-  } = useInfiniteQuery(getFriendExpensesQuery(friend.id));
+  useFocusEffect(
+    React.useCallback(() => {
+      hideTabBar();
+      return () => showTabBar();
+    }, [hideTabBar, showTabBar])
+  );
+
+  const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
+    useInfiniteQuery(getFriendExpensesQuery(friend.id));
 
   const expenses = data?.pages.flatMap((page) => page.data) ?? [];
 
