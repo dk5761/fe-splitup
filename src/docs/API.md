@@ -290,7 +290,26 @@ This document outlines the API contract for the SplitUp backend.
 - **Endpoint:** `GET /{friendId}/expenses?page={page}&limit={limit}`
 - **Response Body:**
   ```json
-  // Paginated list of expenses
+  {
+    "data": [
+      {
+        "id": "uuid",
+        "description": "string",
+        "total_amount": "decimal",
+        "payer": {
+          "id": "uuid",
+          "name": "string"
+        },
+        "expense_date": "timestamp",
+        "image_url": "string" // Presigned S3 URL (if image exists)
+      }
+    ],
+    "pagination": {
+      "current_page": "int",
+      "total_pages": "int",
+      "total_items": "int"
+    }
+  }
   ```
 
 ---
@@ -408,7 +427,59 @@ This document outlines the API contract for the SplitUp backend.
 - **Endpoint:** `GET /{groupId}/expenses?page={page}&limit={limit}`
 - **Response Body:**
   ```json
-  // Paginated list of expenses
+  {
+    "data": [
+      {
+        "id": "uuid",
+        "description": "string",
+        "total_amount": "decimal",
+        "payer": {
+          "id": "uuid",
+          "name": "string"
+        },
+        "expense_date": "timestamp",
+        "image_url": "string" // Presigned S3 URL (if image exists)
+      }
+    ],
+    "pagination": {
+      "current_page": "int",
+      "total_pages": "int",
+      "total_items": "int"
+    }
+  }
+  ```
+
+### 11. Get Group Balances
+
+- **Description:** Gets the total balances of all members within a specific group, along with a summary of simplified debts.
+- **Endpoint:** `GET /{groupId}/balances`
+- **Response Body:**
+  ```json
+  {
+    "total_expense": "decimal",
+    "members": [
+      {
+        "user_id": "uuid",
+        "user_name": "string",
+        "balance": "decimal",
+        "paid": "decimal",
+        "should_pay": "decimal"
+      }
+    ],
+    "debts": [
+      {
+        "from": {
+          "id": "uuid",
+          "name": "string"
+        },
+        "to": {
+          "id": "uuid",
+          "name": "string"
+        },
+        "amount": "decimal"
+      }
+    ]
+  }
   ```
 
 ---
@@ -419,27 +490,60 @@ This document outlines the API contract for the SplitUp backend.
 
 ### 1. Create Expense
 
-- **Description:** Creates a new expense.
+- **Description:** Creates a new expense with optional receipt image upload.
 - **Endpoint:** `POST`
-- **Request Body:**
-  ```json
-  {
-    "description": "string",
-    "total_amount": "decimal",
-    "group_id": "uuid", // optional
-    "expense_date": "timestamp",
-    "split_type": "string", // "equal", "exact", "percentage"
-    "participants": [
+- **Content-Type:** `multipart/form-data`
+- **Request Form Fields:**
+
+  - `expense_data` (string, required): A JSON string representation of the expense data.
+    - Example JSON string:
+      ```json
       {
-        "user_id": "uuid",
-        "share_amount": "decimal" // required for "exact" and "percentage"
+        "description": "string",
+        "total_amount": "decimal",
+        "group_id": "uuid", // optional
+        "expense_date": "timestamp",
+        "split_type": "string", // "EQUAL" or "MANUAL"
+        "participants": [
+          {
+            "user_id": "uuid",
+            "share_amount": "decimal" // required for "MANUAL" split type
+          }
+        ]
       }
-    ]
-  }
+      ```
+  - `image` (file, optional): The receipt image (e.g., `.jpg`, `.png`). Max 5MB.
+
+- **Example Request (`curl`):**
+  ```bash
+  curl -X POST \
+    http://localhost:8080/api/v1/expenses \
+    -H "Authorization: Bearer <token>" \
+    -F 'expense_data={"description":"Dinner","total_amount":"100.00","split_type":"EQUAL","participants":[{"user_id":"uuid1"},{"user_id":"uuid2"}]}' \
+    -F "image=@/path/to/receipt.jpg"
   ```
 - **Response Body:**
   ```json
-  // Detailed expense response
+  {
+    "id": "uuid",
+    "description": "string",
+    "total_amount": "decimal",
+    "group_id": "uuid",
+    "payer": {
+      "id": "uuid",
+      "name": "string"
+    },
+    "split_type": "string",
+    "expense_date": "timestamp",
+    "image_url": "string", // Presigned S3 URL (if image was uploaded)
+    "participants": [
+      {
+        "user_id": "uuid",
+        "name": "string",
+        "share_amount": "decimal"
+      }
+    ]
+  }
   ```
 
 ### 2. Get Balances
@@ -485,7 +589,26 @@ This document outlines the API contract for the SplitUp backend.
 - **Endpoint:** `GET /{id}`
 - **Response Body:**
   ```json
-  // Detailed expense response
+  {
+    "id": "uuid",
+    "description": "string",
+    "total_amount": "decimal",
+    "group_id": "uuid",
+    "payer": {
+      "id": "uuid",
+      "name": "string"
+    },
+    "split_type": "string",
+    "expense_date": "timestamp",
+    "image_url": "string", // Presigned S3 URL (if image exists)
+    "participants": [
+      {
+        "user_id": "uuid",
+        "name": "string",
+        "share_amount": "decimal"
+      }
+    ]
+  }
   ```
 
 ### 5. Update Expense
@@ -508,7 +631,26 @@ This document outlines the API contract for the SplitUp backend.
   ```
 - **Response Body:**
   ```json
-  // Detailed expense response
+  {
+    "id": "uuid",
+    "description": "string",
+    "total_amount": "decimal",
+    "group_id": "uuid",
+    "payer": {
+      "id": "uuid",
+      "name": "string"
+    },
+    "split_type": "string",
+    "expense_date": "timestamp",
+    "image_url": "string", // Presigned S3 URL (if image exists)
+    "participants": [
+      {
+        "user_id": "uuid",
+        "name": "string",
+        "share_amount": "decimal"
+      }
+    ]
+  }
   ```
 
 ### 6. Delete Expense
