@@ -1,17 +1,16 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import { getFriendsQuery } from "../../api/query";
-import {
-  AddFriendButton,
-  FriendList,
-  FriendListHeader,
-} from "../../components";
+import { FriendList, FriendListHeader } from "../../components";
 import { stylesheet as styles } from "./FriendsScreen.styles";
+import { Fab } from "@/components/ui";
 
 const FriendsScreen = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const navigation = useNavigation();
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery(getFriendsQuery());
 
@@ -46,7 +45,7 @@ const FriendsScreen = () => {
           </View>
         }
       />
-      <AddFriendButton />
+      <Fab onPress={() => navigation.navigate("AddFriendScreen" as never)} />
     </View>
   );
 };

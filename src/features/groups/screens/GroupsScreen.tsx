@@ -6,9 +6,8 @@ import { StyleSheet } from "react-native-unistyles";
 import { getGroupsQuery } from "../api/query";
 import { GroupList } from "../components/GroupList";
 import { EmptyGroups } from "../components/EmptyGroups";
-import { GroupsHeader } from "../components/GroupsHeader";
-import { CreateGroupButton } from "../components/CreateGroupButton";
 import { useNavigation } from "@react-navigation/native";
+import { Fab } from "@/components/ui";
 
 const GroupsScreen = () => {
   const navigation = useNavigation();
@@ -43,9 +42,7 @@ const GroupsScreen = () => {
           isRefreshing={isRefetching}
         />
       )}
-      <CreateGroupButton
-        onPress={() => navigate.navigate("CreateGroupScreen" as never)}
-      />
+      <Fab onPress={() => navigate.navigate("CreateGroup" as never)} />
     </View>
   );
 };
