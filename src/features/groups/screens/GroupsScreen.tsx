@@ -1,6 +1,5 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native-unistyles";
 
 import { getGroupsQuery } from "../api/query";
@@ -10,7 +9,6 @@ import { useNavigation } from "@react-navigation/native";
 import { Fab } from "@/components/ui";
 
 const GroupsScreen = () => {
-  const navigation = useNavigation();
   const {
     data,
     isLoading,
@@ -21,7 +19,6 @@ const GroupsScreen = () => {
     refetch,
     isRefetching,
   } = useInfiniteQuery(getGroupsQuery());
-  const insets = useSafeAreaInsets();
   const navigate = useNavigation();
 
   const groups = data?.pages.flatMap((page) => page.data) ?? [];
@@ -42,7 +39,7 @@ const GroupsScreen = () => {
           isRefreshing={isRefetching}
         />
       )}
-      <Fab onPress={() => navigate.navigate("CreateGroup" as never)} />
+      <Fab onPress={() => navigate.navigate("CreateGroupScreen" as never)} />
     </View>
   );
 };
