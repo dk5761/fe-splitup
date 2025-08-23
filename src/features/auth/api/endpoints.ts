@@ -1,12 +1,12 @@
 export const authEndpoints = {
   // Auth
-  register: "/api/v1/auth/register",
-  login: "/api/v1/auth/login",
-  checkUsername: "/api/v1/auth/check-username",
-  refresh: "/api/v1/auth/refresh",
-  logout: "/api/v1/auth/logout",
-  forgotPassword: "/api/v1/auth/forgot-password",
-  resetPassword: "/api/v1/auth/reset-password",
+  register: "/auth/register",
+  login: "/auth/login",
+  checkUsername: "/auth/check-username",
+  refresh: "/auth/refresh",
+  logout: "/auth/logout",
+  forgotPassword: "/auth/forgot-password",
+  resetPassword: "/auth/reset-password",
   // User
-  me: "/api/v1/user/me",
+  me: "/user/me",
 } as const;
