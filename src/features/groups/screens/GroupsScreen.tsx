@@ -3,13 +3,15 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native-unistyles";
 
-import { getGroupsQuery } from "../api";
+import { getGroupsQuery } from "../api/query";
 import { GroupList } from "../components/GroupList";
 import { EmptyGroups } from "../components/EmptyGroups";
 import { GroupsHeader } from "../components/GroupsHeader";
 import { CreateGroupButton } from "../components/CreateGroupButton";
+import { useNavigation } from "@react-navigation/native";
 
-export const GroupsScreen = () => {
+const GroupsScreen = () => {
+  const navigation = useNavigation();
   const {
     data,
     isLoading,
@@ -21,6 +23,7 @@ export const GroupsScreen = () => {
     isRefetching,
   } = useInfiniteQuery(getGroupsQuery());
   const insets = useSafeAreaInsets();
+  const navigate = useNavigation();
 
   const groups = data?.pages.flatMap((page) => page.data) ?? [];
 
@@ -40,7 +43,9 @@ export const GroupsScreen = () => {
           isRefreshing={isRefetching}
         />
       )}
-      <CreateGroupButton />
+      <CreateGroupButton
+        onPress={() => navigate.navigate("CreateGroupScreen" as never)}
+      />
     </View>
   );
 };
@@ -51,3 +56,5 @@ const styles = StyleSheet.create((theme) => ({
     backgroundColor: theme.colors.background,
   },
 }));
+
+export default GroupsScreen;

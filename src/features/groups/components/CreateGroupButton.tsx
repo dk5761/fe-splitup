@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Ionicons } from "@expo/vector-icons";
 import { useUnistyles } from "react-native-unistyles";
 
-export const CreateGroupButton = () => {
+export const CreateGroupButton = ({ onPress }: { onPress: () => void }) => {
   const { theme } = useUnistyles();
   return (
     <View style={styles.container}>
-      <Button variant="primary" style={styles.button}>
+      <Button variant="primary" style={styles.button} onPress={onPress}>
         <Ionicons name="add" size={30} color={theme.colors.primaryOn} />
       </Button>
     </View>

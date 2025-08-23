@@ -25,7 +25,6 @@ export const Tabs = () => {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Groups" component={GroupStackNavigator} />
-      {/* This screen acts as a placeholder to create space for the center button */}
       <Tab.Screen name="Scan" component={ScanScreen} />
       <Tab.Screen name="Friends" component={FriendsStackNavigator} />
       <Tab.Screen name="Account" component={AccountScreen} />

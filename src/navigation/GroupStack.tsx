@@ -1,6 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { GroupsScreen } from "@/features/groups/screens";
+import { CreateGroupScreen, GroupsScreen } from "@/features/groups/screens";
 import { GroupStackParamList } from "./types";
 import Header from "@/components/layout/header/Header";
 import { useUnistyles } from "react-native-unistyles";
@@ -27,6 +27,14 @@ export function GroupStackNavigator() {
           header: (props) => (
             <Header title={props.options.title || ""} canGoBack={false} />
           ),
+        }}
+      />
+      <GroupStack.Screen
+        name="CreateGroupScreen"
+        component={CreateGroupScreen}
+        options={{
+          title: "Create Group",
+          headerShown: true,
         }}
       />
     </GroupStack.Navigator>

@@ -1,16 +1,16 @@
 import { infiniteQueryOptions } from "@tanstack/react-query";
 
 import { apiGet } from "@/shared/api/client";
-import { GroupsListResponse } from "../types";
+import { GroupsListResponse } from "../types/groups.types";
 import { groupsEndpoints } from "./endpoints";
-import { groupsKeys } from "./queryKeyFactory";
+import { groupsQueryKeys } from "./queryKeyFactory";
 
 export const getGroupsQuery = () =>
   infiniteQueryOptions({
-    queryKey: groupsKeys.lists(),
+    queryKey: groupsQueryKeys.lists(),
     queryFn: ({ pageParam = 1 }) =>
       apiGet<GroupsListResponse>(
-        `${groupsEndpoints.groups}?page=${pageParam}&limit=10`
+        `${groupsEndpoints.getGroups}?page=${pageParam}&limit=10`
       ),
     getNextPageParam: (lastPage) => {
       if (lastPage.offset + lastPage.limit < lastPage.total) {

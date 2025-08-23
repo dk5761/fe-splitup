@@ -1,3 +1,3 @@
 export * from "./endpoints";
-export * from "./query";
+export * from "./mutationFn";
 export * from "./queryKeyFactory";

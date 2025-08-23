@@ -1,6 +1,5 @@
-export const groupsKeys = {
+export const groupsQueryKeys = {
   all: ["groups"] as const,
-  lists: () => [...groupsKeys.all, "list"] as const,
-  list: (filters: { page: number; limit: number }) =>
-    [...groupsKeys.lists(), filters] as const,
+  lists: () => [...groupsQueryKeys.all, "list"] as const,
+  list: (filters: string) => [...groupsQueryKeys.lists(), { filters }] as const,
 };

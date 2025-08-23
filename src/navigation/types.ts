@@ -24,6 +24,7 @@ export type FriendsStackParamList = {
 
 export type GroupStackParamList = {
   GroupsScreen: undefined;
+  CreateGroupScreen: undefined;
 };
 
 export type MainStackParamList = {

@@ -1,3 +1,4 @@
 export const groupsEndpoints = {
-  groups: "/groups",
+  createGroup: "/groups",
+  getGroups: "/groups",
 };
