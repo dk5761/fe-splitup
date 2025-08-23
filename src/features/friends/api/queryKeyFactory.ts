@@ -5,4 +5,7 @@ export const friendsQueryKeys = {
     [...friendsQueryKeys.lists(), { filters }] as const,
   details: () => [...friendsQueryKeys.all, "detail"] as const,
   detail: (id: string) => [...friendsQueryKeys.details(), id] as const,
+  expenseLists: () => [...friendsQueryKeys.all, "expense-list"] as const,
+  expenseList: (friendId: string) =>
+    [...friendsQueryKeys.expenseLists(), friendId] as const,
 };

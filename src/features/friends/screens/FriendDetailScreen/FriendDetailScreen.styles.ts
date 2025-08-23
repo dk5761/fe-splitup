@@ -134,4 +134,10 @@ export const stylesheet = StyleSheet.create((theme) => ({
     width: "100%",
     gap: theme.spacing.md,
   },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
 }));
