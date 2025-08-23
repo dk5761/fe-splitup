@@ -16,6 +16,8 @@ interface GroupListProps {
   fetchNextPage: () => void;
   hasNextPage?: boolean;
   isFetchingNextPage: boolean;
+  onRefresh: () => void;
+  isRefreshing: boolean;
 }
 
 export const GroupList = ({
@@ -25,6 +27,8 @@ export const GroupList = ({
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
+  onRefresh,
+  isRefreshing,
 }: GroupListProps) => {
   if (isLoading && groups.length === 0) {
     return (
@@ -56,6 +60,8 @@ export const GroupList = ({
       ListFooterComponent={isFetchingNextPage ? <ActivityIndicator /> : null}
       contentContainerStyle={{ padding: 20 }}
       ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+      onRefresh={onRefresh}
+      refreshing={isRefreshing}
     />
   );
 };

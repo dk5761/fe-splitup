@@ -301,19 +301,24 @@ This document outlines the API contract for the SplitUp backend.
 
 ### 1. Create Group
 
-- **Description:** Creates a new group.
+- **Description:** Creates a new group, with an option to upload a profile image.
 - **Endpoint:** `POST`
-- **Request Body:**
-  ```json
-  {
-    "name": "string",
-    "members": [
-      {
-        "user_id": "uuid",
-        "role": "string" // "admin" or "member"
-      }
-    ]
-  }
+- **Content-Type:** `multipart/form-data`
+- **Request Form Fields:**
+
+  - `name` (string, required): The name of the group.
+  - `members` (string, required): A JSON string representation of an array of members.
+    - Example JSON string: `[{"user_id": "uuid", "role": "member"}]`
+  - `image` (file, optional): The group's profile image (e.g., `.jpg`, `.png`). Max 5MB.
+
+- **Example Request (`curl`):**
+  ```bash
+  curl -X POST \
+    http://localhost:8080/api/v1/groups \
+    -H "Authorization: Bearer <token>" \
+    -F "name=Trip to the Alps" \
+    -F 'members=[{"user_id":"a1b2c3d4-...","role":"member"},{"user_id":"e5f6g7h8-...","role":"admin"}]' \
+    -F "image=@/path/to/your/image.jpg"
   ```
 - **Response Body:**
   ```json

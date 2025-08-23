@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
-import { Group } from "../../types";
+import { Group } from "../types";
+import { ChevronRight, Icon } from "lucide-react-native";
 
 interface GroupListItemProps {
   item: Group;
@@ -10,20 +11,9 @@ export const GroupListItem = ({ item }: GroupListItemProps) => {
     <Pressable style={styles.container}>
       <Image source={{ uri: item.image_url }} style={styles.image} />
       <View style={styles.infoContainer}>
-        <Text style={styles.name}>
-          {item.name} {item.tag}
-        </Text>
-        <View style={styles.membersContainer}>
-          {item.members.slice(0, 5).map((member) => (
-            <Image
-              key={member.id}
-              source={{ uri: member.avatar_url }}
-              style={styles.avatar}
-            />
-          ))}
-        </View>
+        <Text style={styles.name}>{item.name}</Text>
       </View>
-      <Text>{">"}</Text>
+      <ChevronRight size={24} color="#000" />
     </Pressable>
   );
 };

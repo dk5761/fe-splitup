@@ -17,6 +17,8 @@ export const GroupsScreen = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    refetch,
+    isRefetching,
   } = useInfiniteQuery(getGroupsQuery());
   const insets = useSafeAreaInsets();
 
@@ -34,6 +36,8 @@ export const GroupsScreen = () => {
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
+          onRefresh={refetch}
+          isRefreshing={isRefetching}
         />
       )}
       <CreateGroupButton />
