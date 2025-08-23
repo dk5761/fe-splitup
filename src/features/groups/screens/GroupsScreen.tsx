@@ -7,6 +7,14 @@ import { GroupList } from "../components/GroupList";
 import { EmptyGroups } from "../components/EmptyGroups";
 import { useNavigation } from "@react-navigation/native";
 import { Fab } from "@/components/ui";
+import { Group, GroupsListResponse } from "../types";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { GroupStackParamList } from "@/navigation/types";
+
+type GroupsScreenNavigationProp = NativeStackNavigationProp<
+  GroupStackParamList,
+  "GroupsScreen"
+>;
 
 const GroupsScreen = () => {
   const {
@@ -19,9 +27,16 @@ const GroupsScreen = () => {
     refetch,
     isRefetching,
   } = useInfiniteQuery(getGroupsQuery());
-  const navigate = useNavigation();
+  const navigation = useNavigation<GroupsScreenNavigationProp>();
 
-  const groups = data?.pages.flatMap((page) => page.data) ?? [];
+  const groups =
+    data?.pages.flatMap((page: GroupsListResponse) => page.data) ?? [];
+
+  const handleGroupPress = (group: Group) => {
+    navigation.navigate("GroupDetailScreen", { groupId: group.id });
+  };
+
+  console.log(groups, data);
 
   return (
     <View style={[styles.container]}>
@@ -30,6 +45,7 @@ const GroupsScreen = () => {
       ) : (
         <GroupList
           groups={groups}
+          onGroupPress={handleGroupPress}
           isLoading={isLoading}
           isError={isError}
           fetchNextPage={fetchNextPage}
@@ -39,7 +55,7 @@ const GroupsScreen = () => {
           isRefreshing={isRefetching}
         />
       )}
-      <Fab onPress={() => navigate.navigate("CreateGroupScreen" as never)} />
+      <Fab onPress={() => navigation.navigate("CreateGroupScreen")} />
     </View>
   );
 };

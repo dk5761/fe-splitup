@@ -25,11 +25,14 @@ export type FriendsStackParamList = {
 export type GroupStackParamList = {
   GroupsScreen: undefined;
   CreateGroupScreen: undefined;
+  GroupDetailScreen: { groupId: string };
+  AddExpense: { groupId: string };
 };
 
 export type MainStackParamList = {
   Tabs: NavigatorScreenParams<TabParamList>;
   FriendsStack: NavigatorScreenParams<FriendsStackParamList>;
+  GroupStack: NavigatorScreenParams<GroupStackParamList>;
 };
 
 export type RootStackParamList = {

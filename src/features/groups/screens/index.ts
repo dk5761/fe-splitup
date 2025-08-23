@@ -1,2 +1,4 @@
-export { default as CreateGroupScreen } from "./CreateGroupScreen/CreateGroupScreen";
-export { default as GroupsScreen } from "./GroupsScreen";
+export * from "./GroupsScreen";
+export * from "./CreateGroupScreen";
+export * from "./GroupDetailScreen";
+export * from "./AddExpenseScreen";

@@ -26,3 +26,28 @@ export interface GroupsListResponse {
   limit: number;
   offset: number;
 }
+
+export interface ExpenseParticipant {
+  user_id: string;
+  share_amount: string;
+}
+
+export interface Payer {
+  id: string;
+  name: string;
+}
+
+export interface ExpenseCategory {
+  name: string;
+  icon_name: string;
+}
+
+export interface Expense {
+  id: string;
+  description: string;
+  total_amount: string;
+  expense_date: string;
+  payer: Payer;
+  category: ExpenseCategory;
+  participants: ExpenseParticipant[];
+}

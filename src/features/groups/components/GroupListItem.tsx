@@ -4,12 +4,16 @@ import { ChevronRight, Icon } from "lucide-react-native";
 
 interface GroupListItemProps {
   item: Group;
+  onPress: () => void;
 }
 
-export const GroupListItem = ({ item }: GroupListItemProps) => {
+export const GroupListItem = ({ item, onPress }: GroupListItemProps) => {
   return (
-    <Pressable style={styles.container}>
-      <Image source={{ uri: item.image_url }} style={styles.image} />
+    <Pressable style={styles.container} onPress={onPress}>
+      <Image
+        source={{ uri: item.image_url || "https://via.placeholder.com/60" }}
+        style={styles.image}
+      />
       <View style={styles.infoContainer}>
         <Text style={styles.name}>{item.name}</Text>
       </View>

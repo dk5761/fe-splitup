@@ -10,6 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useUnistyles } from "react-native-unistyles";
 import Header from "@/components/layout/header/Header";
 import { FriendsStackNavigator } from "./FriendsStack";
+import { GroupStackNavigator } from "./GroupStack";
 
 const MainStack = createNativeStackNavigator<MainStackParamList>();
 
@@ -49,6 +50,11 @@ export function MainStackNavigator() {
           name="FriendsStack"
           component={FriendsStackNavigator}
           options={{ title: "Friends" }}
+        />
+        <MainStack.Screen
+          name="GroupStack"
+          component={GroupStackNavigator}
+          options={{ title: "Groups" }}
         />
       </MainStack.Navigator>
     </View>

@@ -11,6 +11,7 @@ import { GroupListItem } from "./GroupListItem";
 
 interface GroupListProps {
   groups: Group[];
+  onGroupPress: (group: Group) => void;
   isLoading: boolean;
   isError: boolean;
   fetchNextPage: () => void;
@@ -22,6 +23,7 @@ interface GroupListProps {
 
 export const GroupList = ({
   groups,
+  onGroupPress,
   isLoading,
   isError,
   fetchNextPage,
@@ -50,7 +52,9 @@ export const GroupList = ({
     <FlatList
       data={groups}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <GroupListItem item={item} />}
+      renderItem={({ item }) => (
+        <GroupListItem item={item} onPress={() => onGroupPress(item)} />
+      )}
       onEndReached={() => {
         if (hasNextPage && !isFetchingNextPage) {
           fetchNextPage();
