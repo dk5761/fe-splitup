@@ -36,8 +36,6 @@ const GroupsScreen = () => {
     navigation.navigate("GroupDetailScreen", { groupId: group.id });
   };
 
-  console.log(groups, data);
-
   return (
     <View style={[styles.container]}>
       {groups.length === 0 && !isLoading ? (

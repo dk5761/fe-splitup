@@ -20,12 +20,14 @@ export const GroupDetailHeader = ({
 }: GroupDetailHeaderProps) => {
   return (
     <View style={styles.container}>
-      <Image
-        source={{
-          uri: group?.image_url || "https://via.placeholder.com/400x200",
-        }}
-        style={styles.image}
-      />
+      <View style={styles.imageContainer}>
+        <Image
+          source={{
+            uri: group?.image_url || "https://via.placeholder.com/400x200",
+          }}
+          style={styles.image}
+        />
+      </View>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}

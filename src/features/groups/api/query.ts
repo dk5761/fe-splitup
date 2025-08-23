@@ -1,7 +1,13 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import { apiGet, httpClient } from "@/shared/api/client";
 import { groupsQueryKeys } from "./queryKeyFactory";
-import { Group, Expense, GroupsListResponse } from "../types";
+import {
+  Group,
+  Expense,
+  GroupsListResponse,
+  GroupMembersResponse,
+  GroupMemberDetails,
+} from "../types";
 import { groupsEndpoints } from "./endpoints";
 
 // Get Groups
@@ -53,4 +59,12 @@ export const getGroupExpensesQuery = (groupId: string) =>
       }
       return undefined;
     },
+  });
+
+// Get Group Members
+export const getGroupMembersQuery = (groupId: string) =>
+  queryOptions({
+    queryKey: groupsQueryKeys.members(groupId),
+    queryFn: () =>
+      apiGet<GroupMemberDetails[]>(groupsEndpoints.getGroupMembers(groupId)),
   });

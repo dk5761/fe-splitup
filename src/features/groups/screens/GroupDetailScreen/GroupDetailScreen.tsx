@@ -36,7 +36,7 @@ export const GroupDetailScreen = () => {
     { key: "expenses", title: "Expenses" },
     { key: "balances", title: "Balances" },
     { key: "totals", title: "Totals" },
-    { key: "group", title: "Group" },
+    { key: "members", title: "Members" },
   ]);
 
   const { data: group, isLoading: isGroupLoading } = useQuery(
@@ -54,7 +54,7 @@ export const GroupDetailScreen = () => {
     expenses: () => <ExpensesTab groupId={groupId} />,
     balances: BalancesTab,
     totals: TotalsTab,
-    group: MembersTab,
+    members: () => <MembersTab groupId={groupId} />,
   });
 
   if (isGroupLoading) {
@@ -69,6 +69,7 @@ export const GroupDetailScreen = () => {
         onIndexChange={setIndex}
         initialLayout={{ width: layout.width }}
         renderTabBar={(props) => <GroupDetailHeader group={group} {...props} />}
+        lazy
       />
       <Fab onPress={() => navigation.navigate("AddExpense", { groupId })} />
     </View>

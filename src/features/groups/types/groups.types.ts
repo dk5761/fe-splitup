@@ -51,3 +51,17 @@ export interface Expense {
   category: ExpenseCategory;
   participants: ExpenseParticipant[];
 }
+
+export interface GroupMemberDetails {
+  user_id: string;
+  name: string;
+  username: string;
+  email: string;
+  avatar_url?: string;
+  role: "admin" | "member";
+  joined_at: string;
+}
+
+export interface GroupMembersResponse {
+  data: GroupMemberDetails[];
+}
