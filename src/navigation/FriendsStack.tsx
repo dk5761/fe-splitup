@@ -51,7 +51,7 @@ export function FriendsStackNavigator() {
         component={FriendDetailScreen}
         options={{
           title: "Contact",
-          headerShown: true,
+          headerShown: false,
           header: (props) => <Header title={props.options.title || ""} />,
         }}
       />
