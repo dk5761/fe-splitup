@@ -1,6 +1,10 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { FriendsScreen, AddFriendScreen } from "@/features/friends/screens";
+import {
+  FriendsScreen,
+  AddFriendScreen,
+  FriendDetailScreen,
+} from "@/features/friends/screens";
 import { FriendsStackParamList } from "./types";
 import Header from "@/components/layout/header/Header";
 import { useUnistyles } from "react-native-unistyles";
@@ -38,6 +42,15 @@ export function FriendsStackNavigator() {
         component={AddFriendScreen}
         options={{
           title: "Add Friend",
+          headerShown: true,
+          header: (props) => <Header title={props.options.title || ""} />,
+        }}
+      />
+      <FriendsStack.Screen
+        name="FriendDetailScreen"
+        component={FriendDetailScreen}
+        options={{
+          title: "Contact",
           headerShown: true,
           header: (props) => <Header title={props.options.title || ""} />,
         }}

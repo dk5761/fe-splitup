@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native-unistyles";
 
 export const stylesheet = StyleSheet.create((theme) => ({
+  container: {
+    paddingVertical: 10,
+  },
   tabs: {
     flexDirection: "row",
     marginVertical: 16,

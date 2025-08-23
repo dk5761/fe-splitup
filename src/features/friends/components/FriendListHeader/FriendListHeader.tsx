@@ -15,17 +15,17 @@ export const FriendListHeader = ({
   setSearchTerm,
 }: FriendListHeaderProps) => {
   return (
-    <>
+    <View style={styles.container}>
       <SearchInput
         placeholder="Search contact"
         value={searchTerm}
         onChangeText={setSearchTerm}
       />
-      <View style={styles.tabs}>
+      {/* <View style={styles.tabs}>
         <TouchableOpacity style={[styles.tab, styles.activeTab]}>
           <Text style={styles.activeTabText}>All Contacts</Text>
         </TouchableOpacity>
-      </View>
-    </>
+      </View> */}
+    </View>
   );
 };

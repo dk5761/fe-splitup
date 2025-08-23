@@ -19,8 +19,7 @@ export const styles = StyleSheet.create((theme) => ({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    padding: theme.spacing.lg,
-    borderBottomWidth: 1,
+
     borderBottomColor: theme.colors.border,
     minHeight: 56,
     marginBottom: theme.spacing.md,

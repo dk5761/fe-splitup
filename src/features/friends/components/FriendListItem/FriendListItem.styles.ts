@@ -5,6 +5,7 @@ export const stylesheet = StyleSheet.create((theme) => ({
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 12,
+    justifyContent: "space-between",
   },
   avatar: {
     width: 50,
@@ -13,6 +14,7 @@ export const stylesheet = StyleSheet.create((theme) => ({
   },
   friendInfo: {
     marginLeft: 16,
+    flex: 1,
   },
   friendName: {
     fontSize: 16,

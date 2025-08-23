@@ -1,5 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { NavigatorScreenParams } from "@react-navigation/native";
+import { Friend } from "@/features/friends/types";
 
 export type AuthStackParamList = {
   Welcome: undefined;
@@ -18,6 +19,7 @@ export type TabParamList = {
 export type FriendsStackParamList = {
   FriendsScreen: undefined;
   AddFriendScreen: undefined;
+  FriendDetailScreen: { friend: Friend };
 };
 
 export type GroupStackParamList = {

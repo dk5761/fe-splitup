@@ -160,6 +160,8 @@ const light = {
   colors: {
     primary: palette.yellow,
     primaryOn: palette.gray800,
+    secondary: palette.gray100,
+    secondaryOn: palette.gray800,
     background: palette.gray50,
     surface: palette.white,
     onSurface: palette.gray800,
@@ -208,6 +210,8 @@ const dark = {
   colors: {
     primary: palette.yellow,
     primaryOn: palette.gray800,
+    secondary: palette.dark700,
+    secondaryOn: palette.dark100,
     background: palette.dark900,
     surface: palette.dark800,
     onSurface: palette.dark100,

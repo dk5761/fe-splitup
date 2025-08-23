@@ -17,6 +17,12 @@ export const styles = StyleSheet.create((theme) => ({
         primary: {
           backgroundColor: theme.colors.primary,
         },
+        secondary: {
+          backgroundColor: theme.colors.secondary,
+        },
+        destructive: {
+          backgroundColor: "red",
+        },
         outline: {
           backgroundColor: "transparent",
           borderWidth: 1.5,
@@ -51,8 +57,14 @@ export const styles = StyleSheet.create((theme) => ({
         primary: {
           color: theme.colors.primaryOn,
         },
+        secondary: {
+          color: theme.colors.secondaryOn,
+        },
+        destructive: {
+          color: theme.colors.primaryOn,
+        },
         outline: {
-          color: theme.colors.primary,
+          color: theme.colors.primaryOn,
         },
         social: {
           color: theme.colors.text,
