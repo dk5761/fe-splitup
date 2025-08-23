@@ -2,8 +2,8 @@ import { Image } from "expo-image";
 import React from "react";
 import { Text, View } from "react-native";
 
-import { useSendFriendRequest } from "../api/mutationFn";
-import { Friend } from "../types/friends.types";
+import { useSendFriendRequest } from "../../api/mutationFn";
+import { Friend } from "../../types/friends.types";
 import { stylesheet as styles } from "./UserListItem.styles";
 
 import { Button } from "@/components/ui/button";

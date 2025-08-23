@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
 import { Text, View } from "react-native";
 
-import { Friend } from "../types/friends.types";
-import { UserListItem } from "./UserListItem";
+import { Friend } from "../../types/friends.types";
+import { UserListItem } from "../UserListItem";
 import { stylesheet as styles } from "./UserList.styles";
 
 interface UserListProps {

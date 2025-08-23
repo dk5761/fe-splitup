@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 
-import { Friend } from "../types/friends.types";
-import { FriendListItem } from "./FriendListItem";
+import { Friend } from "../../types/friends.types";
+import { FriendListItem } from "../FriendListItem";
 import { stylesheet as styles } from "./FriendList.styles";
 
 interface FriendListProps {
