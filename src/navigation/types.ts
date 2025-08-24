@@ -27,6 +27,7 @@ export type GroupStackParamList = {
   GroupsScreen: undefined;
   CreateGroupScreen: undefined;
   GroupDetailScreen: { groupId: string };
+  AddGroupExpenseScreen: { groupId: string };
 };
 
 export type MainStackParamList = {
@@ -39,7 +40,6 @@ export type MainStackParamList = {
 export type RootStackParamList = {
   Main: NavigatorScreenParams<MainStackParamList>;
   Auth: NavigatorScreenParams<AuthStackParamList>;
-  ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

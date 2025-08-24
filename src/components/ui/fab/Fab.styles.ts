@@ -16,5 +16,21 @@ export const stylesheet = StyleSheet.create((theme) => ({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    variants: {
+      text: {
+        true: {
+          width: "auto",
+          flexDirection: "row",
+          gap: theme.spacing.sm,
+          paddingHorizontal: theme.spacing.lg,
+          paddingVertical: theme.spacing.md,
+          borderRadius: theme.spacing.md,
+          backgroundColor: theme.colors.primary,
+          justifyContent: "center",
+          alignItems: "center",
+          elevation: 4,
+        },
+      },
+    },
   },
 }));

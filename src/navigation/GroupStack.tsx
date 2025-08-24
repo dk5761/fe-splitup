@@ -4,7 +4,7 @@ import GroupsScreen from "@/features/groups/screens/GroupsScreen";
 import {
   CreateGroupScreen,
   GroupDetailScreen,
-  AddExpenseScreen,
+  AddGroupExpenseScreen,
 } from "@/features/groups/screens";
 import { GroupStackParamList } from "./types";
 import Header from "@/components/layout/header/Header";
@@ -17,6 +17,7 @@ export function GroupStackNavigator() {
   return (
     <GroupStack.Navigator
       screenOptions={{
+        headerShown: false,
         header: (props) => <Header title={props.options.title || ""} />,
         contentStyle: {
           backgroundColor: theme.colors.background,
@@ -50,14 +51,17 @@ export function GroupStackNavigator() {
           headerShown: true,
         }}
       />
-      {/* <GroupStack.Screen
-        name="AddExpense"
-        component={AddExpenseScreen}
+      <GroupStack.Screen
+        name="AddGroupExpenseScreen"
+        component={AddGroupExpenseScreen}
         options={{
           title: "Add Expense",
           headerShown: true,
+          header: (props) => (
+            <Header title={props.options.title || ""} canGoBack={true} />
+          ),
         }}
-      /> */}
+      />
     </GroupStack.Navigator>
   );
 }

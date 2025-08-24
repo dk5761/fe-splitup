@@ -1,4 +1,4 @@
 export * from "./GroupsScreen";
 export * from "./CreateGroupScreen";
 export * from "./GroupDetailScreen";
-export * from "./AddExpenseScreen";
+export * from "./AddGroupExpenseScreen";

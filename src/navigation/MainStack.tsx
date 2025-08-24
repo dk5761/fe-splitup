@@ -29,6 +29,7 @@ export function MainStackNavigator() {
     >
       <MainStack.Navigator
         screenOptions={{
+          headerShown: false,
           header: (props) => <Header title={props.options.title || ""} />,
           contentStyle: {
             backgroundColor: theme.colors.background,

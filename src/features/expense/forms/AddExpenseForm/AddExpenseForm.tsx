@@ -11,22 +11,26 @@ import {
   AppBottomSheetRef,
 } from "@/components/ui/appbottomsheet";
 import { SplitByBottomSheet } from "../../components/SplitByBottomSheet";
-import { GroupMemberDetails } from "@/features/groups/types";
+
 import { ChevronDown } from "lucide-react-native";
 import { useUnistyles } from "react-native-unistyles";
 import { styles } from "./AddExpense.styles";
 
 type AddExpenseFormProps = {
   groupId?: string;
+  onSuccess?: () => void;
 };
 
-export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ groupId }) => {
+export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({
+  groupId,
+  onSuccess,
+}) => {
   const { theme } = useUnistyles();
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-    getValues,
+
     setValue,
     watch,
   } = useForm<AddExpenseFormValues>({
@@ -35,9 +39,13 @@ export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ groupId }) => {
       description: "",
       total_amount: "",
       expense_date: new Date(),
-      split_type: "EQUAL",
+      split_type: undefined,
       participants: [],
     },
+  });
+
+  styles.useVariants({
+    error: errors.split_type?.message ? true : false,
   });
 
   // console.log(getValues());
@@ -47,14 +55,20 @@ export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ groupId }) => {
   const totalAmount = watch("total_amount");
 
   const onSubmit = (data: AddExpenseFormValues) => {
-    console.log({ data });
     const expenseData = {
       ...data,
       expense_date: data.expense_date.toISOString(),
       group_id: groupId,
     };
 
-    createExpense({ expense_data: expenseData });
+    createExpense(
+      { expense_data: expenseData },
+      {
+        onSuccess: () => {
+          onSuccess?.();
+        },
+      }
+    );
   };
 
   const openBottomSheet = () => {
@@ -62,15 +76,15 @@ export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ groupId }) => {
   };
 
   const handleSplitSubmit = (participants: any[], splitType: "EQUAL") => {
-    setValue("participants", participants);
-    setValue("split_type", splitType);
+    setValue("participants", participants, { shouldValidate: true });
+    setValue("split_type", splitType, { shouldValidate: true });
     bottomSheetRef.current?.close();
   };
 
   const splitType = useWatch({ control, name: "split_type" });
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Controller
         control={control}
         name="description"

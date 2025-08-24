@@ -19,6 +19,15 @@ export const styles = StyleSheet.create((theme) => ({
     borderWidth: 1,
     borderColor: theme.colors.border,
     marginVertical: theme.spacing.lg,
+
+    variants: {
+      error: {
+        true: {
+          borderColor: theme.colors.error,
+          borderWidth: 2,
+        },
+      },
+    },
   },
   splitType: {
     color: theme.colors.primary,

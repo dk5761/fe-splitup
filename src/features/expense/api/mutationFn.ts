@@ -2,9 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { httpClient } from "@/shared/api/client";
 import { CreateExpenseData } from "../types";
 import { expenseEndpoints } from "./endpoints";
-import { router } from "expo-router";
 import { appToast } from "@/components";
-import { toast } from "sonner-native";
 
 export type CreateExpensePayload = {
   expense_data: CreateExpenseData;
@@ -29,13 +27,9 @@ export const useCreateExpense = () => {
     },
     onSuccess: () => {
       appToast.success("Expense created successfully");
-      // Invalidate queries here later
-      if (router.canGoBack()) {
-        router.back();
-      }
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to create expense");
+      appToast.error(error.message || "Failed to create expense");
     },
   });
 };

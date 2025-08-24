@@ -25,10 +25,15 @@ type GroupDetailScreenRouteProp = RouteProp<
   "GroupDetailScreen"
 >;
 
+type GroupNavProp = NativeStackNavigationProp<
+  GroupStackParamList,
+  "GroupDetailScreen"
+>;
+
 export const GroupDetailScreen = () => {
   const layout = useWindowDimensions();
   const route = useRoute<GroupDetailScreenRouteProp>();
-  const navigation = useNavigation<GroupDetailScreenNavigationProp>();
+  const navigation = useNavigation<GroupNavProp>();
   const { groupId } = route.params;
 
   const [index, setIndex] = useState(0);
@@ -72,10 +77,10 @@ export const GroupDetailScreen = () => {
         lazy
       />
       <Fab
+        text="Add Expense"
         onPress={() =>
-          navigation.navigate("ExpenseStack", {
-            screen: "AddExpense",
-            params: { groupId },
+          navigation.navigate("AddGroupExpenseScreen", {
+            groupId,
           })
         }
       />
