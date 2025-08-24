@@ -20,7 +20,7 @@ export const SplitByBottomSheet: React.FC<SplitByBottomSheetProps> = ({
 }) => {
   const [splitType, setSplitType] = useState<"EQUAL">("EQUAL");
   const [selectedParticipants, setSelectedParticipants] = useState<
-    Record<string, { share: string }>
+    Record<string, boolean>
   >({});
 
   // This will be expanded to handle friendId as well
@@ -30,13 +30,13 @@ export const SplitByBottomSheet: React.FC<SplitByBottomSheetProps> = ({
   });
 
   useEffect(() => {
-    if (isLoading) return;
-    const initialSelection = members?.reduce((acc, p) => {
-      acc[p.user_id] = { share: "" };
+    if (isLoading || !members) return;
+    const initialSelection = members.reduce((acc, p) => {
+      acc[p.user_id] = true;
       return acc;
-    }, {} as Record<string, { share: string }>);
-    setSelectedParticipants(initialSelection || {});
-  }, [members]);
+    }, {} as Record<string, boolean>);
+    setSelectedParticipants(initialSelection);
+  }, [isLoading, members]);
 
   const handleSelectParticipant = useCallback((userId: string) => {
     setSelectedParticipants((prev) => {
@@ -44,31 +44,19 @@ export const SplitByBottomSheet: React.FC<SplitByBottomSheetProps> = ({
       if (newSelection[userId]) {
         delete newSelection[userId];
       } else {
-        newSelection[userId] = { share: "" };
+        newSelection[userId] = true;
       }
       return newSelection;
     });
   }, []);
 
-  const handleShareChange = useCallback((userId: string, share: string) => {
-    setSelectedParticipants((prev) => ({
-      ...prev,
-      [userId]: { ...prev[userId], share },
-    }));
-  }, []);
-
   const handleConfirm = useCallback(() => {
-    const result = Object.entries(selectedParticipants).map(
-      ([user_id, data]) => {
-        if (splitType === "EQUAL") {
-          return { user_id };
-        }
-        return { user_id, share_amount: data.share };
-      }
-    );
+    const result = Object.keys(selectedParticipants)
+      .filter((userId) => selectedParticipants[userId])
+      .map((user_id) => ({ user_id }));
     onSubmit(result, "EQUAL" as const);
     onClose();
-  }, [selectedParticipants, splitType, onSubmit, onClose]);
+  }, [selectedParticipants, onSubmit, onClose]);
 
   const renderItem = useCallback(
     ({ item }: { item: GroupMemberDetails }) => (
@@ -76,17 +64,10 @@ export const SplitByBottomSheet: React.FC<SplitByBottomSheetProps> = ({
         item={item}
         isSelected={!!selectedParticipants[item.user_id]}
         splitType={"EQUAL"}
-        share={selectedParticipants[item.user_id]?.share || ""}
         onSelect={handleSelectParticipant}
-        onShareChange={handleShareChange}
       />
     ),
-    [
-      selectedParticipants,
-      splitType,
-      handleSelectParticipant,
-      handleShareChange,
-    ]
+    [selectedParticipants, splitType, handleSelectParticipant]
   );
 
   if (isLoading) return <ActivityIndicator />;

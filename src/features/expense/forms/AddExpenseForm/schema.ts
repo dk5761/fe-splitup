@@ -9,7 +9,6 @@ export const addExpenseSchema = z.object({
     .array(
       z.object({
         user_id: z.string(),
-        share_amount: z.string().optional(),
       })
     )
     .min(1, "At least one participant is required"),

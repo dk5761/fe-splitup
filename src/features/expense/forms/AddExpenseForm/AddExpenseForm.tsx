@@ -25,7 +25,7 @@ export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ groupId }) => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     getValues,
     setValue,
     watch,
@@ -110,7 +110,7 @@ export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ groupId }) => {
       <Button
         title="Save"
         onPress={handleSubmit(onSubmit)}
-        loading={isPending}
+        loading={isPending || isSubmitting}
       />
       <AppBottomSheet
         ref={bottomSheetRef}
