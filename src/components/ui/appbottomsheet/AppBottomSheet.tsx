@@ -19,43 +19,59 @@ interface AppBottomSheetProps {
   children: React.ReactNode;
   headerTitleVariant?: HeaderVariant; // Use the corrected type
   onDismiss?: () => void;
+  snapPoints?: string[];
+  enableDynamicSizing?: boolean;
 }
 
 export const AppBottomSheet = forwardRef<
   AppBottomSheetRef,
   AppBottomSheetProps
->(({ children, headerTitleVariant, onDismiss }, ref) => {
-  // Removed the "default" default value
-  const snapPoints = useMemo(() => ["90%"], []);
+>(
+  (
+    {
+      children,
+      headerTitleVariant,
+      onDismiss,
+      snapPoints,
+      enableDynamicSizing = true,
+    },
+    ref
+  ) => {
+    // Removed the "default" default value
+    const snapPointsInternal = useMemo(
+      () => snapPoints || ["90%"],
+      [snapPoints]
+    );
 
-  // FIX 2: Pass the prop directly. If it's undefined, Unistyles will
-  // correctly apply the default styles.
-  styles.useVariants({
-    variant: headerTitleVariant,
-  });
+    // FIX 2: Pass the prop directly. If it's undefined, Unistyles will
+    // correctly apply the default styles.
+    styles.useVariants({
+      variant: headerTitleVariant,
+    });
 
-  return (
-    <BottomSheetModal
-      ref={ref}
-      index={0}
-      snapPoints={snapPoints}
-      enableDynamicSizing={true}
-      handleComponent={() => <View style={styles.handle} />}
-      backdropComponent={(props) => (
-        <BottomSheetBackdrop
-          {...props}
-          appearsOnIndex={0}
-          disappearsOnIndex={-1}
-        />
-      )}
-      backgroundStyle={styles.background}
-      style={{ flex: 1 }}
-      onDismiss={onDismiss}
-    >
-      {children}
-    </BottomSheetModal>
-  );
-});
+    return (
+      <BottomSheetModal
+        ref={ref}
+        index={0}
+        snapPoints={snapPointsInternal}
+        enableDynamicSizing={enableDynamicSizing}
+        handleComponent={() => <View style={styles.handle} />}
+        backdropComponent={(props) => (
+          <BottomSheetBackdrop
+            {...props}
+            appearsOnIndex={0}
+            disappearsOnIndex={-1}
+          />
+        )}
+        backgroundStyle={styles.background}
+        style={{ flex: 1 }}
+        onDismiss={onDismiss}
+      >
+        {children}
+      </BottomSheetModal>
+    );
+  }
+);
 
 export const AppBottomSheetHeader = ({
   title,

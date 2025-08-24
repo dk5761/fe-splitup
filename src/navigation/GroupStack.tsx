@@ -50,14 +50,14 @@ export function GroupStackNavigator() {
           headerShown: true,
         }}
       />
-      <GroupStack.Screen
+      {/* <GroupStack.Screen
         name="AddExpense"
         component={AddExpenseScreen}
         options={{
           title: "Add Expense",
           headerShown: true,
         }}
-      />
+      /> */}
     </GroupStack.Navigator>
   );
 }

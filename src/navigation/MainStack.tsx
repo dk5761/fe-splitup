@@ -11,6 +11,7 @@ import { useUnistyles } from "react-native-unistyles";
 import Header from "@/components/layout/header/Header";
 import { FriendsStackNavigator } from "./FriendsStack";
 import { GroupStackNavigator } from "./GroupStack";
+import { ExpenseStackNavigator } from "./ExpenseStack";
 
 const MainStack = createNativeStackNavigator<MainStackParamList>();
 
@@ -55,6 +56,11 @@ export function MainStackNavigator() {
           name="GroupStack"
           component={GroupStackNavigator}
           options={{ title: "Groups" }}
+        />
+        <MainStack.Screen
+          name="ExpenseStack"
+          component={ExpenseStackNavigator}
+          options={{ title: "Expenses", headerShown: false }}
         />
       </MainStack.Navigator>
     </View>

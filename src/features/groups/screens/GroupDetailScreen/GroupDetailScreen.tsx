@@ -7,7 +7,7 @@ import { styles } from "./GroupDetailScreen.styles";
 import { getGroupDetailsQuery } from "../../api/query";
 import { GroupDetailHeader } from "../../components/GroupDetailHeader";
 import { Fab } from "@/components/ui/fab";
-import { GroupStackParamList } from "@/navigation/types";
+import { GroupStackParamList, RootStackParamList } from "@/navigation/types";
 import { MoreVertical } from "lucide-react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ExpensesTab } from "./tabs/ExpensesTab";
@@ -16,8 +16,8 @@ import { TotalsTab } from "./tabs/TotalsTab";
 import { MembersTab } from "./tabs/MembersTab";
 
 type GroupDetailScreenNavigationProp = NativeStackNavigationProp<
-  GroupStackParamList,
-  "GroupDetailScreen"
+  RootStackParamList,
+  "Main"
 >;
 
 type GroupDetailScreenRouteProp = RouteProp<
@@ -71,7 +71,14 @@ export const GroupDetailScreen = () => {
         renderTabBar={(props) => <GroupDetailHeader group={group} {...props} />}
         lazy
       />
-      <Fab onPress={() => navigation.navigate("AddExpense", { groupId })} />
+      <Fab
+        onPress={() =>
+          navigation.navigate("ExpenseStack", {
+            screen: "AddExpense",
+            params: { groupId },
+          })
+        }
+      />
     </View>
   );
 };

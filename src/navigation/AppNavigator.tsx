@@ -41,7 +41,9 @@ export function AppNavigator({ linking, onReady }: AppNavigatorProps) {
         }}
       >
         {isAuthenticated ? (
-          <RootStack.Screen name="Main" component={MainStackNavigator} />
+          <RootStack.Group>
+            <RootStack.Screen name="Main" component={MainStackNavigator} />
+          </RootStack.Group>
         ) : (
           <RootStack.Screen name="Auth" component={AuthStack} />
         )}

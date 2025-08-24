@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { NavigatorScreenParams } from "@react-navigation/native";
 import { Friend } from "@/features/friends/types";
+import { ExpenseStackParamList } from "./ExpenseStack";
 
 export type AuthStackParamList = {
   Welcome: undefined;
@@ -26,18 +27,19 @@ export type GroupStackParamList = {
   GroupsScreen: undefined;
   CreateGroupScreen: undefined;
   GroupDetailScreen: { groupId: string };
-  AddExpense: { groupId: string };
 };
 
 export type MainStackParamList = {
   Tabs: NavigatorScreenParams<TabParamList>;
   FriendsStack: NavigatorScreenParams<FriendsStackParamList>;
   GroupStack: NavigatorScreenParams<GroupStackParamList>;
+  ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;
 };
 
 export type RootStackParamList = {
-  Main: MainStackParamList;
-  Auth: AuthStackParamList;
+  Main: NavigatorScreenParams<MainStackParamList>;
+  Auth: NavigatorScreenParams<AuthStackParamList>;
+  ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
