@@ -1,7 +1,14 @@
+import { AddExpenseFormValues } from "../../forms/AddExpenseForm/schema";
+
 export type SplitByBottomSheetProps = {
   groupId: string;
   totalAmount: number;
-
-  onSubmit: (participants: any[], splitType: "EQUAL") => void;
+  payerId?: string;
+  participants: AddExpenseFormValues["participants"];
+  onSubmit: (
+    participants: any[],
+    splitType: "EQUAL",
+    payerId?: string
+  ) => void;
   onClose: () => void;
 };

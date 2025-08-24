@@ -5,6 +5,7 @@ export const stylesheet = StyleSheet.create((theme) => ({
     padding: 20,
     backgroundColor: theme.colors.surface,
     height: "100%",
+    width: "100%",
   },
   contentContainer: {
     flex: 1,

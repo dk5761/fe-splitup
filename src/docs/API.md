@@ -502,6 +502,7 @@ This document outlines the API contract for the SplitUp backend.
         "description": "string",
         "total_amount": "decimal",
         "group_id": "uuid", // optional
+        "payer_id": "uuid", // optional, defaults to the creator
         "expense_date": "timestamp",
         "split_type": "string", // "EQUAL" or "MANUAL"
         "participants": [
@@ -519,7 +520,7 @@ This document outlines the API contract for the SplitUp backend.
   curl -X POST \
     http://localhost:8080/api/v1/expenses \
     -H "Authorization: Bearer <token>" \
-    -F 'expense_data={"description":"Dinner","total_amount":"100.00","split_type":"EQUAL","participants":[{"user_id":"uuid1"},{"user_id":"uuid2"}]}' \
+    -F 'expense_data={"description":"Dinner","total_amount":"100.00","payer_id":"uuid_of_payer","split_type":"EQUAL","participants":[{"user_id":"uuid1"},{"user_id":"uuid2"}]}' \
     -F "image=@/path/to/receipt.jpg"
   ```
 - **Response Body:**

@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from "react-native";
 
-import { Balance } from "../../types";
+import { Balance } from "../types";
 import { ActivityListItem } from "./ActivityListItem";
 
 interface ActivityListProps {

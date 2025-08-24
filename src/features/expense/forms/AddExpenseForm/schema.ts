@@ -13,6 +13,7 @@ export const addExpenseSchema = z.object({
     )
     .min(1, "At least one participant is required"),
   image: z.any().optional(),
+  payer_id: z.string().optional(),
 });
 
 export type AddExpenseFormValues = z.infer<typeof addExpenseSchema>;

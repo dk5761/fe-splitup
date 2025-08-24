@@ -31,7 +31,7 @@ export const ExpenseListItem = ({ expense }: ExpenseListItemProps) => {
         <Text style={styles.paidBy}>Paid by {expense.payer.name}</Text>
       </View>
       <View style={styles.amountContainer}>
-        <Text style={styles.amount}>${expense.total_amount}</Text>
+        <Text style={styles.amount}>₹{expense.total_amount}</Text>
         <Text style={styles.date}>{formatDate(expense.expense_date)}</Text>
       </View>
     </View>

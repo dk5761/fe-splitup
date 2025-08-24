@@ -41,6 +41,7 @@ export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({
       expense_date: new Date(),
       split_type: undefined,
       participants: [],
+      payer_id: undefined,
     },
   });
 
@@ -53,13 +54,20 @@ export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({
   const { mutate: createExpense, isPending } = useCreateExpense();
   const bottomSheetRef = useRef<AppBottomSheetRef>(null);
   const totalAmount = watch("total_amount");
+  const payerId = watch("payer_id");
+  const participants = watch("participants");
 
   const onSubmit = (data: AddExpenseFormValues) => {
-    const expenseData = {
-      ...data,
+    const { payer_id, ...restData } = data;
+    const expenseData: any = {
+      ...restData,
       expense_date: data.expense_date.toISOString(),
       group_id: groupId,
     };
+
+    if (payer_id) {
+      expenseData.payer_id = payer_id;
+    }
 
     createExpense(
       { expense_data: expenseData },
@@ -75,9 +83,14 @@ export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({
     bottomSheetRef.current?.present();
   };
 
-  const handleSplitSubmit = (participants: any[], splitType: "EQUAL") => {
+  const handleSplitSubmit = (
+    participants: any[],
+    splitType: "EQUAL",
+    payerId?: string
+  ) => {
     setValue("participants", participants, { shouldValidate: true });
     setValue("split_type", splitType, { shouldValidate: true });
+    setValue("payer_id", payerId);
     bottomSheetRef.current?.close();
   };
 
@@ -136,6 +149,8 @@ export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({
           totalAmount={parseFloat(totalAmount) || 0}
           onSubmit={handleSplitSubmit}
           onClose={() => bottomSheetRef.current?.close()}
+          payerId={payerId}
+          participants={participants}
         />
       </AppBottomSheet>
     </View>

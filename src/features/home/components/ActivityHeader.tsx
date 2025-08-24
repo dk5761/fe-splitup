@@ -4,9 +4,6 @@ export const ActivityHeader = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Activity</Text>
-      <Pressable>
-        <Text style={styles.viewAll}>View All</Text>
-      </Pressable>
     </View>
   );
 };
