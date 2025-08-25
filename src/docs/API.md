@@ -141,20 +141,24 @@ This document outlines the API contract for the SplitUp backend.
     "id": "uuid",
     "name": "string",
     "username": "string",
-    "email": "string"
+    "email": "string",
+    "upi_id": "string",
+    "profile_image_url": "string"
   }
   ```
 
 ### 2. Update Profile
 
-- **Description:** Updates the current user's profile.
+- **Description:** Updates the current user's profile. Can optionally include a key for a pre-uploaded profile image.
 - **Endpoint:** `PATCH /me`
 - **Request Body:**
   ```json
   {
     "name": "string",
     "username": "string",
-    "email": "string"
+    "email": "string",
+    "upi_id": "string",
+    "profile_image_key": "string" // optional
   }
   ```
 - **Response Body:**
@@ -163,11 +167,38 @@ This document outlines the API contract for the SplitUp backend.
     "id": "uuid",
     "name": "string",
     "username": "string",
-    "email": "string"
+    "email": "string",
+    "upi_id": "string"
   }
   ```
 
-### 3. Change Password
+### 3. Generate Profile Image Upload URL
+
+- **Description:** Generates a pre-signed URL for uploading a profile image.
+- **Endpoint:** `POST /user/image/upload-url`
+- **Request Body:**
+  ```json
+  {
+    "content_type": "string" // e.g., "image/jpeg", "image/png"
+  }
+  ```
+- **Response Body:**
+  ```json
+  {
+    "upload_url": "string",
+    "image_key": "string"
+  }
+  ```
+- **Flow:**
+
+  1.  The frontend sends a request to this endpoint with the content type of the image to be uploaded.
+  2.  The backend returns a pre-signed URL and a unique `image_key` (e.g., `users/temp/...`).
+  3.  The frontend uses the `upload_url` to upload the image directly to S3 via a `PUT` request.
+  4.  After a successful upload, the frontend calls the `PATCH /me` endpoint, including the received `image_key` in the request body to associate it with the user.
+
+- **DEPRECATED:** `POST /me/profile-image/upload-url` has been replaced by the above flow.
+
+### 4. Change Password
 
 - **Description:** Changes the current user's password.
 - **Endpoint:** `POST /change-password`
@@ -180,13 +211,13 @@ This document outlines the API contract for the SplitUp backend.
   ```
 - **Response:** `200 OK` with `{"message": "Password changed successfully"}`
 
-### 4. Delete Account
+### 5. Delete Account
 
 - **Description:** Deletes the current user's account.
 - **Endpoint:** `DELETE /me`
 - **Response:** `200 OK` with `{"message": "Account deleted successfully"}`
 
-### 5. Search Users
+### 6. Search Users
 
 - **Description:** Searches for users by username or email.
 - **Endpoint:** `GET /search?q={query}&page={page}&limit={limit}`
@@ -320,31 +351,54 @@ This document outlines the API contract for the SplitUp backend.
 
 ### 1. Create Group
 
-- **Description:** Creates a new group, with an option to upload a profile image.
+- **Description:** Creates a new group. Can optionally include a key for a pre-uploaded group image.
 - **Endpoint:** `POST`
-- **Content-Type:** `multipart/form-data`
-- **Request Form Fields:**
-
-  - `name` (string, required): The name of the group.
-  - `members` (string, required): A JSON string representation of an array of members.
-    - Example JSON string: `[{"user_id": "uuid", "role": "member"}]`
-  - `image` (file, optional): The group's profile image (e.g., `.jpg`, `.png`). Max 5MB.
-
-- **Example Request (`curl`):**
-  ```bash
-  curl -X POST \
-    http://localhost:8080/api/v1/groups \
-    -H "Authorization: Bearer <token>" \
-    -F "name=Trip to the Alps" \
-    -F 'members=[{"user_id":"a1b2c3d4-...","role":"member"},{"user_id":"e5f6g7h8-...","role":"admin"}]' \
-    -F "image=@/path/to/your/image.jpg"
+- **Content-Type:** `application/json`
+- **Request Body:**
+  ```json
+  {
+    "name": "string",
+    "members": [
+      {
+        "user_id": "uuid",
+        "role": "string"
+      }
+    ],
+    "image_key": "string" // optional
+  }
   ```
 - **Response Body:**
   ```json
   // Group details
   ```
 
-### 2. List Groups
+### 2. Generate Group Image Upload URL
+
+- **Description:** Generates a pre-signed URL for uploading a group image.
+- **Endpoint:** `POST /groups/image/upload-url`
+- **Request Body:**
+  ```json
+  {
+    "content_type": "string" // e.g., "image/jpeg", "image/png"
+  }
+  ```
+- **Response Body:**
+  ```json
+  {
+    "upload_url": "string",
+    "image_key": "string"
+  }
+  ```
+- **Flow:**
+
+  1.  The frontend sends a request to this endpoint with the content type of the image to be uploaded.
+  2.  The backend returns a pre-signed URL and a unique `image_key` (e.g., `groups/temp/...`).
+  3.  The frontend uses the `upload_url` to upload the image directly to S3 via a `PUT` request.
+  4.  After a successful upload, the frontend calls the `POST /groups` endpoint, including the received `image_key` in the request body to create the group with its image.
+
+- **DEPRECATED:** `POST /{groupId}/image/upload-url` has been replaced by the above flow.
+
+### 3. List Groups
 
 - **Description:** Lists all groups the current user is a member of.
 - **Endpoint:** `GET?page={page}&limit={limit}`
@@ -353,7 +407,7 @@ This document outlines the API contract for the SplitUp backend.
   // Paginated list of groups
   ```
 
-### 3. Get Group By ID
+### 4. Get Group By ID
 
 - **Description:** Gets the details of a specific group.
 - **Endpoint:** `GET /{groupId}`
@@ -362,7 +416,7 @@ This document outlines the API contract for the SplitUp backend.
   // Group details
   ```
 
-### 4. Update Group Name
+### 5. Update Group Name
 
 - **Description:** Updates the name of a group.
 - **Endpoint:** `PUT /{groupId}`
@@ -374,7 +428,7 @@ This document outlines the API contract for the SplitUp backend.
   ```
 - **Response:** `200 OK` with `{"message": "Group name updated successfully"}`
 
-### 5. Update Group
+### 6. Update Group
 
 - **Description:** Updates a group (add/remove members).
 - **Endpoint:** `PATCH /{groupId}`
@@ -388,13 +442,13 @@ This document outlines the API contract for the SplitUp backend.
   ```
 - **Response:** `200 OK` with `{"message": "Group updated successfully"}`
 
-### 6. Delete Group
+### 7. Delete Group
 
 - **Description:** Deletes a group.
 - **Endpoint:** `DELETE /{groupId}`
 - **Response:** `204 No Content`
 
-### 7. Add Members to Group
+### 8. Add Members to Group
 
 - **Description:** Adds members to a group.
 - **Endpoint:** `POST /{groupId}/members`
@@ -406,7 +460,7 @@ This document outlines the API contract for the SplitUp backend.
   ```
 - **Response:** `200 OK` with `{"message": "Members added successfully"}`
 
-### 8. Get Group Members
+### 9. Get Group Members
 
 - **Description:** Gets the members of a group.
 - **Endpoint:** `GET /{groupId}/members?page={page}&limit={limit}&role={role}`
@@ -415,13 +469,13 @@ This document outlines the API contract for the SplitUp backend.
   // Paginated list of group members
   ```
 
-### 9. Remove Member from Group
+### 10. Remove Member from Group
 
 - **Description:** Removes a member from a group.
 - **Endpoint:** `DELETE /{groupId}/members/{userId}`
 - **Response:** `204 No Content`
 
-### 10. Get Group Expenses
+### 11. Get Group Expenses
 
 - **Description:** Gets the expenses for a specific group.
 - **Endpoint:** `GET /{groupId}/expenses?page={page}&limit={limit}`
@@ -449,7 +503,7 @@ This document outlines the API contract for the SplitUp backend.
   }
   ```
 
-### 11. Get Group Balances
+### 12. Get Group Balances
 
 - **Description:** Gets the total balances of all members within a specific group, along with a summary of simplified debts.
 - **Endpoint:** `GET /{groupId}/balances`

@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from "react-native";
 
-import { Group } from "../../types";
+import { Group } from "../types";
 import { GroupListItem } from "./GroupListItem";
 
 interface GroupListProps {

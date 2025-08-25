@@ -3,32 +3,23 @@ import { httpClient } from "@/shared/api/client";
 import { groupsEndpoints } from "./endpoints";
 import { CreateGroupPayload } from "../types";
 import { groupsQueryKeys } from "./queryKeyFactory";
-import { Toaster, toast } from "sonner-native";
+import { appToast } from "@/components/toast";
 
 export const useCreateGroup = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data: CreateGroupPayload) => {
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("members", data.members);
-      if (data.image) {
-        formData.append("image", data.image as any);
-      }
-
-      return httpClient.post(groupsEndpoints.createGroup, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      return httpClient.post(groupsEndpoints.createGroup, data);
     },
     onSuccess: () => {
-      toast.success("Group created successfully!");
+      appToast.success("Group created successfully!");
       queryClient.invalidateQueries({ queryKey: groupsQueryKeys.lists() });
     },
-    onError: (error) => {
-      toast.error("Failed to create group.");
+    onError: (error: Error) => {
+      appToast.error("Failed to create group", {
+        description: error.message || "Please check the details and try again.",
+      });
     },
   });
 };

@@ -12,12 +12,8 @@ export interface Group {
 
 export interface CreateGroupPayload {
   name: string;
-  members: string; // JSON string
-  image?: {
-    uri: string;
-    type: string;
-    name: string;
-  };
+  members: GroupMember[];
+  image_key?: string;
 }
 
 export interface GroupsListResponse {

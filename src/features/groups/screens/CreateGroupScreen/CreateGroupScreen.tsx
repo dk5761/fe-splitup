@@ -16,14 +16,22 @@ import {
 } from "@/components/ui/appdropdown/AppDropdown";
 import { getFriendsQuery } from "@/features/friends/api/query";
 import { useCreateGroup } from "../../api";
-import { CreateGroupPayload } from "../../types";
+import { useImageUpload } from "@/shared/hooks/useImageUpload";
+import { groupsEndpoints } from "../../api/endpoints";
 import { UploadCloud } from "lucide-react-native";
 import { useTabBar } from "@/shared/context/TabBarContext";
+import { GroupMember } from "../../types";
 
 const createGroupSchema = z.object({
   name: z.string().min(1, "Group name is required"),
   members: z.array(z.string()).min(1, "At least one member is required"),
-  image: z.string().optional(),
+  image: z
+    .object({
+      uri: z.string(),
+      type: z.string(),
+      name: z.string(),
+    })
+    .optional(),
 });
 
 type CreateGroupForm = z.infer<typeof createGroupSchema>;
@@ -31,7 +39,9 @@ type CreateGroupForm = z.infer<typeof createGroupSchema>;
 const CreateGroupScreen = () => {
   const styles = stylesheet;
   const navigation = useNavigation();
-  const { mutate: createGroup, isPending } = useCreateGroup();
+  const { mutate: createGroup, isPending: isCreatingGroup } = useCreateGroup();
+  const { mutateAsync: uploadImage, isPending: isUploadingImage } =
+    useImageUpload();
   const { showTabBar, hideTabBar } = useTabBar();
 
   useFocusEffect(
@@ -63,7 +73,7 @@ const CreateGroupScreen = () => {
     },
   });
 
-  const imageUri = watch("image");
+  const image = watch("image");
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -73,37 +83,47 @@ const CreateGroupScreen = () => {
       quality: 1,
     });
 
-    if (!result.canceled) {
-      setValue("image", result.assets[0].uri);
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const asset = result.assets[0];
+      const uriParts = asset.uri.split(".");
+      const fileType = uriParts.pop();
+      const fileName = uriParts.join(".").split("/").pop();
+
+      setValue("image", {
+        uri: asset.uri,
+        type: `image/${fileType}`,
+        name: `${fileName}.${fileType}`,
+      });
     }
   };
 
-  const onSubmit = (data: CreateGroupForm) => {
-    const membersPayload = data.members.map((id) => ({
+  const onSubmit = async (data: CreateGroupForm) => {
+    const membersPayload: GroupMember[] = data.members.map((id) => ({
       user_id: id,
       role: "member",
     }));
 
-    const payload: CreateGroupPayload = {
-      name: data.name,
-      members: JSON.stringify(membersPayload),
-    };
+    let image_key: string | undefined;
 
     if (data.image) {
-      const uriParts = data.image.split(".");
-      const fileType = uriParts[uriParts.length - 1];
-      payload.image = {
-        uri: data.image,
-        name: `photo.${fileType}`,
-        type: `image/${fileType}`,
-      };
+      image_key = await uploadImage({
+        file: data.image,
+        uploadUrlEndpoint: groupsEndpoints.generateImageUploadUrl,
+      });
     }
 
-    createGroup(payload, {
-      onSuccess: () => {
-        navigation.goBack();
+    createGroup(
+      {
+        name: data.name,
+        members: membersPayload,
+        image_key,
       },
-    });
+      {
+        onSuccess: () => {
+          navigation.goBack();
+        },
+      }
+    );
   };
 
   return (
@@ -111,8 +131,8 @@ const CreateGroupScreen = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.form}>
           <TouchableOpacity onPress={pickImage} style={styles.imagePicker}>
-            {imageUri ? (
-              <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+            {image?.uri ? (
+              <Image source={{ uri: image.uri }} style={styles.imagePreview} />
             ) : (
               <>
                 <UploadCloud size={40} color="gray" />
@@ -171,7 +191,7 @@ const CreateGroupScreen = () => {
         <Button
           title="Create Group"
           onPress={handleSubmit(onSubmit)}
-          loading={isPending}
+          loading={isCreatingGroup || isUploadingImage}
         />
       </View>
     </View>
