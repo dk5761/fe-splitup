@@ -91,32 +91,3 @@ export const AccountScreen = () => {
     </View>
   );
 };
-
-// const styles = StyleSheet.create((theme) => ({
-//   container: {
-//     flex: 1,
-//     backgroundColor: theme.colors.background,
-//   },
-//   sectionContainer: {
-//     marginTop: theme.spacing.md,
-//   },
-//   logoutButtonWrapper: {
-//     marginTop: theme.spacing.lg,
-//     paddingHorizontal: theme.spacing.md,
-//   },
-//   logoutButtonText: {
-//     color: theme.colors.error,
-//   },
-//   loadingContainer: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     backgroundColor: theme.colors.background,
-//   },
-//   errorContainer: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     backgroundColor: theme.colors.background,
-//   },
-// }));

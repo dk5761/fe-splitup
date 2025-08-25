@@ -24,30 +24,3 @@ export const AccountHeader: React.FC<AccountHeaderProps> = ({ user }) => {
     </View>
   );
 };
-
-//   container: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     paddingVertical: theme.spacing.lg,
-//     paddingHorizontal: theme.spacing.md,
-//     backgroundColor: theme.colors.background,
-//   },
-//   avatar: {
-//     width: 60,
-//     height: 60,
-//     borderRadius: 30,
-//     marginRight: theme.spacing.md,
-//   },
-//   userInfo: {
-//     flex: 1,
-//   },
-//   userName: {
-//     fontSize: theme.typography.sizes.h3,
-//     fontWeight: "bold",
-//     color: theme.colors.text,
-//   },
-//   userEmail: {
-//     fontSize: theme.typography.sizes.body,
-//     color: theme.colors.textSecondary,
-//   },
-// }));

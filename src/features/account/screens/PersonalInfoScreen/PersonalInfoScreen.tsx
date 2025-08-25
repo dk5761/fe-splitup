@@ -16,6 +16,7 @@ import { meQuery } from "@/features/account/api";
 import { appToast } from "@/components/toast";
 import { useUpdateProfileMutation } from "@/features/account/api/mutationFn";
 import { PersonalInfoForm } from "../../forms/PersonalInfoForm/PersonalInfoForm";
+import { styles } from "./PersonalInfoScreen.styles";
 
 type PersonalInfoScreenNavigationProp = NativeStackNavigationProp<
   AccountStackParamList,
@@ -93,27 +94,3 @@ export const PersonalInfoScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create((theme) => ({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.lg,
-  },
-  saveButtonWrapper: {
-    marginTop: theme.spacing.xl,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: theme.colors.background,
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: theme.colors.background,
-  },
-}));

@@ -14,6 +14,7 @@ import { AccountStackParamList } from "@/navigation/types";
 import { useChangePasswordMutation } from "@/features/account/api/mutationFn";
 import { appToast } from "@/components/toast";
 import { ChangePasswordForm } from "../../forms/ChangePasswordForm/ChangePasswordForm";
+import { styles } from "./AccountSecurityScreen.styles";
 
 type AccountSecurityScreenNavigationProp = NativeStackNavigationProp<
   AccountStackParamList,
@@ -71,15 +72,3 @@ export const AccountSecurityScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create((theme) => ({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.lg,
-  },
-  saveButtonWrapper: {
-    marginTop: theme.spacing.xl,
-  },
-}));
