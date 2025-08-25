@@ -31,9 +31,10 @@ export function toApiError(error: unknown): ApiError {
     const axiosError = error as AxiosError;
     const status = axiosError.response?.status;
     const data = axiosError.response?.data;
+    console.log("data", data);
     const isNetworkError = !!axiosError.isAxiosError && !axiosError.response;
     const message =
-      (typeof data === "object" && data && (data as any).message) ||
+      (typeof data === "object" && data && (data as any).error) ||
       axiosError.message ||
       "Request failed";
     return { message, status, data, isNetworkError, raw: error };
@@ -73,7 +74,15 @@ httpClient.interceptors.response.use(
     const originalRequest = error?.config as any;
     const status = error?.response?.status;
 
+    const ignoreUrls = [authEndpoints.register, authEndpoints.login];
+
     if (status === 401 && !originalRequest?._retry) {
+      console.log("originalRequest", originalRequest);
+
+      if (ignoreUrls.includes(originalRequest?.url)) {
+        return Promise.reject(toApiError(error));
+      }
+
       originalRequest._retry = true;
       const currentRefreshToken = getRefreshToken();
       if (!currentRefreshToken) {

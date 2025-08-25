@@ -9,12 +9,18 @@ export type AuthStackParamList = {
   SignUp: undefined;
 };
 
+export type AccountStackParamList = {
+  Account: undefined;
+  PersonalInfo: undefined;
+  AccountSecurity: undefined;
+};
+
 export type TabParamList = {
   Home: undefined;
   Groups: undefined;
   Scan: undefined;
   Friends: undefined;
-  Account: undefined;
+  Account: NavigatorScreenParams<AccountStackParamList>;
 };
 
 export type FriendsStackParamList = {
@@ -35,6 +41,7 @@ export type MainStackParamList = {
   FriendsStack: NavigatorScreenParams<FriendsStackParamList>;
   GroupStack: NavigatorScreenParams<GroupStackParamList>;
   ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;
+  AccountStack: NavigatorScreenParams<AccountStackParamList>;
 };
 
 export type RootStackParamList = {

@@ -3,6 +3,8 @@ export interface AuthUser {
   name: string;
   username: string;
   email: string;
+  profile_image_url?: string;
+  upi_id?: string;
 }
 
 export interface LoginRequest {
