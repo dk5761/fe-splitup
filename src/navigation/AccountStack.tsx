@@ -4,7 +4,10 @@ import { AccountStackParamList } from "@/navigation/types"; // Import updated na
 import Header from "@/components/layout/header/Header"; // Assuming a generic Header component
 import { AccountScreen } from "@/features/account/screens/AccountScreen";
 import { PersonalInfoScreen } from "@/features/account/screens/PersonalInfoScreen";
-import { AccountSecurityScreen } from "@/features/account/screens/AccountSecurityScreen";
+import {
+  AccountSecurityScreen,
+  UpdateProfileImageScreen,
+} from "@/features/account/screens";
 
 const Stack = createNativeStackNavigator<AccountStackParamList>();
 
@@ -42,6 +45,17 @@ export const AccountNavigator = () => {
         component={AccountSecurityScreen}
         options={{
           title: "Account & Security",
+          headerShown: true,
+          header: (props) => (
+            <Header title={props.options.title || ""} canGoBack={true} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="UpdateProfileImage"
+        component={UpdateProfileImageScreen}
+        options={{
+          title: "Profile Image",
           headerShown: true,
           header: (props) => (
             <Header title={props.options.title || ""} canGoBack={true} />

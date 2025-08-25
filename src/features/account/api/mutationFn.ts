@@ -23,10 +23,10 @@ export function useUpdateProfileMutation() {
       await queryClient.invalidateQueries({
         queryKey: accountQueryKeys.me(),
       });
-      appToast.success("Profile updated successfully");
+      appToast.success("Profile image updated successfully");
     },
     onError: (e: any) => {
-      appToast.error("Profile update failed", {
+      appToast.error("Failed to update profile image", {
         description: e?.message ?? "Unknown error",
       });
     },

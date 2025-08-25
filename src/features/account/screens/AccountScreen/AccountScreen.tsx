@@ -63,6 +63,17 @@ export const AccountScreen = () => {
         <AccountSection
           icon={
             <Feather
+              name="image"
+              size={20}
+              color={theme.colors.textSecondary}
+            />
+          }
+          title="Profile Image"
+          onPress={() => navigation.navigate("UpdateProfileImage")}
+        />
+        <AccountSection
+          icon={
+            <Feather
               name="shield"
               size={20}
               color={theme.colors.textSecondary}

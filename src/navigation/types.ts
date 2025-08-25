@@ -13,6 +13,7 @@ export type AccountStackParamList = {
   Account: undefined;
   PersonalInfo: undefined;
   AccountSecurity: undefined;
+  UpdateProfileImage: undefined;
 };
 
 export type TabParamList = {
