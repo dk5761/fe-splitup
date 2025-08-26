@@ -258,23 +258,33 @@ This document outlines the API contract for the SplitUp backend.
 
 ### 2. Get Pending Friend Requests
 
-- **Description:** Gets all pending friend requests for the current user.
-- **Endpoint:** `GET /requests`
+- **Description:** Gets paginated pending friend requests for the current user.
+- **Endpoint:** `GET /requests?limit={limit}&offset={offset}`
+- **Query Parameters:**
+  - `limit` (optional, default: 10): Number of requests per page
+  - `offset` (optional, default: 0): Starting offset for pagination
 - **Response Body:**
   ```json
-  [
-    {
-      "user": {
-        "id": "uuid",
-        "name": "string",
-        "username": "string",
-        "email": "string"
-      },
-      "sentAt": "timestamp",
-      "direction": "string" // "incoming" or "outgoing"
-    }
-  ]
+  {
+    "requests": [
+      {
+        "user": {
+          "id": "uuid",
+          "name": "string",
+          "username": "string",
+          "email": "string"
+        },
+        "sentAt": "timestamp",
+        "direction": "string" // "incoming" or "outgoing"
+      }
+    ],
+    "total": "int" // Total number of friend requests (both incoming and outgoing)
+  }
   ```
+- **Notes:**
+  - The response includes both incoming and outgoing friend requests
+  - The limit is split evenly between incoming and outgoing requests
+  - Requests are sorted by most recent first
 
 ### 3. Respond to Friend Request
 
