@@ -6,6 +6,7 @@ import {
   PaginatedFriends,
   Friend,
   PaginatedExpenses,
+  FriendRequest,
 } from "../types/friends.types";
 
 export const getFriendsQuery = () =>
@@ -65,6 +66,33 @@ export const getFriendExpensesQuery = (friendId: string) =>
           },
         }
       );
+      return response.data;
+    },
+    getNextPageParam: (lastPage) => {
+      if (lastPage.offset + lastPage.limit < lastPage.total) {
+        return lastPage.offset / lastPage.limit + 2;
+      }
+      return undefined;
+    },
+    initialPageParam: 1,
+  });
+
+export const getFriendRequestsQuery = () =>
+  infiniteQueryOptions({
+    queryKey: [...friendsQueryKeys.lists(), "requests"] as const,
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await httpClient.get<{
+        requests: FriendRequest[];
+        total: number;
+        limit: number;
+        offset: number;
+      }>(friendsEndpoints.getFriendRequests, {
+        params: {
+          page: pageParam,
+          limit: 10,
+        },
+      });
+
       return response.data;
     },
     getNextPageParam: (lastPage) => {

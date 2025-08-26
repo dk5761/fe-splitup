@@ -8,14 +8,12 @@ export const stylesheet = StyleSheet.create((theme) => ({
   },
   tabContainer: {
     flexDirection: "row",
-    backgroundColor: theme.colors.surface,
     borderRadius: theme.radii.pill,
-    padding: theme.spacing.xs,
-    marginVertical: theme.spacing.sm,
+    backgroundColor: theme.colors.surface,
   },
   tabWrapper: {
     flex: 1,
-    marginHorizontal: theme.spacing.xs,
+    margin: theme.spacing.xs,
   },
   tabPressable: {
     paddingVertical: theme.spacing.sm,
@@ -31,3 +29,5 @@ export const stylesheet = StyleSheet.create((theme) => ({
     color: theme.colors.text,
   },
 }));
+
+export type RequestsListStyles = typeof stylesheet;
