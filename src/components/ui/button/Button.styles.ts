@@ -55,16 +55,16 @@ export const styles = StyleSheet.create((theme) => ({
     variants: {
       variant: {
         primary: {
-          color: theme.colors.primaryOn,
+          color: theme.colors.text,
         },
         secondary: {
-          color: theme.colors.secondaryOn,
+          color: theme.colors.text,
         },
         destructive: {
-          color: theme.colors.primaryOn,
+          color: theme.colors.text,
         },
         outline: {
-          color: theme.colors.primaryOn,
+          color: theme.colors.text,
         },
         social: {
           color: theme.colors.text,

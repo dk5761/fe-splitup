@@ -9,6 +9,7 @@ import { stylesheet as styles } from "./FriendListItem.styles";
 
 import { FriendsStackParamList } from "@/navigation/types";
 import { ChevronRight } from "lucide-react-native";
+import { useUnistyles } from "react-native-unistyles";
 
 interface FriendListItemProps {
   item: Friend;
@@ -17,6 +18,7 @@ interface FriendListItemProps {
 export const FriendListItem = React.memo(({ item }: FriendListItemProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<FriendsStackParamList>>();
+  const { theme } = useUnistyles();
 
   return (
     <TouchableOpacity
@@ -33,7 +35,7 @@ export const FriendListItem = React.memo(({ item }: FriendListItemProps) => {
         <Text style={styles.friendName}>{item.name}</Text>
         <Text style={styles.friendEmail}>{item.email}</Text>
       </View>
-      <ChevronRight size={24} color="#000" />
+      <ChevronRight size={24} color={theme.colors.text} />
     </TouchableOpacity>
   );
 });

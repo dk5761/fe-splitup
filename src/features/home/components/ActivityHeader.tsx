@@ -1,4 +1,5 @@
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 
 export const ActivityHeader = () => {
   return (
@@ -8,7 +9,7 @@ export const ActivityHeader = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -18,9 +19,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
+    color: theme.colors.text,
   },
   viewAll: {
     fontSize: 16,
     color: "gray",
   },
-});
+}));

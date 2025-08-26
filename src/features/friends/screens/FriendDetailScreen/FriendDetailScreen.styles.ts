@@ -79,6 +79,7 @@ export const stylesheet = StyleSheet.create((theme) => ({
     fontSize: 24,
     fontWeight: "bold",
     marginTop: 20,
+    color: theme.colors.text,
   },
   email: {
     fontSize: 16,
@@ -93,6 +94,7 @@ export const stylesheet = StyleSheet.create((theme) => ({
   deleteButton: {
     minWidth: 170,
     borderColor: theme.colors.error,
+    backgroundColor: theme.colors.surface,
   },
   deleteButtonText: {
     color: theme.colors.error,

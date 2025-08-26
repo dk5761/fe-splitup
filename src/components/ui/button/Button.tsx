@@ -32,8 +32,6 @@ export const Button = ({
   children,
   ...rest
 }: ButtonProps) => {
-  // V3: Call useVariants at the top of the component.
-  // This modifies the 'styles' object for this instance.
   styles.useVariants({
     variant,
     disabled: disabled || loading,

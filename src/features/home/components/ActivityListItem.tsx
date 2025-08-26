@@ -40,6 +40,7 @@ const styles = StyleSheet.create((theme) => ({
   name: {
     fontSize: 16,
     fontWeight: "500",
+    color: theme.colors.text,
   },
   owesText: {
     fontSize: 12,

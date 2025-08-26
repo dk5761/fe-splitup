@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import { View, Text, Image, Pressable } from "react-native";
 import { Group } from "../types";
 import { ChevronRight, Icon } from "lucide-react-native";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 
 interface GroupListItemProps {
   item: Group;
@@ -8,6 +9,7 @@ interface GroupListItemProps {
 }
 
 export const GroupListItem = ({ item, onPress }: GroupListItemProps) => {
+  const { theme } = useUnistyles();
   return (
     <Pressable style={styles.container} onPress={onPress}>
       <Image
@@ -17,18 +19,18 @@ export const GroupListItem = ({ item, onPress }: GroupListItemProps) => {
       <View style={styles.infoContainer}>
         <Text style={styles.name}>{item.name}</Text>
       </View>
-      <ChevronRight size={24} color="#000" />
+      <ChevronRight size={24} color={theme.colors.text} />
     </Pressable>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f9f9f9",
     borderRadius: 12,
     padding: 10,
+    backgroundColor: theme.colors.surface,
   },
   image: {
     width: 60,
@@ -43,6 +45,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 8,
+    color: theme.colors.text,
   },
   membersContainer: {
     flexDirection: "row",
@@ -55,4 +58,4 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "white",
   },
-});
+}));

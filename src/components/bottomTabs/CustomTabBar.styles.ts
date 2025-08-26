@@ -30,7 +30,7 @@ export const styles = StyleSheet.create((theme) => ({
         true: {
           color: theme.colors.primary,
         },
-        default: {
+        false: {
           color: theme.colors.textSecondary,
         },
       },

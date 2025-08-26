@@ -19,6 +19,7 @@ export const stylesheet = StyleSheet.create((theme) => ({
   friendName: {
     fontSize: 16,
     fontWeight: "bold",
+    color: theme.colors.text,
   },
   friendEmail: {
     color: theme.colors.textSecondary,
