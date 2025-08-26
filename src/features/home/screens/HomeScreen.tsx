@@ -23,9 +23,6 @@ export const HomeScreen = () => {
       }}
     >
       <View style={{ paddingHorizontal: 20, flex: 1 }}>
-        <Button onPress={() => appToast.error("Hello")} title="Error" />
-        <Button onPress={() => appToast.success("Hello")} title="Success" />
-        <Button onPress={() => appToast.warning("Hello")} title="Warning" />
         <ActivityHeader />
         <ActivityList
           balances={data?.balances ?? []}
