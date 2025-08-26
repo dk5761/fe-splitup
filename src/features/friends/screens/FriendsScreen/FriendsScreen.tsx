@@ -2,6 +2,7 @@ import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useUnistyles } from "react-native-unistyles";
 
 import { getFriendsQuery } from "../../api/query";
 import { FriendList, FriendListHeader } from "../../components";
@@ -11,6 +12,7 @@ import { Fab } from "@/components/ui";
 const FriendsScreen = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigation = useNavigation();
+  const { theme } = useUnistyles();
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery(getFriendsQuery());
 
@@ -41,7 +43,9 @@ const FriendsScreen = () => {
         isFetchingNextPage={isFetchingNextPage}
         ListEmptyComponent={
           <View style={styles.centered}>
-            <Text>No friends found.</Text>
+            <Text style={{ color: theme.colors.textSecondary }}>
+              No friends found.
+            </Text>
           </View>
         }
       />

@@ -10,6 +10,7 @@ export const stylesheet = StyleSheet.create((theme) => ({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: 24,
   },
   header: {
     flexDirection: "row",

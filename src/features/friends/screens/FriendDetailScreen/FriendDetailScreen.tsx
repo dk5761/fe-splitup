@@ -142,7 +142,9 @@ const FriendDetailScreen = () => {
     }
     return (
       <View style={styles.centered}>
-        <Text>No expenses with this friend yet.</Text>
+        <Text style={{ color: theme.colors.textSecondary }}>
+          No expenses with this friend yet.
+        </Text>
       </View>
     );
   };
