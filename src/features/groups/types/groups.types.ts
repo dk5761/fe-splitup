@@ -61,3 +61,28 @@ export interface GroupMemberDetails {
 export interface GroupMembersResponse {
   data: GroupMemberDetails[];
 }
+
+export interface GroupBalanceMember {
+  user_id: string;
+  user_name: string;
+  balance: string; // decimal as string
+  paid: string; // decimal as string
+  should_pay: string; // decimal as string
+}
+
+export interface GroupDebtParticipant {
+  id: string;
+  name: string;
+}
+
+export interface GroupDebt {
+  from: GroupDebtParticipant;
+  to: GroupDebtParticipant;
+  amount: string; // decimal as string
+}
+
+export interface GroupBalanceResponse {
+  total_expense: string; // decimal as string
+  members: GroupBalanceMember[];
+  debts: GroupDebt[];
+}

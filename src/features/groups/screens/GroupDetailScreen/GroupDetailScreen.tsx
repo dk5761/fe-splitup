@@ -40,7 +40,6 @@ export const GroupDetailScreen = () => {
   const [routes] = useState([
     { key: "expenses", title: "Expenses" },
     { key: "balances", title: "Balances" },
-    { key: "totals", title: "Totals" },
     { key: "members", title: "Members" },
   ]);
 
@@ -57,8 +56,7 @@ export const GroupDetailScreen = () => {
 
   const renderScene = SceneMap({
     expenses: () => <ExpensesTab groupId={groupId} />,
-    balances: BalancesTab,
-    totals: TotalsTab,
+    balances: () => <BalancesTab groupId={groupId} />,
     members: () => <MembersTab groupId={groupId} />,
   });
 

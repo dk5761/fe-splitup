@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, ActivityIndicator, View } from "react-native";
+import { FlatList, ActivityIndicator, View, Text } from "react-native";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getGroupExpensesQuery } from "@/features/groups/api/query";
 import { ExpenseListItem } from "@/features/groups/components/ExpenseListItem";
@@ -18,6 +18,20 @@ export const ExpensesTab = ({ groupId }: ExpensesTabProps) => {
   } = useInfiniteQuery(getGroupExpensesQuery(groupId));
 
   const expenses = expensesData?.pages.flatMap((page) => page.data) ?? [];
+
+  if (expenses.length === 0) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text>No expenses found</Text>
+      </View>
+    );
+  }
 
   return (
     <FlatList

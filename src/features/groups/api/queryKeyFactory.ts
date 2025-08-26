@@ -7,4 +7,6 @@ export const groupsQueryKeys = {
   expenses: (id: string) =>
     [...groupsQueryKeys.detail(id), "expenses"] as const,
   members: (id: string) => [...groupsQueryKeys.detail(id), "members"] as const,
+  balances: (id: string) =>
+    [...groupsQueryKeys.detail(id), "balances"] as const,
 };

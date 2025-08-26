@@ -7,6 +7,7 @@ import {
   GroupsListResponse,
   GroupMembersResponse,
   GroupMemberDetails,
+  GroupBalanceResponse,
 } from "../types";
 import { groupsEndpoints } from "./endpoints";
 
@@ -67,4 +68,12 @@ export const getGroupMembersQuery = (groupId: string) =>
     queryKey: groupsQueryKeys.members(groupId),
     queryFn: () =>
       apiGet<GroupMemberDetails[]>(groupsEndpoints.getGroupMembers(groupId)),
+  });
+
+// Get Group Balances
+export const getGroupBalancesQuery = (groupId: string) =>
+  queryOptions({
+    queryKey: groupsQueryKeys.balances(groupId),
+    queryFn: () =>
+      apiGet<GroupBalanceResponse>(groupsEndpoints.getGroupBalances(groupId)),
   });
