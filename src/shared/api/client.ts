@@ -77,7 +77,7 @@ httpClient.interceptors.response.use(
     const ignoreUrls = [authEndpoints.register, authEndpoints.login];
 
     if (status === 401 && !originalRequest?._retry) {
-      console.log("originalRequest", originalRequest);
+      // console.log("originalRequest", originalRequest);
 
       if (ignoreUrls.includes(originalRequest?.url)) {
         return Promise.reject(toApiError(error));
