@@ -55,11 +55,11 @@ export const CustomTabBar = ({
     };
   });
 
-  const onCenterButtonPress = () => {
-    navigation.navigate("Scan");
-  };
+  // const onCenterButtonPress = () => {
+  //   navigation.navigate("Scan");
+  // };
 
-  const middleRouteIndex = Math.floor(state.routes.length / 2);
+  // const middleRouteIndex = Math.floor(state.routes.length / 2);
 
   return (
     <Animated.View style={[styles.container, animatedStyle]}>
@@ -93,22 +93,22 @@ export const CustomTabBar = ({
 
         styles.useVariants({ active: isFocused });
 
-        if (index === middleRouteIndex) {
-          return (
-            <View key={route.key} style={styles.tabButton}>
-              <Pressable
-                style={styles.centerActionButton}
-                onPress={onCenterButtonPress}
-              >
-                <Ionicons
-                  name="scan-outline"
-                  size={32}
-                  color={theme.colors.primaryOn}
-                />
-              </Pressable>
-            </View>
-          );
-        }
+        // if (index === middleRouteIndex) {
+        //   return (
+        //     <View key={route.key} style={styles.tabButton}>
+        //       <Pressable
+        //         style={styles.centerActionButton}
+        //         onPress={onCenterButtonPress}
+        //       >
+        //         <Ionicons
+        //           name="scan-outline"
+        //           size={32}
+        //           color={theme.colors.primaryOn}
+        //         />
+        //       </Pressable>
+        //     </View>
+        //   );
+        // }
 
         return (
           <Pressable
