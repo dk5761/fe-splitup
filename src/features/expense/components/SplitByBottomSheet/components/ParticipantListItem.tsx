@@ -3,6 +3,7 @@ import { View, Text } from "react-native";
 import { Checkbox } from "@/components/ui/checkbox";
 import { stylesheet as styles } from "../SplitByBottomSheet.styles";
 import { GroupMemberDetails } from "@/features/groups/types";
+import { useUnistyles } from "react-native-unistyles";
 
 type ParticipantListItemProps = {
   item: GroupMemberDetails;
@@ -15,6 +16,7 @@ type ParticipantListItemProps = {
 
 export const ParticipantListItem: React.FC<ParticipantListItemProps> =
   React.memo(({ item, isSelected, onSelect, isPayer, onSetPayer }) => {
+    const { theme } = useUnistyles();
     return (
       <View style={styles.participantContainer}>
         <View
@@ -37,7 +39,9 @@ export const ParticipantListItem: React.FC<ParticipantListItemProps> =
               alignItems: "center",
             }}
           >
-            <Text style={{ marginRight: 8 }}>Payer</Text>
+            <Text style={{ marginRight: 8, color: theme.colors.text }}>
+              Payer
+            </Text>
             <Checkbox
               value={isPayer}
               onValueChange={() => onSetPayer(item.user_id)}

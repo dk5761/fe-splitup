@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { Button } from "@/components/ui/button";
 import { stylesheet as styles } from "../SplitByBottomSheet.styles";
+import { useUnistyles } from "react-native-unistyles";
 
 type SplitSummaryProps = {
   totalAmount: number;
@@ -16,9 +17,10 @@ export const SplitSummary: React.FC<SplitSummaryProps> = React.memo(
     selectedParticipantsCount,
     onConfirm,
   }) => {
+    const { theme } = useUnistyles();
     return (
       <View style={styles.footer}>
-        <Text style={styles.splitSummaryText}>
+        <Text style={[styles.splitSummaryText, { color: theme.colors.text }]}>
           {`₹ ${(totalAmount / selectedParticipantsCount || 0).toFixed(
             2
           )} per person`}

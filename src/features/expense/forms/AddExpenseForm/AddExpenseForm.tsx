@@ -127,7 +127,7 @@ export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({
       />
       <Pressable onPress={openBottomSheet} style={styles.splitByContainer}>
         <View style={styles.splitByTextContainer}>
-          <Text>
+          <Text style={{ color: theme.colors.text }}>
             Split By {splitType ? `: ` : ""}
             {splitType ? <Text style={styles.splitType}>{splitType}</Text> : ""}
           </Text>

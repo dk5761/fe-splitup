@@ -39,14 +39,17 @@ const styles = StyleSheet.create((theme) => ({
   success: {
     backgroundColor: lighten(theme.colors.success, 0.88),
     borderColor: lighten(theme.colors.success, 0.6),
+    color: theme.colors.text,
   },
   error: {
     backgroundColor: lighten(theme.colors.error, 0.88),
     borderColor: lighten(theme.colors.error, 0.6),
+    color: theme.colors.text,
   },
   warning: {
     backgroundColor: lighten(theme.colors.warning, 0.9),
     borderColor: lighten(theme.colors.warning, 0.6),
+    color: theme.colors.text,
   },
 }));
 

@@ -29,6 +29,7 @@ export const stylesheet = StyleSheet.create((theme) => ({
   participantName: {
     flex: 1,
     marginLeft: 10,
+    color: theme.colors.text,
     fontSize: 16,
   },
   input: {
