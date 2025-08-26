@@ -19,7 +19,7 @@ export const AccountNavigator = () => {
       }}
     >
       <Stack.Screen
-        name="Account"
+        name="AccountScreenStack"
         component={AccountScreen}
         options={{
           title: "Account",

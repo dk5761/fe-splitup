@@ -10,7 +10,7 @@ export type AuthStackParamList = {
 };
 
 export type AccountStackParamList = {
-  Account: undefined;
+  AccountScreenStack: undefined;
   PersonalInfo: undefined;
   AccountSecurity: undefined;
   UpdateProfileImage: undefined;
@@ -21,7 +21,7 @@ export type TabParamList = {
   Groups: undefined;
   Scan: undefined;
   Friends: undefined;
-  Account: NavigatorScreenParams<AccountStackParamList>;
+  AccountTab: NavigatorScreenParams<AccountStackParamList>;
 };
 
 export type FriendsStackParamList = {
