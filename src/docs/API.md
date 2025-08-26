@@ -634,8 +634,32 @@ This document outlines the API contract for the SplitUp backend.
   }
   ```
 - **Response Body:**
+
+```json
+{
+  "friend_id": "uuid",
+  "friend_name": "string",
+  "new_balance": "decimal"
+}
+```
+
+### 4. Generate UPI Payment Link
+
+- **Description:** Generates a UPI deep link for the frontend to use and initiate a payment to another user.
+- **Endpoint:** `POST /generate-upi-link`
+- **Request Body:**
   ```json
-  // Updated balance response
+  {
+    "to_user_id": "uuid",
+    "amount": "decimal",
+    "note": "string" // optional
+  }
+  ```
+- **Response Body:**
+  ```json
+  {
+    "upi_link": "string"
+  }
   ```
 
 ### 4. Get Expense By ID

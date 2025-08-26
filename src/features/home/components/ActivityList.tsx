@@ -4,6 +4,7 @@ import {
   FlatList,
   ActivityIndicator,
   StyleSheet,
+  RefreshControl,
 } from "react-native";
 
 import { Balance } from "../types";
@@ -13,12 +14,16 @@ interface ActivityListProps {
   balances: Balance[];
   isLoading: boolean;
   isError: boolean;
+  onRefresh?: () => void;
+  refreshing?: boolean;
 }
 
 export const ActivityList = ({
   balances,
   isLoading,
   isError,
+  onRefresh,
+  refreshing,
 }: ActivityListProps) => {
   if (isLoading) {
     return (
@@ -43,6 +48,12 @@ export const ActivityList = ({
       renderItem={({ item }) => <ActivityListItem item={item} />}
       showsVerticalScrollIndicator={false}
       ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing ?? false}
+          onRefresh={onRefresh ?? (() => {})}
+        />
+      }
     />
   );
 };

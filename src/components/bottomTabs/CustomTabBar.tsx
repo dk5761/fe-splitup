@@ -17,7 +17,10 @@ const iconMap = {
   Home: { focused: "home", unfocused: "home-outline" },
   Groups: { focused: "people", unfocused: "people-outline" },
   Friends: { focused: "person", unfocused: "person-outline" },
-  Account: { focused: "person-circle", unfocused: "person-circle-outline" },
+  AccountTab: {
+    focused: "person-circle",
+    unfocused: "person-circle-outline",
+  },
 };
 
 const TAB_BAR_HEIGHT = 80; // Approximate height, adjust if needed

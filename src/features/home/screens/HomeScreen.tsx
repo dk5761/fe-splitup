@@ -8,7 +8,9 @@ import { ActivityList } from "../components/ActivityList";
 import { useUnistyles } from "react-native-unistyles";
 
 export const HomeScreen = () => {
-  const { data, isLoading, isError } = useQuery(getBalancesQuery());
+  const { data, isLoading, isError, refetch, isRefetching } = useQuery(
+    getBalancesQuery()
+  );
   const { theme } = useUnistyles();
 
   return (
@@ -24,6 +26,8 @@ export const HomeScreen = () => {
           balances={data?.balances ?? []}
           isLoading={isLoading}
           isError={isError}
+          onRefresh={refetch}
+          refreshing={isRefetching}
         />
       </View>
     </View>
