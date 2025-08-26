@@ -119,8 +119,16 @@ export const FriendList = React.memo(
         ) : (
           <RequestsList
             ListEmptyComponent={
-              <View style={{ padding: 24 }}>
-                <Text>No requests found.</Text>
+              <View
+                style={{
+                  padding: 24,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ color: theme.colors.textSecondary }}>
+                  No requests found.
+                </Text>
               </View>
             }
           />
