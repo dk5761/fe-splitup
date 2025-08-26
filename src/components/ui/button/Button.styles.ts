@@ -55,7 +55,7 @@ export const styles = StyleSheet.create((theme) => ({
     variants: {
       variant: {
         primary: {
-          color: theme.colors.text,
+          color: theme.colors.black,
         },
         secondary: {
           color: theme.colors.text,

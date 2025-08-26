@@ -121,7 +121,7 @@ const FriendDetailScreen = () => {
             <Text style={styles.accountType}>Splitify Account</Text>
           </View>
           <Button
-            title="Delete Contact"
+            title="Remove Contact"
             onPress={() => bottomSheetRef.current?.present()}
             variant="outline"
             style={styles.deleteButton}
@@ -190,9 +190,9 @@ const FriendDetailScreen = () => {
 
       <AppBottomSheet ref={bottomSheetRef}>
         <BottomSheetView style={styles.bottomSheetContent}>
-          <AppBottomSheetHeader title="Delete Contact" variant="destructive" />
+          <AppBottomSheetHeader title="Remove Contact" variant="destructive" />
           <Text style={styles.bottomSheetMessage}>
-            Delete "{friend.name}" from your contacts?
+            Remove "{friend.name}" from your contacts?
           </Text>
           <View style={styles.bottomSheetButtons}>
             <Button
@@ -202,7 +202,7 @@ const FriendDetailScreen = () => {
               variant="outline"
             />
             <Button
-              title="Yes, Delete"
+              title="Yes, Remove"
               variant="primary"
               style={{ flex: 1 }}
               onPress={handleRemoveFriend}
