@@ -39,17 +39,17 @@ const styles = StyleSheet.create((theme) => ({
   success: {
     backgroundColor: lighten(theme.colors.success, 0.88),
     borderColor: lighten(theme.colors.success, 0.6),
-    color: theme.colors.text,
+    color: "black",
   },
   error: {
     backgroundColor: lighten(theme.colors.error, 0.88),
     borderColor: lighten(theme.colors.error, 0.6),
-    color: theme.colors.text,
+    color: "black",
   },
   warning: {
     backgroundColor: lighten(theme.colors.warning, 0.9),
     borderColor: lighten(theme.colors.warning, 0.6),
-    color: theme.colors.text,
+    color: "black",
   },
 }));
 
@@ -69,7 +69,7 @@ const ThemedIcon: React.FC<{ variant: Variant; name: any }> = ({
   return React.createElement(MaterialIcons as any, { name, size: 20, color });
 };
 
-export function showSuccess(
+export function ShowSuccessToast(
   title: string,
   options?: ToastOptions
 ): string | number {
@@ -77,6 +77,7 @@ export function showSuccess(
     description: options?.description,
     duration: options?.duration ?? 3000,
     style: { ...styles.base, ...styles.success },
+
     icon: React.createElement(ThemedIcon, {
       variant: "success",
       name: "check-circle",
@@ -84,7 +85,7 @@ export function showSuccess(
   });
 }
 
-export function showError(
+export function ShowErrorToast(
   title: string,
   options?: ToastOptions
 ): string | number {
@@ -99,7 +100,7 @@ export function showError(
   });
 }
 
-export function showWarning(
+export function ShowWarningToast(
   title: string,
   options?: ToastOptions
 ): string | number {
@@ -113,9 +114,8 @@ export function showWarning(
     }),
   });
 }
-
 export const appToast = {
-  success: showSuccess,
-  error: showError,
-  warning: showWarning,
+  success: ShowSuccessToast,
+  error: ShowErrorToast,
+  warning: ShowWarningToast,
 };

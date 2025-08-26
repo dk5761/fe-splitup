@@ -171,6 +171,7 @@ const light = {
     success: palette.greenLight,
     warning: palette.yellow, // Using primary yellow for warnings
     error: palette.redLight,
+    black: "#000000",
   },
   spacing,
   radii,
@@ -221,6 +222,7 @@ const dark = {
     success: palette.greenDark,
     warning: palette.yellow, // Using primary yellow for warnings
     error: palette.redDark,
+    black: "#000000",
   },
   spacing,
   radii,

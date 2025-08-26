@@ -6,6 +6,8 @@ import { getBalancesQuery } from "../api";
 import { ActivityHeader } from "../components/ActivityHeader";
 import { ActivityList } from "../components/ActivityList";
 import { useUnistyles } from "react-native-unistyles";
+import { Button } from "@/components";
+import { appToast } from "@/components/toast";
 
 export const HomeScreen = () => {
   const { data, isLoading, isError, refetch, isRefetching } = useQuery(
@@ -21,6 +23,9 @@ export const HomeScreen = () => {
       }}
     >
       <View style={{ paddingHorizontal: 20, flex: 1 }}>
+        <Button onPress={() => appToast.error("Hello")} title="Error" />
+        <Button onPress={() => appToast.success("Hello")} title="Success" />
+        <Button onPress={() => appToast.warning("Hello")} title="Warning" />
         <ActivityHeader />
         <ActivityList
           balances={data?.balances ?? []}

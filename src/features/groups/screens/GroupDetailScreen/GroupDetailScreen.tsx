@@ -1,7 +1,12 @@
 import React, { useState, useLayoutEffect } from "react";
 import { View, ActivityIndicator, useWindowDimensions } from "react-native";
 import { useQuery } from "@tanstack/react-query";
-import { RouteProp, useRoute, useNavigation } from "@react-navigation/native";
+import {
+  RouteProp,
+  useRoute,
+  useNavigation,
+  useFocusEffect,
+} from "@react-navigation/native";
 import { TabView, SceneMap } from "react-native-tab-view";
 import { styles } from "./GroupDetailScreen.styles";
 import { getGroupDetailsQuery } from "../../api/query";
@@ -14,6 +19,7 @@ import { ExpensesTab } from "./tabs/ExpensesTab";
 import { BalancesTab } from "./tabs/BalancesTab";
 import { TotalsTab } from "./tabs/TotalsTab";
 import { MembersTab } from "./tabs/MembersTab";
+import { useTabBar } from "@/shared/context/TabBarContext";
 
 type GroupDetailScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -35,6 +41,14 @@ export const GroupDetailScreen = () => {
   const route = useRoute<GroupDetailScreenRouteProp>();
   const navigation = useNavigation<GroupNavProp>();
   const { groupId } = route.params;
+  const { showTabBar, hideTabBar } = useTabBar();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      hideTabBar();
+      return () => showTabBar();
+    }, [hideTabBar, showTabBar])
+  );
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([

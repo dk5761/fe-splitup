@@ -6,7 +6,7 @@ import { useColorScheme } from "react-native";
 import { Navigation } from "./navigation";
 import { QueryProvider } from "./shared/query/client";
 import { Toaster } from "sonner-native";
-import { UnistylesRuntime } from "react-native-unistyles";
+import { UnistylesRuntime, useUnistyles } from "react-native-unistyles";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
@@ -30,6 +30,8 @@ export function App() {
     UnistylesRuntime.setTheme(scheme);
   }
 
+  const { theme } = useUnistyles();
+
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
@@ -51,6 +53,12 @@ export function App() {
                 />
                 <Toaster
                   position="bottom-center"
+                  theme="dark"
+                  styles={{
+                    title: {
+                      color: theme.colors.black,
+                    },
+                  }}
                   toastOptions={{
                     style: {
                       borderRadius: 12,
