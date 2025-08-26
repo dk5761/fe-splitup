@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { Button } from "@/components/ui/button";
 import { Ionicons } from "@expo/vector-icons";
-import { useUnistyles } from "react-native-unistyles";
+import { useUnistyles, StyleSheet } from "react-native-unistyles";
 
 export const EmptyGroups = () => {
   const { theme } = useUnistyles();
@@ -9,30 +9,18 @@ export const EmptyGroups = () => {
   return (
     <View style={styles.container}>
       {/* Replace with actual illustration */}
-      <View style={styles.illustration} />
-      <Text style={styles.title}>Empty</Text>
+
+      <Text style={styles.title}>No Groups</Text>
       <Text style={styles.subtitle}>You haven't created a group yet</Text>
-      <Button
-        variant="primary"
-        style={{ marginTop: 20, gap: 10 }}
-        title="Create a New Group"
-      >
-        <Ionicons name="add-circle" size={24} color={theme.colors.primaryOn} />
-        <Text style={styles.buttonText}> Create a New Group</Text>
-      </Button>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: "bold",
   },
   illustration: {
     width: 150,
@@ -44,9 +32,10 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 8,
+    color: theme.colors.text,
   },
   subtitle: {
     fontSize: 16,
     color: "gray",
   },
-});
+}));

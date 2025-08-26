@@ -12,7 +12,6 @@ export const useRemoveFriend = () => {
 
   return useMutation({
     mutationFn: (friendId: string) => {
-      console.log("remove friend", friendId);
       return httpClient.delete(friendsEndpoints.removeFriend(friendId));
     },
     // onMutate: async (friendId) => {
