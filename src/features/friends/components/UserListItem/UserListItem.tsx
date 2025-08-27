@@ -21,6 +21,15 @@ export const UserListItem = React.memo(({ user }: UserListItemProps) => {
     sendFriendRequest(userId);
   };
 
+  const getFriendshipStatus = (status: string) => {
+    switch (status) {
+      case "pending_sent":
+        return "Request Sent";
+      case "pending_received":
+        return "Request Received";
+    }
+  };
+
   return (
     <View style={styles.userItem}>
       <Image
@@ -31,14 +40,23 @@ export const UserListItem = React.memo(({ user }: UserListItemProps) => {
         <Text style={styles.userName}>{user.name}</Text>
         <Text style={styles.userEmail}>{user.email}</Text>
       </View>
-      <Button
-        onPress={() => handleAddFriend(user.id)}
-        disabled={isPending}
-        style={styles.addButton}
-      >
-        <UserPlus size={20} color={theme.colors.black} />
-        <Text style={styles.addButtonText}>Add Friend</Text>
-      </Button>
+      {user.friendship_status === "not_friends" && (
+        <Button
+          onPress={() => handleAddFriend(user.id)}
+          disabled={isPending}
+          style={styles.addButton}
+        >
+          <UserPlus size={20} color={theme.colors.black} />
+          <Text style={styles.addButtonText}>Add Friend</Text>
+        </Button>
+      )}
+      {user.friendship_status !== "not_friends" && user.friendship_status && (
+        <View style={styles.statusContainer}>
+          <Text style={styles.statusText}>
+            {getFriendshipStatus(user.friendship_status)}
+          </Text>
+        </View>
+      )}
     </View>
   );
 });

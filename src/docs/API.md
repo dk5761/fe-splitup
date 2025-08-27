@@ -229,7 +229,8 @@ This document outlines the API contract for the SplitUp backend.
         "id": "uuid",
         "name": "string",
         "username": "string",
-        "email": "string"
+        "email": "string",
+        "friendship_status": "string"
       }
     ],
     "total": "int",
@@ -237,6 +238,11 @@ This document outlines the API contract for the SplitUp backend.
     "offset": "int"
   }
   ```
+- **Friendship Status Values:**
+  - `"accepted"`: The users are friends.
+  - `"pending_sent"`: The current user has sent a friend request to this user.
+  - `"pending_received"`: The current user has received a friend request from this user.
+  - `"not_friends"`: There is no friendship or pending request between the users.
 
 ---
 
@@ -352,6 +358,97 @@ This document outlines the API contract for the SplitUp backend.
     }
   }
   ```
+
+### 7. Initiate Payment
+
+- **Description:** Initiates a UPI payment between friends. The backend calculates the amount owed based on shared expenses and previous payments.
+- **Endpoint:** `POST /{friendId}/payments/initiate`
+- **Request Body:** None required (amount calculated by backend)
+- **Response Body:**
+  ```json
+  {
+    "payment_id": "uuid",
+    "amount": "decimal",
+    "balance_status": "string", // "owes", "owed", or "settled"
+    "upi_deep_link": "string", // Present only if balance_status is "owes"
+    "expires_at": "timestamp", // Present only if balance_status is "owes"
+    "transaction_id": "string", // Present only if balance_status is "owes"
+    "message": "string"
+  }
+  ```
+- **Balance Status Values:**
+  - `"owes"`: Current user owes money - proceed with UPI payment
+  - `"owed"`: Current user is owed money by the friend
+  - `"settled"`: No outstanding balance between friends
+
+### 8. Update Payment Status
+
+- **Description:** Updates the status of a payment after UPI transaction completion.
+- **Endpoint:** `PUT /payments/{paymentId}/status`
+- **Request Body:**
+  ```json
+  {
+    "status": "string", // "completed", "failed", or "cancelled"
+    "upi_response": "string" // Optional UPI response data
+  }
+  ```
+- **Response Body:**
+  ```json
+  {
+    "payment_id": "uuid",
+    "status": "string",
+    "amount": "decimal",
+    "processed_at": "timestamp"
+  }
+  ```
+- **Status Values:**
+  - `"completed"`: Payment was successful, balances will be updated
+  - `"failed"`: Payment failed, no balance changes
+  - `"cancelled"`: Payment was cancelled by user
+
+### 9. Get Payment Status
+
+- **Description:** Gets the current status of a specific payment.
+- **Endpoint:** `GET /payments/{paymentId}/status`
+- **Response Body:**
+  ```json
+  {
+    "payment_id": "uuid",
+    "status": "string",
+    "amount": "decimal",
+    "processed_at": "timestamp" // Present only if payment is completed/failed/cancelled
+  }
+  ```
+
+### Payment Flow
+
+The payment flow follows these steps:
+
+1. **Initiate Payment:**
+
+   - Frontend calls `POST /friends/{friendId}/payments/initiate`
+   - Backend validates friendship and calculates amount owed
+   - Returns one of three responses:
+     - `"settled"`: No payment needed
+     - `"owed"`: Friend owes current user money
+     - `"owes"`: Current user owes money, includes UPI deep link
+
+2. **Execute Payment:**
+
+   - If status is `"owes"`, frontend opens UPI deep link in UPI app
+   - User completes payment in UPI app
+   - UPI app returns success/failure to frontend
+
+3. **Update Status:**
+
+   - Frontend calls `PUT /friends/payments/{paymentId}/status`
+   - Backend validates payment ownership and updates status
+   - If status is `"completed"`, balances are updated atomically
+
+4. **Balance Updates:**
+   - Successful payments automatically update `user_balances` table
+   - Cache invalidation ensures real-time balance consistency
+   - Payment history is maintained for audit trails
 
 ---
 
@@ -630,9 +727,9 @@ This document outlines the API contract for the SplitUp backend.
   }
   ```
 
-### 3. Record Payment
+### 3. Record Payment (Legacy)
 
-- **Description:** Records a payment between users.
+- **Description:** **DEPRECATED** - Use the Friend module payment endpoints instead. Records a payment between users with manual amount specification.
 - **Endpoint:** `POST /payments`
 - **Request Body:**
   ```json
@@ -644,18 +741,18 @@ This document outlines the API contract for the SplitUp backend.
   }
   ```
 - **Response Body:**
+  ```json
+  {
+    "friend_id": "uuid",
+    "friend_name": "string",
+    "new_balance": "decimal"
+  }
+  ```
+- **Note:** This endpoint allows manual amount specification and does not use UPI integration. For UPI payments, use the Friend module endpoints at `/api/v1/friends/{friendId}/payments/initiate`.
 
-```json
-{
-  "friend_id": "uuid",
-  "friend_name": "string",
-  "new_balance": "decimal"
-}
-```
+### 4. Generate UPI Payment Link (Legacy)
 
-### 4. Generate UPI Payment Link
-
-- **Description:** Generates a UPI deep link for the frontend to use and initiate a payment to another user.
+- **Description:** **DEPRECATED** - Use the Friend module payment endpoints instead. Generates a UPI deep link with manually specified amount.
 - **Endpoint:** `POST /generate-upi-link`
 - **Request Body:**
   ```json
@@ -671,8 +768,9 @@ This document outlines the API contract for the SplitUp backend.
     "upi_link": "string"
   }
   ```
+- **Note:** This endpoint requires manual amount specification. For automatic balance calculation, use `/api/v1/friends/{friendId}/payments/initiate`.
 
-### 4. Get Expense By ID
+### 5. Get Expense By ID
 
 - **Description:** Gets the details of a specific expense.
 - **Endpoint:** `GET /{id}`
@@ -700,7 +798,7 @@ This document outlines the API contract for the SplitUp backend.
   }
   ```
 
-### 5. Update Expense
+### 6. Update Expense
 
 - **Description:** Updates an existing expense.
 - **Endpoint:** `PUT /{id}`
@@ -742,13 +840,13 @@ This document outlines the API contract for the SplitUp backend.
   }
   ```
 
-### 6. Delete Expense
+### 7. Delete Expense
 
 - **Description:** Deletes an expense.
 - **Endpoint:** `DELETE /{id}`
 - **Response:** `204 No Content`
 
-### 7. Get Payment History
+### 8. Get Payment History
 
 - **Description:** Gets the payment history with a friend.
 - **Endpoint:** `GET /history/{friendId}?page={page}&limit={limit}`

@@ -34,4 +34,14 @@ export const stylesheet = StyleSheet.create((theme) => ({
   addButtonText: {
     fontWeight: "bold",
   },
+  statusContainer: {
+    backgroundColor: theme.colors.secondary,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  statusText: {
+    color: theme.colors.text,
+    fontSize: 12,
+  },
 }));
