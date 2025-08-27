@@ -11,7 +11,7 @@ export const stylesheet = StyleSheet.create((theme) => ({
   avatar: {
     width: 50,
     height: 50,
-    borderRadius: 25,
+    borderRadius: 12,
   },
   userInfo: {
     flex: 1,
@@ -20,11 +20,18 @@ export const stylesheet = StyleSheet.create((theme) => ({
   userName: {
     fontSize: 16,
     fontWeight: "bold",
+    color: theme.colors.text,
   },
   userEmail: {
     color: theme.colors.textSecondary,
   },
   addButton: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  addButtonText: {
+    fontWeight: "bold",
   },
 }));
