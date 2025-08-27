@@ -1,10 +1,10 @@
 export const friendsEndpoints = {
-  getFriends: "/friend",
-  removeFriend: (friendId: string) => `/friend/${friendId}`,
-  getFriendExpenses: (friendId: string) => `/friend/${friendId}/expenses`,
+  getFriends: "/friends",
+  removeFriend: (friendId: string) => `/friends/${friendId}`,
+  getFriendExpenses: (friendId: string) => `/friends/${friendId}/expenses`,
   searchUsers: "/user/search",
-  sendFriendRequest: "/friend/requests",
-  getFriendRequests: "/friend/requests",
+  sendFriendRequest: "/friends/requests",
+  getFriendRequests: "/friends/requests",
   respondToFriendRequest: (requesterId: string) =>
-    `/friend/requests/${requesterId}`,
+    `/friends/requests/${requesterId}`,
 };
