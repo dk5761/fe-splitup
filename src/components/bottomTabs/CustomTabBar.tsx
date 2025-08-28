@@ -17,7 +17,7 @@ const iconMap = {
   Home: { focused: "home", unfocused: "home-outline" },
   Groups: { focused: "people", unfocused: "people-outline" },
   Friends: { focused: "person", unfocused: "person-outline" },
-  AccountTab: {
+  Account: {
     focused: "person-circle",
     unfocused: "person-circle-outline",
   },
