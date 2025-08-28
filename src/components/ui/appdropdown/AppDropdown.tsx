@@ -331,7 +331,9 @@ const Content = ({ children, title = "Select an option" }: ContentProps) => {
 
   return (
     <AppBottomSheet ref={bottomSheetRef} onDismiss={() => setIsOpen(false)}>
-      <BottomSheetView style={{ flex: 1 }}>
+      <BottomSheetView
+        style={{ flex: 1, paddingHorizontal: 14, marginTop: 14 }}
+      >
         <FlatList
           data={options}
           keyExtractor={(item) => item.value}

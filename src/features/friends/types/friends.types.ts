@@ -3,6 +3,7 @@ export interface Friend {
   name: string;
   username: string;
   email: string;
+
   friendship_status?:
     | "accepted"
     | "pending_sent"

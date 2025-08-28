@@ -21,6 +21,7 @@ import { groupsEndpoints } from "../../api/endpoints";
 import { UploadCloud } from "lucide-react-native";
 import { useTabBar } from "@/shared/context/TabBarContext";
 import { GroupMember } from "../../types";
+import { GroupMemberSelector } from "../../components";
 
 const createGroupSchema = z.object({
   name: z.string().min(1, "Group name is required"),
@@ -57,6 +58,7 @@ const CreateGroupScreen = () => {
   const friendOptions: DropdownOption[] = friends.map((friend) => ({
     label: friend.name,
     value: friend.id,
+    username: friend.username,
   }));
 
   const {
@@ -159,30 +161,12 @@ const CreateGroupScreen = () => {
           <Controller
             control={control}
             name="members"
-            render={({ field: { onChange, value } }) => (
-              <AppDropdown
+            render={({ field }) => (
+              <GroupMemberSelector
                 options={friendOptions}
-                value={value}
-                onChange={onChange}
-                multiselect
-              >
-                <AppDropdown.Trigger placeholder="Select members">
-                  {() => <Text>{value.length} members selected</Text>}
-                </AppDropdown.Trigger>
-                <AppDropdown.Content>
-                  {({ item, isSelected, handleSelect }) => (
-                    <TouchableOpacity
-                      onPress={() => handleSelect(item)}
-                      style={{
-                        padding: 10,
-                        backgroundColor: isSelected ? "lightblue" : "white",
-                      }}
-                    >
-                      <Text>{item.label}</Text>
-                    </TouchableOpacity>
-                  )}
-                </AppDropdown.Content>
-              </AppDropdown>
+                field={field}
+                error={!!errors.members?.message}
+              />
             )}
           />
         </View>
