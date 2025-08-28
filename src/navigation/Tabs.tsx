@@ -21,7 +21,7 @@ export const Tabs = () => {
       <Tab.Screen name="Groups" component={GroupStackNavigator} />
       {/* <Tab.Screen name="Scan" component={ScanScreen} /> */}
       <Tab.Screen name="Friends" component={FriendsStackNavigator} />
-      <Tab.Screen name="AccountTab" component={AccountNavigator} />
+      <Tab.Screen name="Account" component={AccountNavigator} />
     </Tab.Navigator>
   );
 };

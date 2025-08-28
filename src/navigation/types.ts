@@ -21,7 +21,7 @@ export type TabParamList = {
   Groups: undefined;
   Scan: undefined;
   Friends: undefined;
-  AccountTab: NavigatorScreenParams<AccountStackParamList>;
+  Account: NavigatorScreenParams<AccountStackParamList>;
 };
 
 export type FriendsStackParamList = {
