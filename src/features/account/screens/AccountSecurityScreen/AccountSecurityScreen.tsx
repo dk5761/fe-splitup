@@ -8,13 +8,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AccountStackParamList } from "@/navigation/types";
 import { useChangePasswordMutation } from "@/features/account/api/mutationFn";
 import { appToast } from "@/components/toast";
 import { ChangePasswordForm } from "../../forms/ChangePasswordForm/ChangePasswordForm";
 import { styles } from "./AccountSecurityScreen.styles";
+import { useTabBar } from "@/shared/context/TabBarContext";
 
 type AccountSecurityScreenNavigationProp = NativeStackNavigationProp<
   AccountStackParamList,
@@ -55,6 +56,15 @@ export const AccountSecurityScreen = () => {
       }
     );
   };
+
+  const { showTabBar, hideTabBar } = useTabBar();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      hideTabBar();
+      return () => showTabBar();
+    }, [hideTabBar, showTabBar])
+  );
 
   return (
     <View style={styles.container}>

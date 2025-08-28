@@ -17,9 +17,10 @@ import { Button } from "@/components/ui/button";
 import { useImageUpload } from "@/shared/hooks/useImageUpload";
 import { useUpdateProfileMutation } from "@/features/account/api/mutationFn";
 import { accountEndpoints } from "@/features/account/api";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AccountStackParamList } from "@/navigation/types";
+import { useTabBar } from "@/shared/context/TabBarContext";
 
 type UpdateProfileImageScreenNavigationProp = NativeStackNavigationProp<
   AccountStackParamList,
@@ -39,6 +40,15 @@ export const UpdateProfileImageScreen = () => {
   const { mutate: updateProfile, isPending: isUpdatingProfile } =
     useUpdateProfileMutation();
   const navigation = useNavigation<UpdateProfileImageScreenNavigationProp>();
+
+  const { showTabBar, hideTabBar } = useTabBar();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      hideTabBar();
+      return () => showTabBar();
+    }, [hideTabBar, showTabBar])
+  );
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -138,16 +148,16 @@ export const UpdateProfileImageScreen = () => {
         )}
       </TouchableOpacity>
 
-      {(selectedImage || user?.profile_image_url) && (
-        <View style={styles.saveButtonWrapper}>
-          <Button
-            title="Save Changes"
-            onPress={handleSaveChanges}
-            loading={isUploadingImage || isUpdatingProfile}
-            disabled={isUploadingImage || isUpdatingProfile}
-          />
-        </View>
-      )}
+      {/* {(selectedImage || user?.profile_image_url) && ( */}
+      <View style={styles.saveButtonWrapper}>
+        <Button
+          title="Save Changes"
+          onPress={handleSaveChanges}
+          loading={isUploadingImage || isUpdatingProfile}
+          disabled={isUploadingImage || isUpdatingProfile || !selectedImage}
+        />
+      </View>
+      {/* )} */}
     </View>
   );
 };

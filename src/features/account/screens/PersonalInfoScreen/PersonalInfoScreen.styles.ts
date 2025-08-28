@@ -6,6 +6,7 @@ export const styles = StyleSheet.create((theme) => ({
     backgroundColor: theme.colors.background,
     paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.lg,
+    justifyContent: "space-between",
   },
   saveButtonWrapper: {
     marginTop: theme.spacing.xl,

@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AccountStackParamList } from "@/navigation/types";
 import { useQuery } from "@tanstack/react-query";
@@ -17,6 +17,7 @@ import { appToast } from "@/components/toast";
 import { useUpdateProfileMutation } from "@/features/account/api/mutationFn";
 import { PersonalInfoForm } from "../../forms/PersonalInfoForm/PersonalInfoForm";
 import { styles } from "./PersonalInfoScreen.styles";
+import { useTabBar } from "@/shared/context/TabBarContext";
 
 type PersonalInfoScreenNavigationProp = NativeStackNavigationProp<
   AccountStackParamList,
@@ -42,6 +43,15 @@ export const PersonalInfoScreen = () => {
       email: user?.email || "",
     },
   });
+
+  const { showTabBar, hideTabBar } = useTabBar();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      hideTabBar();
+      return () => showTabBar();
+    }, [hideTabBar, showTabBar])
+  );
 
   useEffect(() => {
     if (user) {
