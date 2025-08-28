@@ -69,3 +69,31 @@ export const useSendFriendRequest = () => {
     },
   });
 };
+
+export const useRespondToFriendRequest = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      requesterId,
+      action,
+    }: {
+      requesterId: string;
+      action: "accept" | "decline";
+    }) => {
+      return httpClient.put(
+        friendsEndpoints.respondToFriendRequest(requesterId),
+        { action },
+      );
+    },
+    onSuccess: (_, variables) => {
+      appToast.success(`Friend request ${variables.action}ed.`);
+      queryClient.invalidateQueries({
+        queryKey: [...friendsQueryKeys.lists(), "requests"],
+      });
+    },
+    onError: (_, variables) => {
+      appToast.error(`Failed to ${variables.action} friend request.`);
+    },
+  });
+};
