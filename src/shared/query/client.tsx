@@ -1,3 +1,4 @@
+import { useReactQueryDevTools } from "@dev-plugins/react-query";
 import NetInfo from "@react-native-community/netinfo";
 import {
   QueryClient,
@@ -41,6 +42,7 @@ export const queryClient = new QueryClient({
 export function QueryProvider({
   children,
 }: PropsWithChildren): React.ReactElement {
+  useReactQueryDevTools(queryClient);
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );

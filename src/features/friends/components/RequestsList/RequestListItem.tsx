@@ -35,20 +35,27 @@ const RequestListItem = ({ item }: RequestListItemProps) => {
         </Text>
       </View>
 
-      <View style={{ flexDirection: "row", gap: 8 }}>
-        <Button
-          title="Accept"
-          variant="primary"
-          onPress={handleAccept}
-          disabled={isPending}
-        />
-        <Button
-          title="Decline"
-          variant="outline"
-          onPress={handleDecline}
-          disabled={isPending}
-        />
-      </View>
+      {item.direction === "incoming" && (
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <Button
+            title="Accept"
+            variant="primary"
+            onPress={handleAccept}
+            disabled={isPending}
+          />
+          <Button
+            title="Decline"
+            variant="outline"
+            onPress={handleDecline}
+            disabled={isPending}
+          />
+        </View>
+      )}
+      {item.direction === "outgoing" && (
+        <Text style={{ color: theme.colors.textSecondary }}>
+          Pending Request
+        </Text>
+      )}
     </View>
   );
 };

@@ -35,7 +35,7 @@ export const getFriendsQuery = () =>
 
 export const searchUsersQuery = (searchTerm: string) =>
   queryOptions({
-    queryKey: ["searchUsers", searchTerm],
+    queryKey: friendsQueryKeys.search(searchTerm),
     queryFn: async () => {
       if (!searchTerm) {
         return [];

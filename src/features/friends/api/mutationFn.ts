@@ -6,10 +6,9 @@ import { friendsEndpoints } from "./endpoints";
 import { friendsQueryKeys } from "./queryKeyFactory";
 import { PaginatedFriends } from "../types/friends.types";
 import { appToast } from "@/components";
+import { queryClient } from "@/shared/query/client";
 
 export const useRemoveFriend = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (friendId: string) => {
       return httpClient.delete(friendsEndpoints.removeFriend(friendId));
@@ -63,6 +62,14 @@ export const useSendFriendRequest = () => {
       httpClient.post(friendsEndpoints.sendFriendRequest, { addresseeId }),
     onSuccess: () => {
       appToast.success("Friend request sent.");
+      queryClient.invalidateQueries({
+        queryKey: [...friendsQueryKeys.all, "search"],
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: [...friendsQueryKeys.lists(), "requests"],
+        exact: false,
+      });
     },
     onError: () => {
       appToast.error("Failed to send friend request.");
@@ -71,8 +78,6 @@ export const useSendFriendRequest = () => {
 };
 
 export const useRespondToFriendRequest = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({
       requesterId,
@@ -83,13 +88,13 @@ export const useRespondToFriendRequest = () => {
     }) => {
       return httpClient.put(
         friendsEndpoints.respondToFriendRequest(requesterId),
-        { action },
+        { action }
       );
     },
     onSuccess: (_, variables) => {
       appToast.success(`Friend request ${variables.action}ed.`);
       queryClient.invalidateQueries({
-        queryKey: [...friendsQueryKeys.lists(), "requests"],
+        queryKey: [...friendsQueryKeys.lists()],
       });
     },
     onError: (_, variables) => {

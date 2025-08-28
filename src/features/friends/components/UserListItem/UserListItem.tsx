@@ -8,6 +8,7 @@ import { stylesheet as styles } from "./UserListItem.styles";
 import { UserPlus } from "lucide-react-native";
 import { Button } from "@/components/ui/button";
 import { useUnistyles } from "react-native-unistyles";
+import { useAuth } from "@/features/auth";
 
 interface UserListItemProps {
   user: Friend;
@@ -16,6 +17,7 @@ interface UserListItemProps {
 export const UserListItem = React.memo(({ user }: UserListItemProps) => {
   const { mutate: sendFriendRequest, isPending } = useSendFriendRequest();
   const { theme } = useUnistyles();
+  const { user: currentUser } = useAuth();
 
   const handleAddFriend = (userId: string) => {
     sendFriendRequest(userId);
@@ -40,16 +42,17 @@ export const UserListItem = React.memo(({ user }: UserListItemProps) => {
         <Text style={styles.userName}>{user.name}</Text>
         <Text style={styles.userEmail}>{user.email}</Text>
       </View>
-      {user.friendship_status === "not_friends" && (
-        <Button
-          onPress={() => handleAddFriend(user.id)}
-          disabled={isPending}
-          style={styles.addButton}
-        >
-          <UserPlus size={20} color={theme.colors.black} />
-          <Text style={styles.addButtonText}>Add Friend</Text>
-        </Button>
-      )}
+      {user.friendship_status === "not_friends" &&
+        user.id !== currentUser?.id && (
+          <Button
+            onPress={() => handleAddFriend(user.id)}
+            disabled={isPending}
+            style={styles.addButton}
+          >
+            <UserPlus size={20} color={theme.colors.black} />
+            <Text style={styles.addButtonText}>Add Friend</Text>
+          </Button>
+        )}
       {user.friendship_status !== "not_friends" && user.friendship_status && (
         <View style={styles.statusContainer}>
           <Text style={styles.statusText}>
