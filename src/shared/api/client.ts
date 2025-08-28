@@ -31,7 +31,7 @@ export function toApiError(error: unknown): ApiError {
     const axiosError = error as AxiosError;
     const status = axiosError.response?.status;
     const data = axiosError.response?.data;
-    console.log("data", data);
+
     const isNetworkError = !!axiosError.isAxiosError && !axiosError.response;
     const message =
       (typeof data === "object" && data && (data as any).error) ||
