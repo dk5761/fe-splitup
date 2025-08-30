@@ -32,13 +32,30 @@ export type FriendsStackParamList = {
 
 export type GroupStackParamList = {
   GroupsScreen: undefined;
-  CreateGroupScreen: undefined;
   GroupDetailScreen: { groupId: string };
+  CreateGroupScreen: undefined;
   AddGroupExpenseScreen: { groupId: string };
 };
 
+export type PaymentStackParamList = {
+  SettlementScreen: {
+    friendId: string;
+    amount: number;
+    friendName: string;
+    friendEmail?: string;
+    friendAvatar?: string;
+  };
+};
+
 export type MainStackParamList = {
-  Tabs: NavigatorScreenParams<TabParamList>;
+  Tabs: undefined;
+  PaymentStack: {
+    friendId: string;
+    amount: number;
+    friendName: string;
+    friendEmail?: string;
+    friendAvatar?: string;
+  };
   FriendsStack: NavigatorScreenParams<FriendsStackParamList>;
   GroupStack: NavigatorScreenParams<GroupStackParamList>;
   ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;

@@ -1,14 +1,34 @@
 import { View, Text } from "react-native";
 import { Balance } from "../types";
 import { StyleSheet } from "react-native-unistyles";
+import { Button } from "@/components/ui/button";
+import { useNavigation } from "@react-navigation/native";
+import { MainStackParamList } from "@/navigation/types";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
+type HomeScreenNavigationProp = NativeStackNavigationProp<
+  MainStackParamList,
+  "Tabs"
+>;
 interface ActivityListItemProps {
   item: Balance;
 }
 
 export const ActivityListItem = ({ item }: ActivityListItemProps) => {
+  const navigation = useNavigation<any>();
   const amount = parseFloat(item.amount);
   const isOwed = amount > 0;
+
+  const handlePay = () => {
+    navigation.navigate("PaymentStack", {
+      screen: "SettlementScreen",
+      params: {
+        friendId: item.friend_id,
+        amount: Math.abs(amount),
+        friendName: item.friend_name,
+      },
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -21,6 +41,7 @@ export const ActivityListItem = ({ item }: ActivityListItemProps) => {
         <Text style={[styles.amount, { color: isOwed ? "green" : "red" }]}>
           ₹{Math.abs(amount).toFixed(2)}
         </Text>
+        {!isOwed && <Button title="Pay" onPress={handlePay} />}
       </View>
     </View>
   );
