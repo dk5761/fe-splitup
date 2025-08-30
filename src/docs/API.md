@@ -196,8 +196,6 @@ This document outlines the API contract for the SplitUp backend.
   3.  The frontend uses the `upload_url` to upload the image directly to S3 via a `PUT` request.
   4.  After a successful upload, the frontend calls the `PATCH /me` endpoint, including the received `image_key` in the request body to associate it with the user.
 
-- **DEPRECATED:** `POST /me/profile-image/upload-url` has been replaced by the above flow.
-
 ### 4. Change Password
 
 - **Description:** Changes the current user's password.
@@ -248,7 +246,7 @@ This document outlines the API contract for the SplitUp backend.
 
 ## Friend Module
 
-**Base Path:** `/api/v1/friend` (Protected)
+**Base Path:** `/api/v1/friends` (Protected)
 
 ### 1. Send Friend Request
 
@@ -333,8 +331,12 @@ This document outlines the API contract for the SplitUp backend.
 
 ### 6. Get Friend Expenses
 
-- **Description:** Gets expenses between the current user and a friend.
-- **Endpoint:** `GET /{friendId}/expenses?page={page}&limit={limit}`
+- **Description:** Gets expenses between the current user and a friend. Can be filtered by type.
+- **Endpoint:** `GET /{friendId}/expenses?page={page}&limit={limit}&type={type}`
+- **Query Parameters:**
+  - `page` (integer, optional, default: 1): The page number for pagination.
+  - `limit` (integer, optional, default: 20): The number of items per page.
+  - `type` (string, optional): Filters expenses. Can be `all` (default), `grouped`, or `non-grouped`.
 - **Response Body:**
   ```json
   {
@@ -359,96 +361,20 @@ This document outlines the API contract for the SplitUp backend.
   }
   ```
 
-### 7. Initiate Payment
+### 7. Settle Expense
 
-- **Description:** Initiates a UPI payment between friends. The backend calculates the amount owed based on shared expenses and previous payments.
-- **Endpoint:** `POST /{friendId}/payments/initiate`
-- **Request Body:** None required (amount calculated by backend)
-- **Response Body:**
-  ```json
-  {
-    "payment_id": "uuid",
-    "amount": "decimal",
-    "balance_status": "string", // "owes", "owed", or "settled"
-    "upi_deep_link": "string", // Present only if balance_status is "owes"
-    "expires_at": "timestamp", // Present only if balance_status is "owes"
-    "transaction_id": "string", // Present only if balance_status is "owes"
-    "message": "string"
-  }
-  ```
-- **Balance Status Values:**
-  - `"owes"`: Current user owes money - proceed with UPI payment
-  - `"owed"`: Current user is owed money by the friend
-  - `"settled"`: No outstanding balance between friends
-
-### 8. Update Payment Status
-
-- **Description:** Updates the status of a payment after UPI transaction completion.
-- **Endpoint:** `PUT /payments/{paymentId}/status`
+- **Description:** Records a manual payment (settlement) between the logged-in user and a friend to settle up debts.
+- **Endpoint:** `POST /settle`
 - **Request Body:**
   ```json
   {
-    "status": "string", // "completed", "failed", or "cancelled"
-    "upi_response": "string" // Optional UPI response data
-  }
-  ```
-- **Response Body:**
-  ```json
-  {
-    "payment_id": "uuid",
-    "status": "string",
+    "friend_id": "uuid",
     "amount": "decimal",
-    "processed_at": "timestamp"
+    "paid_on": "timestamp",
+    "payment_method": "string" // "upi" or "cash"
   }
   ```
-- **Status Values:**
-  - `"completed"`: Payment was successful, balances will be updated
-  - `"failed"`: Payment failed, no balance changes
-  - `"cancelled"`: Payment was cancelled by user
-
-### 9. Get Payment Status
-
-- **Description:** Gets the current status of a specific payment.
-- **Endpoint:** `GET /payments/{paymentId}/status`
-- **Response Body:**
-  ```json
-  {
-    "payment_id": "uuid",
-    "status": "string",
-    "amount": "decimal",
-    "processed_at": "timestamp" // Present only if payment is completed/failed/cancelled
-  }
-  ```
-
-### Payment Flow
-
-The payment flow follows these steps:
-
-1. **Initiate Payment:**
-
-   - Frontend calls `POST /friends/{friendId}/payments/initiate`
-   - Backend validates friendship and calculates amount owed
-   - Returns one of three responses:
-     - `"settled"`: No payment needed
-     - `"owed"`: Friend owes current user money
-     - `"owes"`: Current user owes money, includes UPI deep link
-
-2. **Execute Payment:**
-
-   - If status is `"owes"`, frontend opens UPI deep link in UPI app
-   - User completes payment in UPI app
-   - UPI app returns success/failure to frontend
-
-3. **Update Status:**
-
-   - Frontend calls `PUT /friends/payments/{paymentId}/status`
-   - Backend validates payment ownership and updates status
-   - If status is `"completed"`, balances are updated atomically
-
-4. **Balance Updates:**
-   - Successful payments automatically update `user_balances` table
-   - Cache invalidation ensures real-time balance consistency
-   - Payment history is maintained for audit trails
+- **Response:** `200 OK` with `{"message": "Settlement recorded successfully"}`
 
 ---
 
@@ -503,8 +429,6 @@ The payment flow follows these steps:
   3.  The frontend uses the `upload_url` to upload the image directly to S3 via a `PUT` request.
   4.  After a successful upload, the frontend calls the `POST /groups` endpoint, including the received `image_key` in the request body to create the group with its image.
 
-- **DEPRECATED:** `POST /{groupId}/image/upload-url` has been replaced by the above flow.
-
 ### 3. List Groups
 
 - **Description:** Lists all groups the current user is a member of.
@@ -523,69 +447,44 @@ The payment flow follows these steps:
   // Group details
   ```
 
-### 5. Update Group Name
+### 5. Update Group
 
-- **Description:** Updates the name of a group.
-- **Endpoint:** `PUT /{groupId}`
-- **Request Body:**
+- **Description:** Atomically updates a group's name, adds new members, or removes existing members. Requires admin privileges.
+- **Endpoint:** `PATCH /:groupId`
+- **Request Body (`UpdateGroupRequest`):**
   ```json
   {
-    "name": "string"
-  }
-  ```
-- **Response:** `200 OK` with `{"message": "Group name updated successfully"}`
-
-### 6. Update Group
-
-- **Description:** Updates a group (add/remove members).
-- **Endpoint:** `PATCH /{groupId}`
-- **Request Body:**
-  ```json
-  {
-    "name": "string",
-    "addMembers": ["uuid"],
-    "removeMembers": ["uuid"]
+    "name": "string,omitempty",
+    "add_members": [
+      {
+        "user_id": "uuid",
+        "role": "string"
+      }
+    ],
+    "remove_members": ["uuid"]
   }
   ```
 - **Response:** `200 OK` with `{"message": "Group updated successfully"}`
 
-### 7. Delete Group
+### 6. Delete Group
 
 - **Description:** Deletes a group.
-- **Endpoint:** `DELETE /{groupId}`
+- **Endpoint:** `DELETE /:groupId`
 - **Response:** `204 No Content`
 
-### 8. Add Members to Group
-
-- **Description:** Adds members to a group.
-- **Endpoint:** `POST /{groupId}/members`
-- **Request Body:**
-  ```json
-  {
-    "user_ids": ["uuid"]
-  }
-  ```
-- **Response:** `200 OK` with `{"message": "Members added successfully"}`
-
-### 9. Get Group Members
+### 7. Get Group Members
 
 - **Description:** Gets the members of a group.
-- **Endpoint:** `GET /{groupId}/members?page={page}&limit={limit}&role={role}`
+- **Endpoint:** `GET /:groupId/members?page={page}&limit={limit}&role={role}`
 - **Response Body:**
   ```json
   // Paginated list of group members
   ```
 
-### 10. Remove Member from Group
-
-- **Description:** Removes a member from a group.
-- **Endpoint:** `DELETE /{groupId}/members/{userId}`
-- **Response:** `204 No Content`
-
-### 11. Get Group Expenses
+### 8. Get Group Expenses
 
 - **Description:** Gets the expenses for a specific group.
-- **Endpoint:** `GET /{groupId}/expenses?page={page}&limit={limit}`
+- **Endpoint:** `GET /:groupId/expenses?page={page}&limit={limit}`
 - **Response Body:**
   ```json
   {
@@ -610,10 +509,10 @@ The payment flow follows these steps:
   }
   ```
 
-### 12. Get Group Balances
+### 9. Get Group Balances
 
 - **Description:** Gets the total balances of all members within a specific group, along with a summary of simplified debts.
-- **Endpoint:** `GET /{groupId}/balances`
+- **Endpoint:** `GET /:groupId/balances`
 - **Response Body:**
   ```json
   {
@@ -727,50 +626,28 @@ The payment flow follows these steps:
   }
   ```
 
-### 3. Record Payment (Legacy)
+### 3. Record Payment
 
-- **Description:** **DEPRECATED** - Use the Friend module payment endpoints instead. Records a payment between users with manual amount specification.
+- **Description:** Records a payment made outside the app between two users (friends or group members). This is used to settle up debts.
 - **Endpoint:** `POST /payments`
 - **Request Body:**
   ```json
   {
+    "from_user_id": "uuid",
     "to_user_id": "uuid",
     "amount": "decimal",
-    "currency": "string",
+    "group_id": "uuid", // optional
     "payment_date": "timestamp"
   }
   ```
 - **Response Body:**
   ```json
   {
-    "friend_id": "uuid",
-    "friend_name": "string",
-    "new_balance": "decimal"
+    "message": "Payment recorded successfully"
   }
   ```
-- **Note:** This endpoint allows manual amount specification and does not use UPI integration. For UPI payments, use the Friend module endpoints at `/api/v1/friends/{friendId}/payments/initiate`.
 
-### 4. Generate UPI Payment Link (Legacy)
-
-- **Description:** **DEPRECATED** - Use the Friend module payment endpoints instead. Generates a UPI deep link with manually specified amount.
-- **Endpoint:** `POST /generate-upi-link`
-- **Request Body:**
-  ```json
-  {
-    "to_user_id": "uuid",
-    "amount": "decimal",
-    "note": "string" // optional
-  }
-  ```
-- **Response Body:**
-  ```json
-  {
-    "upi_link": "string"
-  }
-  ```
-- **Note:** This endpoint requires manual amount specification. For automatic balance calculation, use `/api/v1/friends/{friendId}/payments/initiate`.
-
-### 5. Get Expense By ID
+### 4. Get Expense By ID
 
 - **Description:** Gets the details of a specific expense.
 - **Endpoint:** `GET /{id}`
@@ -798,7 +675,7 @@ The payment flow follows these steps:
   }
   ```
 
-### 6. Update Expense
+### 5. Update Expense
 
 - **Description:** Updates an existing expense.
 - **Endpoint:** `PUT /{id}`
@@ -840,13 +717,13 @@ The payment flow follows these steps:
   }
   ```
 
-### 7. Delete Expense
+### 6. Delete Expense
 
 - **Description:** Deletes an expense.
 - **Endpoint:** `DELETE /{id}`
 - **Response:** `204 No Content`
 
-### 8. Get Payment History
+### 7. Get Payment History
 
 - **Description:** Gets the payment history with a friend.
 - **Endpoint:** `GET /history/{friendId}?page={page}&limit={limit}`
