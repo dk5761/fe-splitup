@@ -15,9 +15,6 @@ export const ExpenseListItem = ({ expense }: ExpenseListItemProps) => {
   const { theme } = useUnistyles();
   const styles = stylesheet;
 
-  // TODO: This needs to be calculated based on the user's share
-  const userShare = expense.total_amount / expense.participants.length;
-
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
@@ -30,8 +27,8 @@ export const ExpenseListItem = ({ expense }: ExpenseListItemProps) => {
         </Text>
       </View>
       <View style={styles.amountContainer}>
-        <Text style={styles.amount}>${expense.total_amount.toFixed(2)}</Text>
-        <Text style={styles.share}>Your share: ${userShare.toFixed(2)}</Text>
+        <Text style={styles.amount}>${expense.total_amount}</Text>
+        {/* <Text style={styles.share}>Your share: ${userShare.toFixed(2)}</Text> */}
       </View>
     </View>
   );
