@@ -4,26 +4,26 @@ import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AddExpenseFormValues, addExpenseSchema } from "./schema";
-import { useCreateExpense } from "../../api";
+import { AddGroupExpenseFormValues, addGroupExpenseSchema } from "./schema";
+import { useCreateExpense } from "../../../expense/api";
 import {
   AppBottomSheet,
   AppBottomSheetRef,
 } from "@/components/ui/appbottomsheet";
-import { SplitByBottomSheet } from "../../components/SplitByBottomSheet";
-import { CategorySelectorBottomSheet } from "../../components/CategorySelectorBottomSheet";
+import { SplitByBottomSheet } from "../../../expense/components/SplitByBottomSheet";
+import { CategorySelectorBottomSheet } from "../../../expense/components/CategorySelectorBottomSheet";
 
 import { ChevronDown } from "lucide-react-native";
 import { useUnistyles } from "react-native-unistyles";
-import { styles } from "./AddExpense.styles";
-import { categoryOptions, getCategoryLabel } from "../../data/categories";
+import { styles } from "./AddGroupExpenseForm.styles";
+import { categoryOptions, getCategoryLabel } from "../../../expense/data/categories";
 
-type AddExpenseFormProps = {
+type AddGroupExpenseFormProps = {
   groupId?: string;
   onSuccess?: () => void;
 };
 
-export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({
+export const AddGroupExpenseForm: React.FC<AddGroupExpenseFormProps> = ({
   groupId,
   onSuccess,
 }) => {
@@ -35,8 +35,8 @@ export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({
 
     setValue,
     watch,
-  } = useForm<AddExpenseFormValues>({
-    resolver: zodResolver(addExpenseSchema),
+  } = useForm<AddGroupExpenseFormValues>({
+    resolver: zodResolver(addGroupExpenseSchema),
     defaultValues: {
       description: "",
       total_amount: "",
@@ -62,7 +62,7 @@ export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({
   const participants = watch("participants");
   const category = watch("category");
 
-  const onSubmit = (data: AddExpenseFormValues) => {
+  const onSubmit = (data: AddGroupExpenseFormValues) => {
     const { payer_id, ...restData } = data;
     const expenseData: any = {
       ...restData,

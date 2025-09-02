@@ -7,7 +7,7 @@ export type SplitByBottomSheetProps = {
   participants: AddExpenseFormValues["participants"];
   onSubmit: (
     participants: any[],
-    splitType: "EQUAL",
+    splitType: "EQUAL" | "MANUAL" | "CUSTOM" | "PERCENTAGE" | "SHARES" | "UNEQUAL" | "ITEMIZED",
     payerId?: string
   ) => void;
   onClose: () => void;

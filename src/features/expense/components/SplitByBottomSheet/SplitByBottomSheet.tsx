@@ -19,7 +19,7 @@ export const SplitByBottomSheet: React.FC<SplitByBottomSheetProps> = ({
   payerId: initialPayerId,
   participants: initialParticipants,
 }) => {
-  const [splitType, setSplitType] = useState<"EQUAL">("EQUAL");
+  const [splitType, setSplitType] = useState<"EQUAL" | "MANUAL" | "CUSTOM" | "PERCENTAGE" | "SHARES" | "UNEQUAL" | "ITEMIZED">("EQUAL");
   const [selectedParticipants, setSelectedParticipants] = useState<
     Record<string, boolean>
   >({});
@@ -62,9 +62,9 @@ export const SplitByBottomSheet: React.FC<SplitByBottomSheetProps> = ({
     const result = Object.keys(selectedParticipants)
       .filter((userId) => selectedParticipants[userId])
       .map((user_id) => ({ user_id }));
-    onSubmit(result, "EQUAL" as const, payerId);
+    onSubmit(result, splitType, payerId);
     onClose();
-  }, [selectedParticipants, onSubmit, onClose, payerId]);
+  }, [selectedParticipants, onSubmit, onClose, payerId, splitType]);
 
   const renderItem = useCallback(
     ({ item }: { item: GroupMemberDetails }) => (

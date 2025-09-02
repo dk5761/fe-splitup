@@ -1,4 +1,4 @@
-import { AddExpenseForm } from "@/features/expense/forms/AddExpenseForm";
+import { AddGroupExpenseForm } from "../../forms/AddGroupExpenseForm";
 import React from "react";
 import { View } from "react-native";
 import { GroupStackParamList } from "@/navigation/types";
@@ -32,7 +32,7 @@ export const AddGroupExpenseScreen: React.FC<
 
   return (
     <View style={{ flex: 1, paddingHorizontal: 16, height: "100%" }}>
-      <AddExpenseForm groupId={groupId} onSuccess={handleSuccess} />
+      <AddGroupExpenseForm groupId={groupId} onSuccess={handleSuccess} />
     </View>
   );
 };

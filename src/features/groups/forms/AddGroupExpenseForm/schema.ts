@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const addExpenseSchema = z.object({
+export const addGroupExpenseSchema = z.object({
   description: z.string().min(1, "Title is required"),
   total_amount: z.string().min(1, "Amount is required"),
   category: z.string().optional(),
@@ -17,4 +17,4 @@ export const addExpenseSchema = z.object({
   payer_id: z.string().optional(),
 });
 
-export type AddExpenseFormValues = z.infer<typeof addExpenseSchema>;
+export type AddGroupExpenseFormValues = z.infer<typeof addGroupExpenseSchema>;
