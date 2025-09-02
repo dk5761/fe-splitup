@@ -5,18 +5,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AddGroupExpenseFormValues, addGroupExpenseSchema } from "./schema";
-import { useCreateExpense } from "../../../expense/api";
+import { useCreateExpense } from "../../api";
 import {
   AppBottomSheet,
   AppBottomSheetRef,
 } from "@/components/ui/appbottomsheet";
-import { SplitByBottomSheet } from "../../../expense/components/SplitByBottomSheet";
-import { CategorySelectorBottomSheet } from "../../../expense/components/CategorySelectorBottomSheet";
+import { SplitByBottomSheet } from "../../components/SplitByBottomSheet";
+import { CategorySelectorBottomSheet } from "../../components/CategorySelectorBottomSheet";
 
 import { ChevronDown } from "lucide-react-native";
 import { useUnistyles } from "react-native-unistyles";
 import { styles } from "./AddGroupExpenseForm.styles";
-import { categoryOptions, getCategoryLabel } from "../../../expense/data/categories";
+import { categoryOptions, getCategoryLabel } from "../../data/categories";
 
 type AddGroupExpenseFormProps = {
   groupId?: string;

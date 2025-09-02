@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 
 import { stylesheet as styles } from "./AddExpense.styles";
-import { AddExpenseForm } from "../../forms/AddExpenseForm";
+import { AddGroupExpenseForm } from "../../forms/AddGroupExpenseForm";
 import { ExpenseStackParamList } from "@/navigation/ExpenseStack";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
@@ -13,7 +13,7 @@ export const AddExpenseScreen: React.FC<
 
   return (
     <View style={styles.container}>
-      <AddExpenseForm groupId={groupId} />
+      <AddGroupExpenseForm groupId={groupId} />
     </View>
   );
 };

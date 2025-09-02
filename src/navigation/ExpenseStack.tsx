@@ -3,7 +3,7 @@ import {
   NativeStackScreenProps,
 } from "@react-navigation/native-stack";
 import React from "react";
-import { AddExpenseScreen } from "@/features/expense/screens/AddExpenseScreen/AddExpenseScreen";
+import { AddExpenseScreen } from "@/features/groups/screens/AddExpenseScreen/AddExpenseScreen";
 import { useUnistyles } from "react-native-unistyles";
 import Header from "@/components/layout/header/Header";
 

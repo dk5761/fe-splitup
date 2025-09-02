@@ -1,6 +1,6 @@
 export interface GroupMember {
   user_id: string;
-  role: "admin" | "member";
+  role: "ADMIN" | "MEMBER";
 }
 
 export interface Group {
@@ -54,7 +54,7 @@ export interface GroupMemberDetails {
   username: string;
   email: string;
   avatar_url?: string;
-  role: "admin" | "member";
+  role: "ADMIN" | "MEMBER";
   joined_at: string;
 }
 

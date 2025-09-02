@@ -36,10 +36,10 @@ export const styles = StyleSheet.create((theme) => ({
     textTransform: "capitalize",
     variants: {
       role: {
-        admin: {
+        ADMIN: {
           color: "white",
         },
-        member: {
+        MEMBER: {
           color: "black",
         },
       },
@@ -51,10 +51,10 @@ export const styles = StyleSheet.create((theme) => ({
     borderRadius: theme.spacing.sm,
     variants: {
       role: {
-        admin: {
+        ADMIN: {
           backgroundColor: theme.colors.success,
         },
-        member: {
+        MEMBER: {
           backgroundColor: theme.colors.secondary,
         },
       },

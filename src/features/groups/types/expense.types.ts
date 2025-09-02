@@ -1,4 +1,4 @@
-export type ExpenseParticipant = {
+export type ExpenseParticipantForCreate = {
   user_id: string;
 };
 
@@ -10,5 +10,5 @@ export type CreateExpenseData = {
   payer_id?: string;
   expense_date: string; // timestamp
   split_type: "EQUAL" | "MANUAL" | "CUSTOM" | "PERCENTAGE" | "SHARES" | "UNEQUAL" | "ITEMIZED";
-  participants: ExpenseParticipant[];
+  participants: ExpenseParticipantForCreate[];
 };

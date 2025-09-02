@@ -102,7 +102,7 @@ const CreateGroupScreen = () => {
   const onSubmit = async (data: CreateGroupForm) => {
     const membersPayload: GroupMember[] = data.members.map((id) => ({
       user_id: id,
-      role: "member",
+      role: "MEMBER",
     }));
 
     let image_key: string | undefined;
@@ -110,7 +110,7 @@ const CreateGroupScreen = () => {
     if (data.image) {
       image_key = await uploadImage({
         file: data.image,
-        uploadUrlEndpoint: groupsEndpoints.generateImageUploadUrl,
+        uploadUrlEndpoint: groupsEndpoints.generateGroupImageUploadUrl,
       });
     }
 
