@@ -17,6 +17,7 @@ import {
 } from "@/features/auth/screens";
 import { MainStackNavigator } from "./MainStack";
 import { AuthStack } from "./AuthStack";
+import { navigationRef } from "./navigationRef";
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -31,6 +32,7 @@ export function AppNavigator({ linking, onReady }: AppNavigatorProps) {
 
   return (
     <NavigationContainer
+      ref={navigationRef}
       theme={scheme === "dark" ? DarkTheme : DefaultTheme}
       linking={linking}
       onReady={onReady}

@@ -12,6 +12,7 @@ import {
 } from "@/shared/utils/storage";
 import { queryClient } from "@/shared/query/client";
 import { appToast } from "@/components/toast";
+import { navigationRef } from "@/navigation/navigationRef";
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -68,7 +69,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
   const signOut = React.useCallback(async () => {
     setAccessToken(null);
     deleteKey(storageKeys.authUser);
-    deleteKey((storageKeys as any).authRefreshToken);
+    deleteKey(storageKeys.authRefreshToken);
     setState({
       isAuthenticated: false,
       user: null,
@@ -78,6 +79,16 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
     });
     await queryClient.clear();
     appToast.warning("Signed out");
+    
+    // Navigate to auth screen
+    setTimeout(() => {
+      if (navigationRef.current) {
+        navigationRef.current.resetRoot({
+          index: 0,
+          routes: [{ name: 'Auth' }],
+        });
+      }
+    }, 100);
   }, []);
 
   const value: AuthContextValue = React.useMemo(

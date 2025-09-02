@@ -17,6 +17,7 @@ import {
 } from "../utils/storage";
 import { authEndpoints } from "@/features/auth/api/endpoints";
 import { appToast } from "@/components/toast";
+import { navigationRef } from "@/navigation/navigationRef";
 
 export type ApiError = {
   message: string;
@@ -68,28 +69,57 @@ httpClient.interceptors.request.use(async (config) => {
   return config;
 });
 
+// Flag to prevent multiple refresh attempts
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (value: any) => void;
+  reject: (reason?: any) => void;
+}> = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
 httpClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error) => {
     const originalRequest = error?.config as any;
     const status = error?.response?.status;
 
-    const ignoreUrls = [authEndpoints.register, authEndpoints.login];
+    const ignoreUrls = [authEndpoints.register, authEndpoints.login, authEndpoints.refresh];
 
     if (status === 401 && !originalRequest?._retry) {
-      // console.log("originalRequest", originalRequest);
-
       if (ignoreUrls.includes(originalRequest?.url)) {
         return Promise.reject(toApiError(error));
       }
 
       originalRequest._retry = true;
+
+      if (isRefreshing) {
+        // If already refreshing, add to queue
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then((token) => {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return httpClient(originalRequest);
+        }).catch((err) => {
+          return Promise.reject(err);
+        });
+      }
+
+      isRefreshing = true;
       const currentRefreshToken = getRefreshToken();
+      
       if (!currentRefreshToken) {
         // No refresh token; force sign-out
-        deleteKey(storageKeys.authToken);
-        deleteKey(storageKeys.authRefreshToken);
-        appToast.warning("Session expired. Please log in again.");
+        forceLogout();
         return Promise.reject(toApiError(error));
       }
 
@@ -100,20 +130,40 @@ httpClient.interceptors.response.use(
         });
         const newToken = res?.data?.access_token;
         const newRefresh = res?.data?.refresh_token;
+        
         if (newToken) {
           setAccessToken(newToken);
         }
         if (newRefresh) {
           setRefreshToken(newRefresh);
         }
+        
+        isRefreshing = false;
+        processQueue(null, newToken);
+        
         // Retry original request with new token
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return httpClient(originalRequest);
-      } catch (refreshError) {
-        // Refresh failed
-        deleteKey(storageKeys.authToken);
-        deleteKey(storageKeys.authRefreshToken);
-        appToast.error("Session expired. Please log in again.");
+      } catch (refreshError: any) {
+        isRefreshing = false;
+        processQueue(refreshError, null);
+        
+        // Check if refresh token is expired/invalid
+        const refreshStatus = refreshError?.response?.status;
+        const refreshErrorData = refreshError?.response?.data;
+        
+        if (refreshStatus === 400 || refreshStatus === 401) {
+          // Refresh token is expired or invalid
+          if (refreshErrorData?.error?.includes("refresh token") || 
+              refreshErrorData?.error?.includes("expired") ||
+              refreshErrorData?.error?.includes("invalid")) {
+            forceLogout();
+            return Promise.reject(toApiError(refreshError));
+          }
+        }
+        
+        // Other refresh error
+        forceLogout();
         return Promise.reject(toApiError(refreshError));
       }
     }
@@ -121,6 +171,30 @@ httpClient.interceptors.response.use(
     return Promise.reject(toApiError(error));
   }
 );
+
+function forceLogout() {
+  // Clear all auth data
+  deleteKey(storageKeys.authToken);
+  deleteKey(storageKeys.authRefreshToken);
+  deleteKey(storageKeys.authUser);
+  
+  // Clear query cache
+  const { queryClient } = require('@/shared/query/client');
+  queryClient.clear();
+  
+  // Show message to user
+  appToast.error("Session expired. Please log in again.");
+  
+  // Navigate to auth screen after a short delay
+  setTimeout(() => {
+    if (navigationRef.current) {
+      navigationRef.current.resetRoot({
+        index: 0,
+        routes: [{ name: 'Auth' }],
+      });
+    }
+  }, 100);
+}
 
 export async function apiGet<T>(
   url: string,
