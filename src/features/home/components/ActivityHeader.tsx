@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native-unistyles";
 export const ActivityHeader = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Activity</Text>
+      <Text style={styles.title}>Home</Text>
     </View>
   );
 };

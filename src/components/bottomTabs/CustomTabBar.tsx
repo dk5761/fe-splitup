@@ -15,6 +15,7 @@ import { useTabBar } from "@/shared/context/TabBarContext";
 
 const iconMap = {
   Home: { focused: "home", unfocused: "home-outline" },
+  Activity: { focused: "notifications", unfocused: "notifications-outline" },
   Groups: { focused: "people", unfocused: "people-outline" },
   Friends: { focused: "person", unfocused: "person-outline" },
   Account: {

@@ -18,6 +18,7 @@ export type AccountStackParamList = {
 
 export type TabParamList = {
   Home: undefined;
+  Activity: undefined;
   Groups: undefined;
   Scan: undefined;
   Friends: undefined;
@@ -65,6 +66,7 @@ export type MainStackParamList = {
   GroupStack: NavigatorScreenParams<GroupStackParamList>;
   ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;
   AccountStack: NavigatorScreenParams<AccountStackParamList>;
+  ActivityStack: NavigatorScreenParams<ActivityStackParamList>;
 };
 
 export type RootStackParamList = {

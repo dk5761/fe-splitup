@@ -8,6 +8,7 @@ import { TabParamList } from "./types";
 import { FriendsStackNavigator } from "./FriendsStack";
 import { GroupStackNavigator } from "./GroupStack";
 import { AccountNavigator } from "./AccountStack";
+import { ActivityStackNavigator } from "./ActivityStack";
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -18,6 +19,7 @@ export const Tabs = () => {
       screenOptions={{ headerShown: false }}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Activity" component={ActivityStackNavigator} />
       <Tab.Screen name="Groups" component={GroupStackNavigator} />
       {/* <Tab.Screen name="Scan" component={ScanScreen} /> */}
       <Tab.Screen name="Friends" component={FriendsStackNavigator} />
