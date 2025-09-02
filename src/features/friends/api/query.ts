@@ -7,6 +7,8 @@ import {
   Friend,
   PaginatedExpenses,
   FriendRequest,
+  FriendBalance,
+  BalanceBreakdown,
 } from "../types/friends.types";
 
 export const getFriendsQuery = () =>
@@ -102,4 +104,28 @@ export const getFriendRequestsQuery = () =>
       return undefined;
     },
     initialPageParam: 1,
+  });
+
+export const getFriendBalanceQuery = (friendId: string) =>
+  queryOptions({
+    queryKey: friendsQueryKeys.balance(friendId),
+    queryFn: async () => {
+      const response = await httpClient.get<FriendBalance>(
+        friendsEndpoints.getFriendBalance(friendId)
+      );
+      return response.data;
+    },
+    enabled: !!friendId,
+  });
+
+export const getFriendBreakdownQuery = (friendId: string) =>
+  queryOptions({
+    queryKey: friendsQueryKeys.breakdown(friendId),
+    queryFn: async () => {
+      const response = await httpClient.get<BalanceBreakdown>(
+        friendsEndpoints.getFriendBreakdown(friendId)
+      );
+      return response.data;
+    },
+    enabled: !!friendId,
   });

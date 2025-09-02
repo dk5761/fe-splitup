@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Balance } from "../types";
 import { StyleSheet } from "react-native-unistyles";
 import { Button } from "@/components/ui/button";
@@ -30,8 +30,19 @@ export const ActivityListItem = ({ item }: ActivityListItemProps) => {
     });
   };
 
+  const handlePress = () => {
+    navigation.navigate("FriendsStack", {
+      screen: "BalanceBreakdownScreen",
+      params: {
+        friendId: item.friend_id,
+        friendName: item.friend_name,
+        currentBalance: amount,
+      },
+    });
+  };
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={handlePress}>
       <View>
         <Text style={styles.name}>{isOwed ? item.friend_name : "You"}</Text>
         <Text style={styles.owesText}>owes</Text>
@@ -41,9 +52,17 @@ export const ActivityListItem = ({ item }: ActivityListItemProps) => {
         <Text style={[styles.amount, { color: isOwed ? "green" : "red" }]}>
           ₹{Math.abs(amount).toFixed(2)}
         </Text>
-        {!isOwed && <Button title="Pay" onPress={handlePay} />}
+        {!isOwed && (
+          <Button 
+            title="Pay" 
+            onPress={(e) => {
+              e.stopPropagation();
+              handlePay();
+            }} 
+          />
+        )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

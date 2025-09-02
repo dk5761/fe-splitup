@@ -48,3 +48,21 @@ export interface PaginatedExpenses {
   limit: number;
   offset: number;
 }
+
+export interface FriendBalance {
+  balance: number;
+}
+
+export interface BalanceBreakdown {
+  friend_id: string;
+  friend_name: string;
+  total_balance: number;
+  groups: GroupBalance[];
+  direct_balance: number;
+}
+
+export interface GroupBalance {
+  group_id: string;
+  group_name: string;
+  balance: number;
+}

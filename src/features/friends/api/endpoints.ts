@@ -7,4 +7,6 @@ export const friendsEndpoints = {
   getFriendRequests: "/friends/requests",
   respondToFriendRequest: (requesterId: string) =>
     `/friends/requests/${requesterId}`,
+  getFriendBalance: (friendId: string) => `/friends/${friendId}/balance`,
+  getFriendBreakdown: (friendId: string) => `/friends/${friendId}/breakdown`,
 };

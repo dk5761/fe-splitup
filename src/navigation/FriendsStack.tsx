@@ -4,6 +4,7 @@ import {
   FriendsScreen,
   AddFriendScreen,
   FriendDetailScreen,
+  BalanceBreakdownScreen,
 } from "@/features/friends/screens";
 import { FriendsStackParamList } from "./types";
 import Header from "@/components/layout/header/Header";
@@ -52,6 +53,15 @@ export function FriendsStackNavigator() {
         options={{
           title: "Contact",
           headerShown: false,
+          header: (props) => <Header title={props.options.title || ""} />,
+        }}
+      />
+      <FriendsStack.Screen
+        name="BalanceBreakdownScreen"
+        component={BalanceBreakdownScreen}
+        options={{
+          title: "Balance Breakdown",
+          headerShown: true,
           header: (props) => <Header title={props.options.title || ""} />,
         }}
       />

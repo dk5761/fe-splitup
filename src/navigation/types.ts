@@ -28,6 +28,11 @@ export type FriendsStackParamList = {
   FriendsScreen: undefined;
   AddFriendScreen: undefined;
   FriendDetailScreen: { friend: Friend };
+  BalanceBreakdownScreen: {
+    friendId: string;
+    friendName: string;
+    currentBalance: number;
+  };
 };
 
 export type GroupStackParamList = {

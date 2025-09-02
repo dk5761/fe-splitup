@@ -10,4 +10,6 @@ export const friendsQueryKeys = {
   expenseLists: () => [...friendsQueryKeys.all, "expense-list"] as const,
   expenseList: (friendId: string) =>
     [...friendsQueryKeys.expenseLists(), friendId] as const,
+  balance: (friendId: string) => [...friendsQueryKeys.all, "balance", friendId] as const,
+  breakdown: (friendId: string) => [...friendsQueryKeys.all, "breakdown", friendId] as const,
 };
