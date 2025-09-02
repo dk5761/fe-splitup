@@ -146,7 +146,6 @@ This document outlines the API contract for the SplitUp backend.
     "name": "string",
     "username": "string",
     "email": "string",
-    "upi_id": "string",
     "profile_image_url": "string"
   }
   ```
@@ -160,7 +159,6 @@ This document outlines the API contract for the SplitUp backend.
   {
     "name": "string",
     "username": "string",
-    "upi_id": "string",
     "profile_image_key": "string"
   }
   ```
@@ -171,7 +169,6 @@ This document outlines the API contract for the SplitUp backend.
     "name": "string",
     "username": "string",
     "email": "string",
-    "upi_id": "string",
     "profile_image_url": "string"
   }
   ```
@@ -367,23 +364,139 @@ This document outlines the API contract for the SplitUp backend.
   }
   ```
 
-### 7. Settle Expense (Unified Payment Recording)
+### 7. Settle Expense (Payment Recording) - DEPRECATED
 
-- **Description:** Records a settlement payment between friends or group members.
+- **Description:** Records a settlement payment between friends or group members. **Note: This endpoint is deprecated. Use the enhanced settlement endpoint for granular control.**
 - **Endpoint:** `POST /settle`
 - **Request Body:**
   ```json
   {
-    "to_user_id": "uuid",
+    "friend_id": "uuid",
     "amount": "decimal",
     "group_id": "uuid", // optional - for group settlements
-    "payment_method": "UPI", // "UPI", "CASH", "BANK_TRANSFER", "OTHER"
-    "upi_transaction_id": "string", // optional - for UPI payments
-    "notes": "string", // optional
-    "payment_date": "timestamp" // optional - defaults to now
+    "payment_method": "string", // "CASH", "BANK_TRANSFER", "CHEQUE", "DIGITAL_WALLET", "OTHER"
+    "description": "string", // optional - payment description
+    "paid_on": "timestamp" // required - when payment was made
   }
   ```
 - **Response:** `200 OK` with `{"message": "Settlement recorded successfully"}`
+
+### 8. Settle Expense Enhanced (Granular Payment Recording)
+
+- **Description:** Records a settlement payment with granular allocation control across direct and group expenses. Allows users to specify exactly how much to allocate to each debt type in a single transaction.
+- **Endpoint:** `POST /settle-enhanced`
+- **Request Body:**
+  ```json
+  {
+    "friend_id": "uuid",
+    "settlement_allocations": [
+      {
+        "group_id": null, // null for direct expenses, uuid for group expenses
+        "amount": "300.00"
+      },
+      {
+        "group_id": "uuid-of-group-1",
+        "amount": "500.00"
+      }
+    ],
+    "total_amount": "800.00",
+    "paid_on": "timestamp",
+    "payment_method": "string", // "CASH", "BANK_TRANSFER", "CHEQUE", "DIGITAL_WALLET", "OTHER"
+    "description": "string" // optional - payment description
+  }
+  ```
+- **Response Body:**
+  ```json
+  {
+    "payment_id": "uuid",
+    "settlement_results": [
+      {
+        "group_id": null,
+        "amount_settled": "300.00",
+        "previous_balance": "300.00",
+        "new_balance": "0.00"
+      },
+      {
+        "group_id": "uuid-of-group-1",
+        "amount_settled": "500.00",
+        "previous_balance": "500.00",
+        "new_balance": "0.00"
+      }
+    ],
+    "total_amount_settled": "800.00",
+    "message": "Settlement processed successfully"
+  }
+  ```
+
+#### Settlement Allocation Schema:
+
+- `group_id` (uuid|null):
+  - `null` for direct/non-group expenses
+  - UUID for specific group expenses
+- `amount` (decimal): Amount to allocate to this debt type (must be > 0)
+
+#### Validation Rules:
+
+1. **Total Amount Match**: Sum of all allocation amounts must equal `total_amount`
+2. **Balance Validation**: Each allocation amount must not exceed the available balance for that debt type
+3. **Group Validation**: If `group_id` is provided, user must be a member of the group
+4. **Friendship Validation**: Users must be friends to settle expenses
+
+#### Use Cases:
+
+**Scenario 1: Mixed Direct and Group Debts**
+
+- User A owes User B: ₹300 (direct) + ₹500 (Group X) + ₹200 (Group Y) = ₹1000 total
+- Single payment allocation:
+  ```json
+  {
+    "friend_id": "user-b-uuid",
+    "settlement_allocations": [
+      { "group_id": null, "amount": "300.00" },
+      { "group_id": "group-x-uuid", "amount": "500.00" },
+      { "group_id": "group-y-uuid", "amount": "200.00" }
+    ],
+    "total_amount": "1000.00",
+    "paid_on": "2024-01-01T00:00:00+05:30",
+    "payment_method": "CASH"
+  }
+  ```
+
+**Scenario 2: Selective Group Settlement**
+
+- User A owes User B across multiple groups but only wants to settle one:
+  ```json
+  {
+    "friend_id": "user-b-uuid",
+    "settlement_allocations": [
+      { "group_id": "group-x-uuid", "amount": "500.00" }
+    ],
+    "total_amount": "500.00",
+    "paid_on": "2024-01-01T00:00:00+05:30",
+    "payment_method": "BANK_TRANSFER"
+  }
+  ```
+
+**Scenario 3: Direct Expenses Only**
+
+- User A owes User B only for direct expenses:
+  ```json
+  {
+    "friend_id": "user-b-uuid",
+    "settlement_allocations": [{ "group_id": null, "amount": "300.00" }],
+    "total_amount": "300.00",
+    "paid_on": "2024-01-01T00:00:00+05:30",
+    "payment_method": "BANK_TRANSFER"
+  }
+  ```
+
+#### Advantages over Legacy Endpoint:
+
+1. **Granular Control**: Specify exactly which debts to settle
+2. **Single Transaction**: Multiple debt types settled in one atomic operation
+3. **Real-time Validation**: Prevents overpayment and ensures allocation accuracy
+4. **Detailed Response**: Clear breakdown of what was settled and resulting balances
+5. **Flexible**: Supports any combination of direct and group expenses
 
 ### 8. Get Friendship Balance
 
@@ -436,7 +549,7 @@ This document outlines the API contract for the SplitUp backend.
       "members": [
         {
           "user_id": "uuid",
-          "role": "admin" // or "member"
+          "role": "ADMIN" // or "MEMBER"
         }
       ]
     }
@@ -513,7 +626,7 @@ This document outlines the API contract for the SplitUp backend.
     "add_members": [
       {
         "user_id": "uuid",
-        "role": "member" // optional, defaults to "member"
+        "role": "MEMBER" // optional, defaults to "MEMBER"
       }
     ], // optional
     "remove_members": ["uuid1", "uuid2"] // optional - user IDs to remove
@@ -532,7 +645,7 @@ This document outlines the API contract for the SplitUp backend.
 - **Description:** Gets members of a group.
 - **Endpoint:** `GET /{groupId}/members`
 - **Query Parameters:**
-  - `role` (string, optional): Filter by role ("admin", "member")
+  - `role` (string, optional): Filter by role ("ADMIN", "MEMBER")
   - `limit` (int, optional): Number of results per page (default: 25, max: 100)
   - `offset` (int, optional): Number of results to skip (default: 0)
 - **Response Body:**
@@ -544,7 +657,7 @@ This document outlines the API contract for the SplitUp backend.
         "username": "string",
         "name": "string",
         "email": "string",
-        "role": "admin",
+        "role": "ADMIN",
         "joined_at": "timestamp"
       }
     ],
@@ -741,7 +854,7 @@ This document outlines the API contract for the SplitUp backend.
   "category": "FOOD",
   "group_id": "uuid",
   "payer_id": "uuid",
-  "expense_date": "2024-08-31T10:30:00Z",
+  "expense_date": "2024-08-31T10:30:00+05:30",
   "split_type": "EQUAL",
   "participants": [
     { "user_id": "uuid1" },
@@ -870,6 +983,7 @@ This document outlines the API contract for the SplitUp backend.
 - `payer_id` (uuid, optional): Who paid for the expense, defaults to creator
 - `expense_date` (timestamp, optional): When the expense occurred, defaults to now
 - `split_type` (string, optional): How to split the expense, defaults to "EQUAL"
+  - **Supported Values:** "EQUAL", "MANUAL", "CUSTOM", "PERCENTAGE", "SHARES", "UNEQUAL", "ITEMIZED"
 - `participants` (array, required): List of participants with split-specific fields:
   - `user_id` (uuid, required): Participant's user ID
   - `share_amount` (decimal): For CUSTOM splits - exact amount
@@ -1049,9 +1163,8 @@ This document outlines the API contract for the SplitUp backend.
           "name": "string"
         },
         "amount": "decimal",
-        "payment_method": "UPI",
-        "upi_transaction_id": "string",
-        "notes": "string",
+        "payment_method": "string",
+        "description": "string",
         "payment_date": "timestamp",
         "group": {
           "id": "uuid",
@@ -1146,7 +1259,7 @@ The Activity Feed module provides endpoints to retrieve activity feeds showing r
           "expense_description": "Dinner at restaurant",
           "category": "FOOD"
         },
-        "created_at": "2024-08-31T10:30:00Z"
+        "created_at": "2024-08-31T10:30:00+05:30"
       }
     ],
     "page": 1,
@@ -1193,7 +1306,7 @@ The Activity Feed module provides endpoints to retrieve activity feeds showing r
         "metadata": {
           "group_name": "Weekend Trip"
         },
-        "created_at": "2024-08-31T09:15:00Z"
+        "created_at": "2024-08-31T09:15:00+05:30"
       }
     ],
     "page": 1,
@@ -1238,7 +1351,7 @@ The Activity Feed module provides endpoints to retrieve activity feeds showing r
           "currency": "INR",
           "payment_method": "upi"
         },
-        "created_at": "2024-08-31T08:45:00Z"
+        "created_at": "2024-08-31T08:45:00+05:30"
       }
     ],
     "page": 1,
@@ -1292,6 +1405,39 @@ All activity feed endpoints return standard error responses:
 - **403 Forbidden:** User doesn't have access to the requested resource
 - **404 Not Found:** Group or friend not found
 - **500 Internal Server Error:** Server-side error
+
+---
+
+## Enum Values Reference
+
+### Group Roles
+
+- `ADMIN` - Group creator/admin, can manage group members and expenses
+- `MEMBER` - Can view group details and participate in expenses
+- `OWNER` - _Planned_: Full group ownership with delete privileges (future implementation)
+
+### Payment Methods
+
+- `CASH` - Physical cash payment
+- `BANK_TRANSFER` - Bank account transfer
+- `CHEQUE` - Cheque payment
+- `DIGITAL_WALLET` - Digital wallet payment (Paytm, PhonePe, etc.)
+- `OTHER` - Other payment methods
+
+### Split Types
+
+- `EQUAL` - Equal split among all participants
+- `MANUAL` - Manual split with custom amounts
+- `CUSTOM` - Custom amount per participant
+- `PERCENTAGE` - Percentage-based split
+- `SHARES` - Share-based split (integer ratios)
+- `UNEQUAL` - Unequal split with decimal ratios
+- `ITEMIZED` - Item-level split with individual and shared items
+
+### Friendship Status
+
+- `PENDING` - Friend request pending acceptance
+- `ACCEPTED` - Friendship established
 
 ---
 
@@ -1453,7 +1599,7 @@ All endpoints return standardized error responses:
 
 1. **Currency**: All monetary amounts are in INR (Indian Rupees) and represented as decimal strings.
 
-2. **Timestamps**: All timestamps are in ISO 8601 format (e.g., `2024-08-31T10:30:00Z`).
+2. **Timestamps**: All timestamps are in ISO 8601 format with Indian Standard Time (IST) timezone (e.g., `2024-08-31T10:30:00+05:30`).
 
 3. **UUIDs**: All IDs are UUID v4 format.
 
