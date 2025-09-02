@@ -37,14 +37,14 @@ const BalanceBreakdownScreen = React.memo(() => {
     console.log('Settle up pressed');
   };
 
-  const handleViewHistory = () => {
-    // History feature not implemented yet
-    console.log('History feature not implemented');
-  };
-
+  
   const handleGroupPress = (groupId: string) => {
-    // TODO: Navigate to group details
-    console.log('Group pressed:', groupId);
+    navigation.navigate("GroupStack", {
+      screen: "GroupDetailScreen",
+      params: {
+        groupId: groupId,
+      },
+    });
   };
 
   const isOwed = totalBalance >= 0;
@@ -128,13 +128,10 @@ const BalanceBreakdownScreen = React.memo(() => {
           </View>
         )}
 
-        {/* Action Buttons */}
+        {/* Action Button */}
         <View style={styles.actionButtons}>
           <TouchableOpacity style={styles.settleButton} onPress={handleSettleUp}>
             <Text style={styles.settleButtonText}>Settle Up</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.historyButton} onPress={handleViewHistory}>
-            <Text style={styles.historyButtonText}>View History</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

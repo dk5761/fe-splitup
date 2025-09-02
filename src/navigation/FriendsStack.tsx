@@ -60,9 +60,7 @@ export function FriendsStackNavigator() {
         name="BalanceBreakdownScreen"
         component={BalanceBreakdownScreen}
         options={{
-          title: "Balance Breakdown",
-          headerShown: true,
-          header: (props) => <Header title={props.options.title || ""} />,
+          headerShown: false,
         }}
       />
     </FriendsStack.Navigator>

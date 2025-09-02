@@ -127,18 +127,4 @@ export const stylesheet = StyleSheet.create((theme) => ({
     fontWeight: "600",
     color: theme.colors.background,
   },
-  historyButton: {
-    flex: 1,
-    backgroundColor: theme.colors.card,
-    borderRadius: 8,
-    paddingVertical: 16,
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  historyButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: theme.colors.text,
-  },
 }));
