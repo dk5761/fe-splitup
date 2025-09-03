@@ -33,8 +33,8 @@ const BalanceBreakdownScreen = React.memo(() => {
   const totalBalance = balanceData?.balance || currentBalance;
 
   const handleSettleUp = () => {
-    // TODO: Navigate to settlement flow
-    console.log('Settle up pressed');
+    // Payment feature removed - settlement flow disabled
+    console.log('Payment feature disabled');
   };
 
   
@@ -128,12 +128,12 @@ const BalanceBreakdownScreen = React.memo(() => {
           </View>
         )}
 
-        {/* Action Button */}
-        <View style={styles.actionButtons}>
+        {/* Action Button - Payment feature removed */}
+        {/* <View style={styles.actionButtons}>
           <TouchableOpacity style={styles.settleButton} onPress={handleSettleUp}>
             <Text style={styles.settleButtonText}>Settle Up</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </ScrollView>
     </View>
   );

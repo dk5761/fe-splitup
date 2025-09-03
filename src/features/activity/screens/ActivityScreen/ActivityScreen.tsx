@@ -12,7 +12,6 @@ const filterOptions: ActivityFilterOption[] = [
   { label: "Expenses", value: "expenses", icon: "💰" },
   { label: "Groups", value: "groups", icon: "👥" },
   { label: "Friends", value: "friends", icon: "🤝" },
-  { label: "Payments", value: "payments", icon: "💳" },
 ];
 
 export const ActivityScreen = () => {

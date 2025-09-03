@@ -28,8 +28,6 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = ({
       case "friend_request_sent":
       case "friend_request_accepted":
         return "🤝";
-      case "payment_recorded":
-        return "💳";
       case "expense_settled":
         return "✅";
       default:

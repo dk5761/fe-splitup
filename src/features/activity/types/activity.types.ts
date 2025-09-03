@@ -15,7 +15,6 @@ export interface ActivityMetadata {
   category?: string;
   group_name?: string;
   role?: string;
-  payment_method?: string;
 }
 
 export interface Activity {
@@ -52,12 +51,11 @@ export type ActivityType =
   | "friend_request_accepted"
   | "friend_request_rejected"
   | "friendship_removed"
-  | "payment_recorded"
   | "expense_settled";
 
-export type EntityType = "expense" | "group" | "friend" | "payment";
+export type EntityType = "expense" | "group" | "friend";
 
-export type ActivityFilter = "all" | "expenses" | "groups" | "friends" | "payments";
+export type ActivityFilter = "all" | "expenses" | "groups" | "friends";
 
 export interface ActivityFilters {
   filter?: ActivityFilter;

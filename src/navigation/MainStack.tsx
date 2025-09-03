@@ -12,7 +12,6 @@ import Header from "@/components/layout/header/Header";
 import { FriendsStackNavigator } from "./FriendsStack";
 import { GroupStackNavigator } from "./GroupStack";
 import { ExpenseStackNavigator } from "./ExpenseStack";
-import { PaymentStack } from "./PaymentStack";
 
 const MainStack = createNativeStackNavigator<MainStackParamList>();
 
@@ -48,13 +47,6 @@ export function MainStackNavigator() {
           name="Tabs"
           component={Tabs}
           options={{ headerShown: false }}
-        />
-        <MainStack.Screen
-          name="PaymentStack"
-          component={PaymentStack}
-          options={{
-            title: "Settlement",
-          }}
         />
         <MainStack.Screen
           name="FriendsStack"

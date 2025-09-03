@@ -20,14 +20,8 @@ export const ActivityListItem = ({ item }: ActivityListItemProps) => {
   const isOwed = amount > 0;
 
   const handlePay = () => {
-    navigation.navigate("PaymentStack", {
-      screen: "SettlementScreen",
-      params: {
-        friendId: item.friend_id,
-        amount: Math.abs(amount),
-        friendName: item.friend_name,
-      },
-    });
+    // Payment feature removed - navigation to settlement disabled
+    console.log('Payment feature disabled');
   };
 
   const handlePress = () => {
@@ -52,15 +46,7 @@ export const ActivityListItem = ({ item }: ActivityListItemProps) => {
         <Text style={[styles.amount, { color: isOwed ? "green" : "red" }]}>
           ₹{Math.abs(amount).toFixed(2)}
         </Text>
-        {!isOwed && (
-          <Button 
-            title="Pay" 
-            onPress={(e) => {
-              e.stopPropagation();
-              handlePay();
-            }} 
-          />
-        )}
+        {/* Payment feature removed - Pay button disabled */}
       </View>
     </TouchableOpacity>
   );

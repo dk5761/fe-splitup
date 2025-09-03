@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { NavigatorScreenParams } from "@react-navigation/native";
 import { Friend } from "@/features/friends/types";
 import { ExpenseStackParamList } from "./ExpenseStack";
+import { ActivityStackParamList } from "./ActivityStack";
 
 export type AuthStackParamList = {
   Welcome: undefined;
@@ -43,25 +44,8 @@ export type GroupStackParamList = {
   AddGroupExpenseScreen: { groupId: string };
 };
 
-export type PaymentStackParamList = {
-  SettlementScreen: {
-    friendId: string;
-    amount: number;
-    friendName: string;
-    friendEmail?: string;
-    friendAvatar?: string;
-  };
-};
-
 export type MainStackParamList = {
   Tabs: undefined;
-  PaymentStack: {
-    friendId: string;
-    amount: number;
-    friendName: string;
-    friendEmail?: string;
-    friendAvatar?: string;
-  };
   FriendsStack: NavigatorScreenParams<FriendsStackParamList>;
   GroupStack: NavigatorScreenParams<GroupStackParamList>;
   ExpenseStack: NavigatorScreenParams<ExpenseStackParamList>;
